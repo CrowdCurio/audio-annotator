@@ -153,7 +153,7 @@ WaveSurfer.Spectrogram = {
     getFrequencies: function(callback) {
         var fftSamples = this.fftSamples;
         var buffer = this.buffer = this.wavesurfer.backend.buffer;
-        var channelOne = Array.prototype.slice(buffer.getChannelData(0));
+        var channelOne = Array.prototype.slice.call(buffer.getChannelData(0));
         var bufferLength = buffer.length;
         var sampleRate = buffer.sampleRate;
         var frequencies = [];
