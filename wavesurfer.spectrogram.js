@@ -44,7 +44,7 @@ WaveSurfer.Spectrogram = {
         this.width = drawer.width;
         this.pixelRatio = this.params.pixelRatio || wavesurfer.params.pixelRatio;
         this.fftSamples = this.params.fftSamples || wavesurfer.params.fftSamples || 512;
-        this.height = this.fftSamples / 2;
+        this.height = this.fftSamples / 4;
         this.noverlap = params.noverlap;
         this.windowFunc = params.windowFunc;
         this.alpha = params.alpha;
@@ -146,7 +146,7 @@ WaveSurfer.Spectrogram = {
         for (var i = 0; i < pixels.length; i++) {
             for (var j = 0; j < pixels[i].length; j++) {
                 var colorValue = 255 - pixels[i][j];
-                my.spectrCc.fillStyle = this.getFrequencyRGB(colorValue); 
+                my.spectrCc.fillStyle = my.getFrequencyRGB(colorValue); 
                 my.spectrCc.fillRect(i, height - j * heightFactor, 1, heightFactor);
             }
         }
