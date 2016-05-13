@@ -28,4 +28,4 @@ wavesurfer.on('ready', function () {
     });
 });
 
-wavesurfer.load('song.wav');
+wavesurfer.load('traffic.wav');
