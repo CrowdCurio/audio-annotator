@@ -146,15 +146,15 @@ WaveSurfer.Spectrogram = {
         for (var i = 0; i < pixels.length; i++) {
             for (var j = 0; j < pixels[i].length; j++) {
                 var colorValue = 255 - pixels[i][j];
-                my.spectrCc.fillStyle = my.getFrequencyRGB(colorValue); 
+                my.spectrCc.fillStyle = my.getFrequencyRGB(colorValue);
                 my.spectrCc.fillRect(i, height - j * heightFactor, 1, heightFactor);
             }
         }
     },
-   
+
     getFrequencyGrayscaleRGB: function(colorValue) {
-        return 'rgb(' + colorValue + ', '  + colorValue + ', ' + colorValue + ')';     
-    }, 
+        return 'rgb(' + colorValue + ', '  + colorValue + ', ' + colorValue + ')';
+    },
 
     getFrequencies: function(callback) {
         var fftSamples = this.fftSamples;
