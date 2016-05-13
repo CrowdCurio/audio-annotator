@@ -27,5 +27,19 @@ wavesurfer.on('ready', function () {
         getFrequencyRGB: colorFunc
     });
 });
+function renderImage(file) {
 
-wavesurfer.load('traffic.wav');
+  // generate a new FileReader object
+  var reader = new FileReader();
+
+  reader.onload = function(event) {
+    the_url = event.target.result
+    wavesurfer.load(the_url);
+  }
+ 
+  reader.readAsDataURL(file);
+}
+$("#the-file-input").change(function() {
+    renderImage(this.files[0]);
+});
+
