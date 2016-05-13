@@ -20,6 +20,7 @@ WaveSurfer.Spectrogram = {
      *               + 'triangular'
      *   alpha: some window functions have this extra value (0<alpha<1);
      *   noverlap: size of the overlapping window. Must be < fftSamples. Auto deduced from canvas size by default.
+     *   getFrequencyRGB: function that takes a frequency value of 0 - 255 and returns the desired color
      */
     init: function (params) {
         this.params = params;
@@ -43,10 +44,11 @@ WaveSurfer.Spectrogram = {
         this.width = drawer.width;
         this.pixelRatio = this.params.pixelRatio || wavesurfer.params.pixelRatio;
         this.fftSamples = this.params.fftSamples || wavesurfer.params.fftSamples || 512;
-        this.height = this.fftSamples / 2;
+        this.height = this.fftSamples / 4;
         this.noverlap = params.noverlap;
         this.windowFunc = params.windowFunc;
         this.alpha = params.alpha;
+        this.getFrequencyRGB = this.params.getFrequencyRGB || this.getFrequencyGrayscaleRGB;
 
         this.createWrapper();
         this.createCanvas();
@@ -144,10 +146,14 @@ WaveSurfer.Spectrogram = {
         for (var i = 0; i < pixels.length; i++) {
             for (var j = 0; j < pixels[i].length; j++) {
                 var colorValue = 255 - pixels[i][j];
-                my.spectrCc.fillStyle = 'rgb(' + colorValue + ', '  + colorValue + ', ' + colorValue + ')';
+                my.spectrCc.fillStyle = my.getFrequencyRGB(colorValue);
                 my.spectrCc.fillRect(i, height - j * heightFactor, 1, heightFactor);
             }
         }
+    },
+
+    getFrequencyGrayscaleRGB: function(colorValue) {
+        return 'rgb(' + colorValue + ', '  + colorValue + ', ' + colorValue + ')';
     },
 
     getFrequencies: function(callback) {
