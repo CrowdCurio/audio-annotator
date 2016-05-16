@@ -15,7 +15,7 @@ div#wave-spectrogram.loaded {
 }
 
 div#waveform.loading {
-  background: url('/static/img/spinner.gif') no-repeat center center;
+  background: url('../img/spinner.gif') no-repeat center center;
 }
 
 body {
