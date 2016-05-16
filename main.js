@@ -35,7 +35,7 @@ function renderImage(file) {
   var reader = new FileReader();
 
   reader.onload = function(event) {
-    var url = event.target.result
+    var url = event.target.result;
     wavesurfer.load(url);
   }
  
@@ -43,8 +43,10 @@ function renderImage(file) {
 }
 
 $("#the-file-input").change(function() {
-    $("#waveform, #wave-spectrogram").removeClass('loaded').addClass('loading');
-    $("spectrogram").remove();
-    renderImage(this.files[0]);
+    if (this.files.length > 0) {
+      $("#waveform, #wave-spectrogram").removeClass('loaded').addClass('loading');
+      $("spectrogram").remove();
+      renderImage(this.files[0]);
+    }
 });
 
