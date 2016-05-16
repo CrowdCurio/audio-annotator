@@ -7,6 +7,11 @@ div#wave-spectrogram {
 
 div#waveform.loaded {
   background-color: #D3D3D3;
+  border: 0.5px solid black;
+}
+
+div#wave-spectrogram.loaded {
+  border: 0.5px solid black;
 }
 
 div#waveform.loading {

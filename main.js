@@ -8,7 +8,7 @@ wavesurfer.init({
 });
 
 wavesurfer.on('ready', function () {
-    $("#waveform").removeClass('loading').addClass('loaded');
+    $("#waveform, #wave-spectrogram").removeClass('loading').addClass('loaded');
     
     var spectrogram = Object.create(WaveSurfer.Spectrogram);
 
@@ -43,7 +43,7 @@ function renderImage(file) {
 }
 
 $("#the-file-input").change(function() {
-    $("#waveform").removeClass('loaded').addClass('loading');
+    $("#waveform, #wave-spectrogram").removeClass('loaded').addClass('loading');
     $("spectrogram").remove();
     renderImage(this.files[0]);
 });
