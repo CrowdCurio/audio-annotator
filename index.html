@@ -2,14 +2,18 @@
 <html>
 <head>
     <title>Urban Ears</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
     <script type="text/javascript" src="jquery-2.2.3.min.js"></script>
     <script type="text/javascript" src="wavesurfer.min.js"></script>
     <script type="text/javascript" src="wavesurfer.spectrogram.js"></script>
     <script type="text/javascript" src="main.js" defer></script>
 </head>
 <body>
-        <input id="the-file-input" type="file">
-        <div id="waveform" style="width:50%"></div> 
+        <div id="instruction">Select a WAV file to view the wavesufer.js waveform and spectrogram visual representations</div>
+        <div id="file-container">
+            <input id="the-file-input" type="file">
+        </div>
+        <div id="waveform"></div> 
         <div id="wave-spectrogram"></div> 
 </body>
 </html>

@@ -1,0 +1,24 @@
+
+div#waveform,
+div#wave-spectrogram {   
+  width: 50%;
+  margin: 10px auto;
+}
+
+div#waveform.loaded {
+  background-color: #D3D3D3;
+}
+
+div#waveform.loading {
+  background: url('spinner.gif') no-repeat center center;
+}
+
+body {
+  font-family: 'Raleway', sans-serif;
+}
+
+div#instruction,   
+div#file-container {   
+  text-align: center;
+  margin: 20px 0px;
+}

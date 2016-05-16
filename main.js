@@ -2,11 +2,14 @@ var wavesurfer = Object.create(WaveSurfer);
 
 wavesurfer.init({
   container: '#waveform',
-  waveColor: 'red',
-  progressColor: 'purple'
+  waveColor: '#FF00FF',
+  interact: false,
+  cursorWidth: 0,
 });
 
 wavesurfer.on('ready', function () {
+    $("#waveform").removeClass('loading').addClass('loaded');
+    
     var spectrogram = Object.create(WaveSurfer.Spectrogram);
 
     var colorFunc = function(colorValue) {
@@ -27,19 +30,21 @@ wavesurfer.on('ready', function () {
         getFrequencyRGB: colorFunc
     });
 });
-function renderImage(file) {
 
-  // generate a new FileReader object
+function renderImage(file) {
   var reader = new FileReader();
 
   reader.onload = function(event) {
-    the_url = event.target.result
-    wavesurfer.load(the_url);
+    var url = event.target.result
+    wavesurfer.load(url);
   }
  
   reader.readAsDataURL(file);
 }
+
 $("#the-file-input").change(function() {
+    $("#waveform").removeClass('loaded').addClass('loading');
+    $("spectrogram").remove();
     renderImage(this.files[0]);
 });
 
