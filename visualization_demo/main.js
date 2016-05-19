@@ -13,18 +13,21 @@ wavesurfer.on('ready', function () {
     var spectrogram = Object.create(WaveSurfer.Spectrogram);
 
     var colorFunc = function(colorValue) {
-      if (colorValue < 90) {
+      if (colorValue < 70) {
         return 'rgb(255, 255, 255)';
-      } else if (colorValue < 150) {
+      } else if (colorValue < 115) {
         return 'rgb(255, 0, 0)';
-      } else if (colorValue < 185) {
+      } else if (colorValue < 160) {
         return 'rgb(255, 0, 255)';
-      } else {
+      } else if (colorValue < 200){
         return 'rgb(51, 153, 255)';
+      } else  {
+        return 'rgb(160, 160, 160)';
       }
     }
 
     spectrogram.init({
+        fftSamples: 256,
         wavesurfer: wavesurfer,
         container: "#wave-spectrogram",
         getFrequencyRGB: colorFunc
