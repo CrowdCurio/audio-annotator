@@ -7,10 +7,14 @@
     <script type="text/javascript" src="../static/js/wavesurfer.min.js"></script>
     <script type="text/javascript" src="../static/js/spectrogram.js"></script>
     <script type="text/javascript" src="../static/js/wavesurfer.spectrogram.js"></script>
+    <script type="text/javascript" src="../static/js/wavesurfer.regions.js"></script>
     <script type="text/javascript" src="main.js" defer></script>
 </head>
 <body>
         <div id="waveform"></div> 
-        <div id="wave-spectrogram"></div> 
+        <div id="wave-spectrogram"></div>
+        <button class="btn btn-primary" onclick="wavesurfer.playPause()">
+           Play
+        </button> 
 </body>
 </html>

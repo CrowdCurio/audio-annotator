@@ -3,10 +3,11 @@ var wavesurfer = Object.create(WaveSurfer);
 wavesurfer.init({
     container: '#waveform',
     waveColor: '#FF00FF',
-    visualization: 'spectrogram', 
+    visualization: 'invisible', 
 });
 
 wavesurfer.on('ready', function () {
+    wavesurfer.enableDragSelection();
     var spectrogram = Object.create(WaveSurfer.Spectrogram);
 
     spectrogram.init({
