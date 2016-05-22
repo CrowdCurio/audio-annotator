@@ -3,6 +3,7 @@
 <head>
     <title>Urban Ears</title>
     <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <script type="text/javascript" src="../static/js/jquery-2.2.3.min.js"></script>
     <script type="text/javascript" src="../static/js/wavesurfer.min.js"></script>
     <script type="text/javascript" src="../static/js/spectrogram.js"></script>
@@ -11,10 +12,16 @@
     <script type="text/javascript" src="main.js" defer></script>
 </head>
 <body>
-        <div id="waveform"></div> 
-        <div id="wave-spectrogram"></div>
-        <button class="btn btn-primary" onclick="wavesurfer.playPause()">
-           Play
-        </button> 
+    <div class="annotation">
+
+    <a class="play_audio">
+        <i class="fa fa-play-circle"></i>
+    </a>
+   
+    <div id="waveform"></div>
+    </div>
+
+</div>
+        
 </body>
 </html>

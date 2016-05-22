@@ -1,20 +1,30 @@
 
-div#waveform,
-div#wave-spectrogram {   
-  width: 50%;
-  margin: 10px auto;
+#waveform,
+#spectrogram,
+#invisible {   
+  width: 70%;
+  margin: 0px auto;
 }
 
-div#waveform.loaded {
+.annotation,
+.waveform_visualization,
+.spectrogram_visualization,
+.invisible_visualization {   
+  width: 70%;
+  margin: 50px auto;
+}
+
+#waveform.loaded {
   background-color: #D3D3D3;
-  border: 0.5px solid black;
+  border: 0.5px solid #D3D3D3;
 }
 
-div#wave-spectrogram.loaded {
-  border: 0.5px solid black;
+#spectrogram.loaded,
+#invisible.loaded {
+  border: 0.5px solid #D3D3D3;
 }
 
-div#waveform.loading {
+#waveform.loading {
   background: url('../img/spinner.gif') no-repeat center center;
 }
 
@@ -22,8 +32,19 @@ body {
   font-family: 'Raleway', sans-serif;
 }
 
-div#instruction,   
-div#file-container {   
+#instruction,   
+#file-container {   
   text-align: center;
   margin: 20px 0px;
+}
+
+.play_audio .fa {
+	font-size: 50px;
+}
+
+.play_audio {
+	float: left;
+    position: relative;
+	top: 39px;
+	left: 5%;
 }

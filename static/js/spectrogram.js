@@ -2,21 +2,21 @@
 
 WaveSurfer.util.extend(WaveSurfer.Drawer.Canvas, {
     getFrequencyRGB: function(colorValue) {
-        if (colorValue < 70) {
-            return 'rgb(255, 255, 255)';
-         } else if (colorValue < 115) {
-             return 'rgb(255, 0, 0)';
-         } else if (colorValue < 160) {
-             return 'rgb(255, 0, 255)';
-         } else if (colorValue < 200){
-             return 'rgb(51, 153, 255)';
+        if (colorValue < 35) {
+            return 'rgb(211, 211, 211)'; //grey            
+         } else if (colorValue < 80) {
+            return 'rgb(102, 178, 255)'; //blue            
+         } else if (colorValue < 120) {
+             return 'rgb(255, 0, 255)'; //pink
+         } else if (colorValue < 175){
+             return 'rgb(255, 0, 0)'; // red
          } else  {
-            return 'rgb(160, 160, 160)';
+            return 'rgb(255, 255, 255)'; //white
          }
     },
 
     getFrequencies: function(buffer) {
-        var fftSamples = this.fftSamples || 256;
+        var fftSamples = this.params.fftSamples || 512;
         var channelOne = Array.prototype.slice.call(buffer.getChannelData(0));
         var bufferLength = buffer.length;
         var sampleRate = buffer.sampleRate;
@@ -32,8 +32,7 @@ WaveSurfer.util.extend(WaveSurfer.Drawer.Canvas, {
             var uniqueSamplesPerPx = buffer.length / this.width;
             noverlap = Math.max(0, Math.round(fftSamples - uniqueSamplesPerPx));
         }
-
-        var fft = new WaveSurfer.FFT(fftSamples, sampleRate, this.windowFunc, this.alpha);
+        var fft = new WaveSurfer.FFT(fftSamples, sampleRate);
 
         var maxSlicesCount = Math.floor(bufferLength/ (fftSamples - noverlap));
 
@@ -42,8 +41,9 @@ WaveSurfer.util.extend(WaveSurfer.Drawer.Canvas, {
         while (currentOffset + fftSamples < channelOne.length) {
             var segment = channelOne.slice(currentOffset, currentOffset + fftSamples);
             var spectrum = fft.calculateSpectrum(segment);
-            var array = new Uint8Array(fftSamples/2);
-            for (var j = 0; j<fftSamples/2; j++) {
+            var length = fftSamples / 2 + 1;
+            var array = new Uint8Array(length);
+            for (var j = 0; j < length; j++) {
                 array[j] = Math.max(-255, Math.log10(spectrum[j])*45);
             }
             frequencies.push(array);
@@ -98,19 +98,16 @@ WaveSurfer.util.extend(WaveSurfer.Drawer.Canvas, {
 
     drawSpectrogram: function (buffer) {
         var length = buffer.duration;
-        var height = this.height;
+        var height = this.params.fftSamples / 2;
         var frequenciesData = this.getFrequencies(buffer);
 
         var pixels = this.resample(frequenciesData);
 
-        var heightFactor = buffer ? 
-                              2 / buffer.numberOfChannels : 
-                              1;
+        var heightFactor = 1;
 
         for (var i = 0; i < pixels.length; i++) {
             for (var j = 0; j < pixels[i].length; j++) {
-                var colorValue = 255 - pixels[i][j];
-                this.waveCc.fillStyle = this.getFrequencyRGB(colorValue);
+                this.waveCc.fillStyle = this.getFrequencyRGB(pixels[i][j]);
                 this.waveCc.fillRect(i, height - j * heightFactor, 1, heightFactor);
             }
         }
