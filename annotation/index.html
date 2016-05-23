@@ -2,26 +2,20 @@
 <html>
 <head>
     <title>Urban Ears</title>
-    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/annotation_style.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <script type="text/javascript" src="../static/js/experiment_data.js"></script>
     <script type="text/javascript" src="../static/js/jquery-2.2.3.min.js"></script>
     <script type="text/javascript" src="../static/js/wavesurfer.min.js"></script>
-    <script type="text/javascript" src="../static/js/spectrogram.js"></script>
-    <script type="text/javascript" src="../static/js/wavesurfer.spectrogram.js"></script>
+    <script type="text/javascript" src="../static/js/wavesurfer.spectrogram.min.js"></script>
     <script type="text/javascript" src="../static/js/wavesurfer.regions.js"></script>
+    <script type="text/javascript" src="../static/js/spectrogram.js"></script>
     <script type="text/javascript" src="main.js" defer></script>
 </head>
 <body>
-    <div class="annotation">
-
-    <a class="play_audio">
-        <i class="fa fa-play-circle"></i>
-    </a>
-   
-    <div id="waveform"></div>
-    </div>
-
-</div>
-        
+    <div class="annotation">  
+        <div id="waveform"></div>
+        <div class="progress_bar"></div>
+    </div>      
 </body>
 </html>

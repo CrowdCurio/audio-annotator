@@ -1,26 +1,67 @@
-var wavesurfer = Object.create(WaveSurfer);
+function getTimerText(wavesurfer) {
+	return '00:' + wavesurfer.getCurrentTime().toFixed(3) +
+	       ' / 00:' + wavesurfer.getDuration().toFixed(3);
+}
 
-wavesurfer.init({
-    container: '#waveform',
-    waveColor: '#FF00FF',
-    visualization: 'spectrogram',
-    fftSamples: 256,
-});
+function createPlayBar(wavesurfer) {
+    // Create the play button
+    var playButton = $('<i>', {
+    	class: 'play_audio fa fa-play-circle',
+    });
+    playButton.click(function () {
+    	wavesurfer.playPause();
+    })
+    
+    // Add event handlers for events which change the play button
+    wavesurfer.on('play', function () {
+        playButton.removeClass('fa-play-circle').addClass('fa-stop-circle');
+    });
+    wavesurfer.on('pause', function () {
+        playButton.removeClass('fa-stop-circle').addClass('fa-play-circle');
+    });
 
-wavesurfer.on('ready', function () {
-    wavesurfer.enableDragSelection();
-});
+    // Create audio timer text
+    var timer = $('<span>', {
+        text: getTimerText(wavesurfer),
+        class: 'timer',
+    });
 
-$('.play_audio').click(function () {
-    wavesurfer.playPause(); 
-});
+    // Add event handlers for events which modify the timer text
+    var updateTimer = function () {
+        timer.text(getTimerText(wavesurfer));
+    };
+    wavesurfer.on('audioprocess', updateTimer);
+    wavesurfer.on('seek', updateTimer);
+    wavesurfer.on('finish', function () {
+    	wavesurfer.seekTo(wavesurfer.getCurrentTime() / wavesurfer.getDuration());
+    });
 
-wavesurfer.on('play', function () {
-    $('.play_audio i').removeClass('fa-play-circle').addClass('fa-stop-circle');
-});
+    // Create and append the play button and audio timer test to the play_bar div
+    var playBar = $('<div>', {
+        class: 'play_bar',
+    });
+    return playBar.append([playButton, timer]);  
+}
 
-wavesurfer.on('pause', function () {
-    $('.play_audio i').removeClass('fa-stop-circle').addClass('fa-play-circle');
-});
+function main() {
+    var wavesurfer = Object.create(WaveSurfer);
+    var height = 128;
 
-wavesurfer.load('../static/wav/traffic.wav');
+    wavesurfer.init({
+        container: '#waveform',
+        waveColor: '#FF00FF',
+        visualization: experimentData["visualization_type"],
+        fftSamples: height * 2,
+        height: height,
+    });
+
+    wavesurfer.on('ready', function () {
+        wavesurfer.enableDragSelection();
+        var playBar = createPlayBar(wavesurfer);
+        $('.annotation').append(playBar);
+    });
+    
+    wavesurfer.load(experimentData["url"]);
+}
+
+main();

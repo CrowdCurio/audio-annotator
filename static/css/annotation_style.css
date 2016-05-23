@@ -1,0 +1,36 @@
+#waveform,
+.progress_bar,
+.play_bar {   
+  width: 70%;
+}
+
+#waveform wave {
+  height: 148px !important;
+}
+
+#waveform wave canvas {
+  position: relative;
+  top: 10px !important;
+}
+.annotation {   
+  width: 80%;
+  margin: 50px auto;
+}
+
+body {
+  font-family: 'Raleway', sans-serif;
+}
+
+.play_bar {
+  margin: 10px 0px;
+  position: relative;
+}
+
+.timer {
+  position: absolute;
+  right: 0px;
+}
+
+.play_audio.fa {
+	font-size: 50px;
+}
