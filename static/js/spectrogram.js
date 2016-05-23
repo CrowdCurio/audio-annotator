@@ -97,13 +97,16 @@ WaveSurfer.util.extend(WaveSurfer.Drawer.Canvas, {
     },
 
     drawSpectrogram: function (buffer) {
+        var pixelRatio = this.params.pixelRatio || 
+                         window.devicePixelRatio || 
+                         screen.deviceXDPI / screen.logicalXDPIwindow.devicePixelRatio;
         var length = buffer.duration;
-        var height = this.params.fftSamples / 2;
+        var height = (this.params.fftSamples / 2) * pixelRatio;
         var frequenciesData = this.getFrequencies(buffer);
 
         var pixels = this.resample(frequenciesData);
 
-        var heightFactor = 1;
+        var heightFactor = pixelRatio;
 
         for (var i = 0; i < pixels.length; i++) {
             for (var j = 0; j < pixels[i].length; j++) {
