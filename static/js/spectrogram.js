@@ -2,17 +2,13 @@
 
 WaveSurfer.util.extend(WaveSurfer.Drawer.Canvas, {
     getFrequencyRGB: function(colorValue) {
-        if (colorValue < 35) {
-            return 'rgb(6, 0, 0)'; // blackish red           
-         } else if (colorValue < 80) {
-            return 'rgb(139, 0, 0)'; // dark red          
-         } else if (colorValue < 120) {
-            return 'rgb(235, 41, 0)'; // red
-         } else if (colorValue < 175){
-            return 'rgb(247, 140, 0)' // orange
-         } else  {
-            return 'rgb(255, 235, 140)'; // pale yellow
-         }
+        if (this.params.colorMap) {
+            var rgb = this.params.colorMap[colorValue];
+            return 'rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
+        } else {
+            return 'rgb(' + colorValue + ',' + colorValue + ',' + colorValue + ')';
+        }
+        
     },
 
     getFrequencies: function(buffer) {
@@ -27,11 +23,12 @@ WaveSurfer.util.extend(WaveSurfer.Drawer.Canvas, {
             return;
         }
 
-        var noverlap = this.noverlap;
+        var noverlap = this.params.noverlap;
         if (! noverlap) {
             var uniqueSamplesPerPx = buffer.length / this.width;
             noverlap = Math.max(0, Math.round(fftSamples - uniqueSamplesPerPx));
         }
+
         var fft = new WaveSurfer.FFT(fftSamples, sampleRate);
 
         var maxSlicesCount = Math.floor(bufferLength/ (fftSamples - noverlap));

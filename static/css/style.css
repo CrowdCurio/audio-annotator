@@ -1,7 +1,8 @@
 
 #waveform,
 #spectrogram,
-#invisible {   
+#invisible,
+#noverlap {   
   width: 70%;
   margin: 0px auto;
 }
@@ -9,7 +10,8 @@
 .annotation,
 .waveform_visualization,
 .spectrogram_visualization,
-.invisible_visualization {   
+.invisible_visualization,
+.noverlap_visualization {   
   width: 70%;
   margin: 50px auto;
 }
@@ -20,7 +22,8 @@
 }
 
 #spectrogram.loaded,
-#invisible.loaded {
+#invisible.loaded,
+#noverlap.loaded {
   border: 0.5px solid #D3D3D3;
 }
 

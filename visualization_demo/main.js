@@ -24,7 +24,7 @@
   function addFileEvent() {
     $("#the-file-input").change(function() {
       if (this.files.length > 0) {
-        $("#waveform, #spectrogram, #invisible").removeClass('loaded').addClass('loading');
+        $("#waveform, #spectrogram, #noverlap, #invisible").removeClass('loaded').addClass('loading');
         renderImage(this.files[0]);
       }
     });
@@ -46,11 +46,19 @@
   function main() {
     var waveform = Object.create(WaveSurfer);
     var invisible = Object.create(WaveSurfer);
-    var spectrogram = Object.create(WaveSurfer);  
+    var spectrogram = Object.create(WaveSurfer); 
+    var noverlap = Object.create(WaveSurfer);   
 
     waveform.init({
       container: '#waveform',
       waveColor: '#FF00FF',
+    });
+
+    var spectrogramColorMap = colormap({
+      colormap: 'hot',
+        nshades: 256,
+        format: 'rgb', 
+        alpha: 1    
     });
 
     spectrogram.init({
@@ -58,6 +66,16 @@
       waveColor: '#FF00FF',
       visualization: 'spectrogram',
       fftSamples: 256,
+      colorMap: spectrogramColorMap,
+    });
+
+    noverlap.init({
+      container: '#noverlap',
+      waveColor: '#FF00FF',
+      visualization: 'spectrogram',
+      fftSamples: 256,
+      noverlap: 128,
+      colorMap: spectrogramColorMap,
     });
 
     invisible.init({
@@ -65,7 +83,7 @@
       visualization: 'invisible',
     });
 
-    visualizations = [waveform, spectrogram, invisible];  
+    visualizations = [waveform, spectrogram, noverlap, invisible];  
 
     visualizations.forEach(function (wavesurfer) {
       addWaveSurferEvents(wavesurfer);
