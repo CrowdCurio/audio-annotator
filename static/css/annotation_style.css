@@ -1,7 +1,22 @@
 #waveform,
 .progress_bar,
 .play_bar {   
-  width: 70%;
+  width: 60%;
+}
+
+#waveform,
+.annotation_list {
+  display: inline-block;
+}
+
+.annotation_list {
+  width: 30%;
+  margin: 0px 50px;
+}
+
+.annotation_list {
+  position: absolute;
+  top: 0px;
 }
 
 #waveform wave {
@@ -13,12 +28,14 @@
   top: 10px !important;
 }
 .annotation {   
-  width: 80%;
+  width: 90%;
   margin: 50px auto;
+  position: relative;
 }
 
 body {
   font-family: 'Raleway', sans-serif;
+  font-weight: bold;
 }
 
 .play_bar {
@@ -29,8 +46,69 @@ body {
 .timer {
   position: absolute;
   right: 0px;
+  font-weight: normal;
 }
 
 .play_audio.fa {
 	font-size: 50px;
+}
+
+.btn_replay .fa {
+  margin: 0px 10px;
+}
+
+.creation_stage_container {
+  text-align: center;
+}
+
+.annotation .btn {
+  width: 325px;
+  color: #fff !important;
+  padding: 10px 30px !important;
+  font-weight: bold !important;
+}
+
+.btn_replay {
+  background-color: #910093;
+  border-color: #910093;
+}
+
+.btn_replay:hover{
+  background-color: #5D005E;
+  border-color: #5D005E;
+}
+
+.btn_start {
+  background-color: #18C501;
+  border-color: #18C501;
+}
+
+.btn_start:hover{
+  background-color: #118C01;
+  border-color: #118C01;
+}
+
+.btn_stop {
+  background-color: #B90042;
+  border-color: #B90042;
+}
+
+.btn_stop:hover {
+  background-color: #6E0027;
+  border-color: #6E0027;
+}
+
+.time_segment input {
+  margin: 0px 8px;
+  width: 90px !important;
+  display: inline-block;
+  font-weight: normal;
+}
+
+.time_segment span {
+  margin: 0px 8px;
+}
+
+.time_segment {
+  margin: 20px 0px;
 }

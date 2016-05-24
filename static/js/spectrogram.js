@@ -3,15 +3,15 @@
 WaveSurfer.util.extend(WaveSurfer.Drawer.Canvas, {
     getFrequencyRGB: function(colorValue) {
         if (colorValue < 35) {
-            return 'rgb(211, 211, 211)'; //grey            
+            return 'rgb(6, 0, 0)'; // blackish red           
          } else if (colorValue < 80) {
-            return 'rgb(102, 178, 255)'; //blue            
+            return 'rgb(139, 0, 0)'; // dark red          
          } else if (colorValue < 120) {
-             return 'rgb(255, 0, 255)'; //pink
+            return 'rgb(235, 41, 0)'; // red
          } else if (colorValue < 175){
-             return 'rgb(255, 0, 0)'; // red
+            return 'rgb(247, 140, 0)' // orange
          } else  {
-            return 'rgb(255, 255, 255)'; //white
+            return 'rgb(255, 235, 140)'; // pale yellow
          }
     },
 
