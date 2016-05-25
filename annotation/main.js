@@ -24,7 +24,6 @@ function addWaveSurferEvents (wavesurfer) {
 
     wavesurfer.on('region-update-end', function(region) {
     	AnnotationStages.changeStages(wavesurfer, 3, region);
-    	wavesurfer.seekTo(region.end / wavesurfer.getDuration());
     });
 }
 

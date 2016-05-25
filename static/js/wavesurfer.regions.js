@@ -111,7 +111,7 @@ WaveSurfer.Region = {
         this.start = Number(params.start) || 0;
         this.end = params.end == null ?
             // small marker-like region
-            this.start + (4 / this.wrapper.scrollWidth) * this.wavesurfer.getDuration() :
+            this.start + (4 / this.wavesurfer.drawer.width) * this.wavesurfer.getDuration() :
             Number(params.end);
         this.resize = params.resize === undefined ? true : Boolean(params.resize);
         this.drag = params.drag === undefined ? true : Boolean(params.drag);
@@ -203,7 +203,7 @@ WaveSurfer.Region = {
             regionEl.setAttribute('data-region-' + attrname, this.attributes[attrname]);
         }
 
-        var width = this.wrapper.scrollWidth;
+        var width = this.wavesurfer.drawer.width;
         this.style(regionEl, {
             position: 'absolute',
             zIndex: 2,
@@ -255,7 +255,7 @@ WaveSurfer.Region = {
             width = Math.round(this.wavesurfer.getDuration() * pxPerSec);
         }
         else {
-            width = this.wrapper.scrollWidth;
+            width = this.wavesurfer.drawer.width;
         }
 
         if (this.start < 0) {

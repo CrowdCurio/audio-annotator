@@ -1,5 +1,15 @@
 'use strict';
 
+var EventCallBacks = {
+    'region': null,
+
+    updateOnPlay: function () {
+        EventCallBacks.region.update({
+            end: wavesurfer.getCurrentTime(),
+        });
+    },
+};
+
 var Util = {
     secondsToString: function (seconds) {
         var timeStr = '00:';
@@ -39,32 +49,38 @@ var AnnotationStages = {
         my.currentStage = 1;
 
     	wavesurfer.enableDragSelection();
-    	
         
         var button = $('<button>', {
         	class: 'btn btn_start',
         	text: 'CLICK TO START A NEW ANNOTATION',
         });
         button.click(function () {
-        	my.changeStages(wavesurfer, 2);
+            var region = wavesurfer.addRegion({
+                start: wavesurfer.getCurrentTime(),
+                end: wavesurfer.getCurrentTime()
+            });
+        	my.changeStages(wavesurfer, 2, region);
         })
 
         
         return button;
     },
 
-    createStageTwo: function (wavesurfer) {
+    createStageTwo: function (wavesurfer, region) {
     	var my = this;
     	my.currentStage = 2;
 
         wavesurfer.disableDragSelection();
+        
+        EventCallBacks.region = region;
+        wavesurfer.on('audioprocess', EventCallBacks.updateOnPlay);
 
     	var button = $('<button>', {
         	class: 'btn btn_stop',
         	text: 'CLICK TO END ANNOTATION',
         });
         button.click(function () {
-        	my.changeStages(wavesurfer, 3);
+        	my.changeStages(wavesurfer, 3, region);
         })
         
         return button;
@@ -75,6 +91,7 @@ var AnnotationStages = {
     	my.currentStage = 3;
 
         wavesurfer.disableDragSelection();
+        wavesurfer.un('audioprocess', EventCallBacks.updateOnPlay);
 
         var container = $('<div>');
     	var button = $('<button>', {
@@ -108,11 +125,11 @@ var AnnotationStages = {
         if (my.currentStage === 0) {
         	newContent = my.createStageOne(wavesurfer);
         } else if (my.currentStage === 1 && newStage === 2) {
-        	newContent = my.createStageTwo(wavesurfer);
+        	newContent = my.createStageTwo(wavesurfer, region);
         } else if (my.currentStage === 1 && newStage === 3) {
         	newContent = my.createStageThree(wavesurfer, region);
         } else if (my.currentStage === 2 && newStage === 3) {
-        	newContent = my.createStageThree(wavesurfer);
+        	newContent = my.createStageThree(wavesurfer, region);
         }
 
         if (newContent) {
