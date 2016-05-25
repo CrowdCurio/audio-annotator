@@ -52,7 +52,6 @@ function main() {
     addWaveSurferEvents(wavesurfer);
 
     wavesurfer.on('ready', function () {
-        AnnotationList.createAnnotationList(wavesurfer);
         PlayBar.createPlayBar(wavesurfer);
         AnnotationStages.changeStages(wavesurfer);
     });

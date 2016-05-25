@@ -166,9 +166,3 @@ var PlayBar = {
         $('.timer').text(my.getTimerText(wavesurfer));
     }
 };
-
-var AnnotationList = {
-    createAnnotationList: function (wavesurfer) {
-
-    }
-};

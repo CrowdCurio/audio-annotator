@@ -1,17 +1,12 @@
 #waveform,
 .progress_bar,
 .play_bar {   
-  width: 60%;
+  width: 100%;
 }
 
 #waveform,
 .annotation_list {
   display: inline-block;
-}
-
-.annotation_list {
-  width: 30%;
-  margin: 0px 50px;
 }
 
 .annotation_list {
