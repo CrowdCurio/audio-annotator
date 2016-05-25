@@ -23,43 +23,43 @@ var Util = {
 }
 
 var AnnotationStages = {
-	'currentStage': 0,
+    'currentStage': 0,
 
-	createSegmentTime: function (region) {
+    createSegmentTime: function (region) {
         var timeDiv = $('<div>', {class: 'time_segment'});
         
         var start = $('<span>', {text: 'Start:'});
         var startInput = $('<input>', {
-        	type: 'text',
-        	class: 'form-control start',
-        	value: Util.secondsToString(region.start),
+            type: 'text',
+            class: 'form-control start',
+            value: Util.secondsToString(region.start),
         });
         var end = $('<span>', {text: 'End:'});
         var endInput = $('<input>', {
-        	type: 'text',
-        	class: 'form-control end',
-        	value: Util.secondsToString(region.end),
+            type: 'text',
+            class: 'form-control end',
+            value: Util.secondsToString(region.end),
         });
 
         return timeDiv.append([start, startInput, end, endInput]);
-	},
+    },
 
     createStageOne: function (wavesurfer) {
-    	var my = this;
+        var my = this;
         my.currentStage = 1;
 
-    	wavesurfer.enableDragSelection();
+        wavesurfer.enableDragSelection();
         
         var button = $('<button>', {
-        	class: 'btn btn_start',
-        	text: 'CLICK TO START A NEW ANNOTATION',
+            class: 'btn btn_start',
+            text: 'CLICK TO START A NEW ANNOTATION',
         });
         button.click(function () {
             var region = wavesurfer.addRegion({
                 start: wavesurfer.getCurrentTime(),
                 end: wavesurfer.getCurrentTime()
             });
-        	my.changeStages(wavesurfer, 2, region);
+            my.changeStages(wavesurfer, 2, region);
         })
 
         
@@ -67,32 +67,32 @@ var AnnotationStages = {
     },
 
     createStageTwo: function (wavesurfer, region) {
-    	var my = this;
-    	my.currentStage = 2;
+        var my = this;
+        my.currentStage = 2;
 
         wavesurfer.on('audioprocess', StageSpecificCallBacks.updateRegion);
         wavesurfer.on('pause', StageSpecificCallBacks.updateRegion);
 
-    	var button = $('<button>', {
-        	class: 'btn btn_stop',
-        	text: 'CLICK TO END ANNOTATION',
+        var button = $('<button>', {
+            class: 'btn btn_stop',
+            text: 'CLICK TO END ANNOTATION',
         });
         button.click(function () {
             wavesurfer.pause();
-        	my.changeStages(wavesurfer, 3, region);
+            my.changeStages(wavesurfer, 3, region);
         })
         
         return button;
     },
 
     createStageThree: function (wavesurfer, region) {
-    	var my = this;
-    	my.currentStage = 3;
+        var my = this;
+        my.currentStage = 3;
 
         var container = $('<div>');
-    	var button = $('<button>', {
-        	class: 'btn btn_replay',
-        	html: '<i class="fa fa-refresh"></i>REPLAY SEGMENT',
+        var button = $('<button>', {
+            class: 'btn btn_replay',
+            html: '<i class="fa fa-refresh"></i>REPLAY SEGMENT',
         });
         button.click(function () {
             region.play();
@@ -118,25 +118,25 @@ var AnnotationStages = {
     },
 
     createStage: function (wavesurfer, newStage, region) {
-    	var my = this;
+        var my = this;
  
         StageSpecificCallBacks.region = region;
         my.removeStageSpecificCallBacks(wavesurfer);
 
         var newContent = null;
         if (my.currentStage === 0) {
-        	newContent = my.createStageOne(wavesurfer);
+            newContent = my.createStageOne(wavesurfer);
         } else if (my.currentStage === 1 && newStage === 2) {
-        	newContent = my.createStageTwo(wavesurfer, region);
+            newContent = my.createStageTwo(wavesurfer, region);
         } else if (my.currentStage === 1 && newStage === 3) {
-        	newContent = my.createStageThree(wavesurfer, region);
+            newContent = my.createStageThree(wavesurfer, region);
         } else if (my.currentStage === 2 && newStage === 3) {
-        	newContent = my.createStageThree(wavesurfer, region);
+            newContent = my.createStageThree(wavesurfer, region);
         }
 
         if (newContent) {
             var container = $('.creation_stage_container');
-        	container.fadeOut(10, function(){
+            container.fadeOut(10, function(){
                 container.empty().append(newContent).fadeIn();
             });
         }

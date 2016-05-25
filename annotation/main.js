@@ -11,7 +11,7 @@ function addWaveSurferEvents (wavesurfer) {
     }); 
 
     wavesurfer.on('audioprocess', function () {
-    	PlayBar.updateTimer(wavesurfer);
+        PlayBar.updateTimer(wavesurfer);
     });
 
     wavesurfer.on('pause', function () {
@@ -19,7 +19,7 @@ function addWaveSurferEvents (wavesurfer) {
     });
 
     wavesurfer.on('seek', function () {
-    	PlayBar.updateTimer(wavesurfer);
+        PlayBar.updateTimer(wavesurfer);
     });
 
     wavesurfer.on('finish', function () {
@@ -28,7 +28,7 @@ function addWaveSurferEvents (wavesurfer) {
 
     //Possibly stage specific
     wavesurfer.on('region-update-end', function(region) {
-    	AnnotationStages.changeStages(wavesurfer, 3, region);
+        AnnotationStages.changeStages(wavesurfer, 3, region);
     });
 }
 
@@ -37,7 +37,7 @@ function main() {
     var height = 128;
 
     var spectrogramColorMap = colormap({
-    	colormap: 'hot',
+        colormap: 'hot',
         nshades: 256,
         format: 'rgb',
         alpha: 1    
