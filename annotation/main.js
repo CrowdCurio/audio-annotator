@@ -14,6 +14,10 @@ function addWaveSurferEvents (wavesurfer) {
     	PlayBar.updateTimer(wavesurfer);
     });
 
+    wavesurfer.on('pause', function () {
+        wavesurfer.seekTo(wavesurfer.getCurrentTime() / wavesurfer.getDuration());
+    });
+
     wavesurfer.on('seek', function () {
     	PlayBar.updateTimer(wavesurfer);
     });
@@ -22,6 +26,7 @@ function addWaveSurferEvents (wavesurfer) {
         wavesurfer.seekTo(wavesurfer.getCurrentTime() / wavesurfer.getDuration());
     });
 
+    //Possibly stage specific
     wavesurfer.on('region-update-end', function(region) {
     	AnnotationStages.changeStages(wavesurfer, 3, region);
     });

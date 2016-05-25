@@ -1,10 +1,10 @@
 'use strict';
 
-var EventCallBacks = {
+var StageSpecificCallBacks = {
     'region': null,
 
-    updateOnPlay: function () {
-        EventCallBacks.region.update({
+    updateRegion: function () {
+        StageSpecificCallBacks.region.update({
             end: wavesurfer.getCurrentTime(),
         });
     },
@@ -70,16 +70,15 @@ var AnnotationStages = {
     	var my = this;
     	my.currentStage = 2;
 
-        wavesurfer.disableDragSelection();
-        
-        EventCallBacks.region = region;
-        wavesurfer.on('audioprocess', EventCallBacks.updateOnPlay);
+        wavesurfer.on('audioprocess', StageSpecificCallBacks.updateRegion);
+        wavesurfer.on('pause', StageSpecificCallBacks.updateRegion);
 
     	var button = $('<button>', {
         	class: 'btn btn_stop',
         	text: 'CLICK TO END ANNOTATION',
         });
         button.click(function () {
+            wavesurfer.pause();
         	my.changeStages(wavesurfer, 3, region);
         })
         
@@ -90,13 +89,13 @@ var AnnotationStages = {
     	var my = this;
     	my.currentStage = 3;
 
-        wavesurfer.disableDragSelection();
-        wavesurfer.un('audioprocess', EventCallBacks.updateOnPlay);
-
         var container = $('<div>');
     	var button = $('<button>', {
         	class: 'btn btn_replay',
         	html: '<i class="fa fa-refresh"></i>REPLAY SEGMENT',
+        });
+        button.click(function () {
+            region.play();
         });
 
         var time = my.createSegmentTime(region);
@@ -121,6 +120,9 @@ var AnnotationStages = {
     createStage: function (wavesurfer, newStage, region) {
     	var my = this;
  
+        StageSpecificCallBacks.region = region;
+        my.removeStageSpecificCallBacks(wavesurfer);
+
         var newContent = null;
         if (my.currentStage === 0) {
         	newContent = my.createStageOne(wavesurfer);
@@ -138,6 +140,14 @@ var AnnotationStages = {
                 container.empty().append(newContent).fadeIn();
             });
         }
+    },
+
+    removeStageSpecificCallBacks: function (wavesurfer) {
+        wavesurfer.un('audioprocess', StageSpecificCallBacks.updateRegion);
+        wavesurfer.un('pause', StageSpecificCallBacks.updateRegion); 
+        if (wavesurfer.regions) {
+            wavesurfer.disableDragSelection();
+        }  
     },
 
     updateStage: function (wavesurfer, newStage, region) {
