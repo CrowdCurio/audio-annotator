@@ -78,7 +78,9 @@ var AnnotationStages = {
             text: 'CLICK TO END ANNOTATION',
         });
         button.click(function () {
-            wavesurfer.pause();
+            if (wavesurfer.isPlaying()) {
+                wavesurfer.pause();
+            }
             my.changeStages(wavesurfer, 3, region);
         })
         
