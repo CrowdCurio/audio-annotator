@@ -8,6 +8,11 @@ var StageSpecificCallBacks = {
             end: wavesurfer.getCurrentTime(),
         });
     },
+
+    switchToStageThree: function (region) {
+        AnnotationStages.changeStages(wavesurfer, 3, region);
+    },
+
 };
 
 var Util = {
@@ -49,6 +54,7 @@ var AnnotationStages = {
         my.currentStage = 1;
 
         wavesurfer.enableDragSelection();
+        wavesurfer.on('region-update-end', StageSpecificCallBacks.switchToStageThree);
         
         var button = $('<button>', {
             class: 'btn btn_start',
@@ -147,6 +153,7 @@ var AnnotationStages = {
     removeStageSpecificCallBacks: function (wavesurfer) {
         wavesurfer.un('audioprocess', StageSpecificCallBacks.updateRegion);
         wavesurfer.un('pause', StageSpecificCallBacks.updateRegion); 
+        wavesurfer.un('region-update-end', StageSpecificCallBacks.switchToStageThree);
         if (wavesurfer.regions) {
             wavesurfer.disableDragSelection();
         }  
