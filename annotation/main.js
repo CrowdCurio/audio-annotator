@@ -53,7 +53,11 @@ function main() {
 
     wavesurfer.on('ready', function () {
         PlayBar.createPlayBar(wavesurfer);
-        AnnotationStages.createStages(wavesurfer);
+        AnnotationStages.createStages(
+            wavesurfer, 
+            experimentData["proximity_tags"], 
+            experimentData["annotation_tags"]
+        );
     });
     
     wavesurfer.load(experimentData["url"]);

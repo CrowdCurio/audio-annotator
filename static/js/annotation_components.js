@@ -58,11 +58,11 @@ var AnnotationStages = {
     stageTwoDom: null,
     stageThreeDom: null,
 
-    createStages: function (wavesurfer) {
+    createStages: function (wavesurfer, proximityTags, annotationTags) {
         var my = this;
         my.createStageOne(wavesurfer);
         my.createStageTwo(wavesurfer);
-        my.createStageThree(wavesurfer);
+        my.createStageThree(wavesurfer, proximityTags, annotationTags);
         my.updateStage(wavesurfer, 1);
     },
 
@@ -117,7 +117,7 @@ var AnnotationStages = {
         wavesurfer.on('pause', StageSpecificCallBacks.updateRegion);
     },
 
-    createStageThree: function (wavesurfer) {
+    createStageThree: function (wavesurfer, proximityTags, annotationTags) {
         var my = this;
 
         var container = $('<div>', {class: 'stage'});
@@ -130,8 +130,41 @@ var AnnotationStages = {
         });
 
         var time = Util.createSegmentTime();
+
+        var proximityLabel = $('<div>', {
+            class: 'stage_3_label',
+            text: 'Proximity:',
+        });
+
+        var proximityContainer = $('<div>', {
+            class: 'proximity_tags'
+        });
+
+        proximityTags.forEach(function (tagName) {
+            var tag = $('<button>', {
+                class: 'proximity_tag btn',
+                text: tagName,
+            });
+            proximityContainer.append(tag);
+        })
+
+        var chooseLabel = $('<div>', {
+            class: 'stage_3_label',
+            text: 'Choose a tag:',
+        });
+
+        var customLabel = $('<div>', {
+            class: 'stage_3_label',
+            text: 'OR use a custom tag:',
+        });
+
+        var tagContainer = $('<div>', {
+            class: 'tag_container',
+        });
+
+        tagContainer.append([proximityLabel, proximityContainer, chooseLabel, customLabel])
         
-        my.stageThreeDom = container.append([button, time]);
+        my.stageThreeDom = container.append([button, time, tagContainer]);
     },
 
     appendEventListenersStageThree: function (wavesurfer) {

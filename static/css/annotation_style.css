@@ -56,7 +56,9 @@ body {
   text-align: center;
 }
 
-.annotation .btn {
+.annotation .btn_replay,
+.annotation .btn_stop,
+.annotation .btn_start {
   width: 325px;
   color: #fff !important;
   padding: 10px 30px !important;
@@ -107,3 +109,22 @@ body {
 .time_segment {
   margin: 20px 0px;
 }
+
+.tag_container {
+  text-align: left;
+}
+
+.stage_3_label {
+  width: 150px;
+  display: inline-block;
+}
+
+.proximity_tags {
+  display: inline-block;
+}
+
+.proximity_tag {
+  margin: 10px;
+  text-transform: uppercase;
+}
+
