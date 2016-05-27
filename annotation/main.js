@@ -6,9 +6,14 @@ function addWaveSurferEvents (wavesurfer) {
     wavesurfer.on('play', function () {
         $('.play_audio').removeClass('fa-play-circle').addClass('fa-stop-circle');
     });
+    
     wavesurfer.on('pause', function () {
         $('.play_audio').removeClass('fa-stop-circle').addClass('fa-play-circle');
     }); 
+
+    wavesurfer.on('seek', function () {
+        PlayBar.updateTimer(wavesurfer);
+    });
 
     wavesurfer.on('audioprocess', function () {
         PlayBar.updateTimer(wavesurfer);
@@ -16,10 +21,6 @@ function addWaveSurferEvents (wavesurfer) {
 
     wavesurfer.on('pause', function () {
         wavesurfer.seekTo(wavesurfer.getCurrentTime() / wavesurfer.getDuration());
-    });
-
-    wavesurfer.on('seek', function () {
-        PlayBar.updateTimer(wavesurfer);
     });
 
     wavesurfer.on('finish', function () {
@@ -52,7 +53,7 @@ function main() {
 
     wavesurfer.on('ready', function () {
         PlayBar.createPlayBar(wavesurfer);
-        AnnotationStages.changeStages(wavesurfer);
+        AnnotationStages.createStages(wavesurfer);
     });
     
     wavesurfer.load(experimentData["url"]);

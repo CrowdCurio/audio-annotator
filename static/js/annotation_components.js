@@ -1,22 +1,24 @@
 'use strict';
 
 var StageSpecificCallBacks = {
-    'region': null,
 
     updateRegion: function () {
-        StageSpecificCallBacks.region.update({
+        AnnotationStages.currentRegion.update({
             end: wavesurfer.getCurrentTime(),
         });
     },
 
     switchToStageThree: function (region) {
-        AnnotationStages.changeStages(wavesurfer, 3, region);
+        AnnotationStages.updateStage(wavesurfer, 3, region);
     },
 
 };
 
 var Util = {
     secondsToString: function (seconds) {
+        if (!seconds) {
+            return '';
+        }
         var timeStr = '00:';
         if (seconds > 9) {
             timeStr += seconds.toFixed(3);
@@ -24,38 +26,50 @@ var Util = {
             timeStr += '0' + seconds.toFixed(3);
         }
         return timeStr;
-    }
-}
+    },
 
-var AnnotationStages = {
-    'currentStage': 0,
-
-    createSegmentTime: function (region) {
+    createSegmentTime: function () {
         var timeDiv = $('<div>', {class: 'time_segment'});
         
         var start = $('<span>', {text: 'Start:'});
         var startInput = $('<input>', {
             type: 'text',
             class: 'form-control start',
-            value: Util.secondsToString(region.start),
         });
         var end = $('<span>', {text: 'End:'});
         var endInput = $('<input>', {
             type: 'text',
             class: 'form-control end',
-            value: Util.secondsToString(region.end),
         });
 
         return timeDiv.append([start, startInput, end, endInput]);
     },
 
+    updateSegmentTime: function (start, end) {
+        $('input.start').value(Util.secondsToString(start));
+        $('input.end').value(Util.secondsToString(end));
+    },
+}
+
+var AnnotationStages = {
+    currentStage: 0,
+    currentRegion: null,
+    stageOneDom: null,
+    stageTwoDom: null,
+    stageThreeDom: null,
+
+    createStages: function (wavesurfer) {
+        var my = this;
+        my.createStageOne(wavesurfer);
+        my.createStageTwo(wavesurfer);
+        my.createStageThree(wavesurfer);
+        my.updateStage(wavesurfer, 1);
+    },
+
     createStageOne: function (wavesurfer) {
         var my = this;
-        my.currentStage = 1;
-
-        wavesurfer.enableDragSelection();
-        wavesurfer.on('region-update-end', StageSpecificCallBacks.switchToStageThree);
         
+        var container = $('<div>', {class: 'stage'});
         var button = $('<button>', {
             class: 'btn btn_start',
             text: 'CLICK TO START A NEW ANNOTATION',
@@ -65,20 +79,23 @@ var AnnotationStages = {
                 start: wavesurfer.getCurrentTime(),
                 end: wavesurfer.getCurrentTime()
             });
-            my.changeStages(wavesurfer, 2, region);
+            my.updateStage(wavesurfer, 2, region);
         })
 
-        
-        return button;
+        var time = Util.createSegmentTime();
+
+        my.stageOneDom = container.append([button, time]);
+    },
+    
+    appendEventListenersStageOne: function (wavesurfer) {
+        wavesurfer.enableDragSelection();
+        wavesurfer.on('region-update-end', StageSpecificCallBacks.switchToStageThree);
     },
 
-    createStageTwo: function (wavesurfer, region) {
+    createStageTwo: function (wavesurfer) {
         var my = this;
-        my.currentStage = 2;
 
-        wavesurfer.on('audioprocess', StageSpecificCallBacks.updateRegion);
-        wavesurfer.on('pause', StageSpecificCallBacks.updateRegion);
-
+        var container = $('<div>', {class: 'stage'});
         var button = $('<button>', {
             class: 'btn btn_stop',
             text: 'CLICK TO END ANNOTATION',
@@ -87,66 +104,74 @@ var AnnotationStages = {
             if (wavesurfer.isPlaying()) {
                 wavesurfer.pause();
             }
-            my.changeStages(wavesurfer, 3, region);
+            my.updateStage(wavesurfer, 3, my.currentRegion);
         })
+
+        var time = Util.createSegmentTime();
         
-        return button;
+        my.stageTwoDom = container.append([button, time]);
     },
 
-    createStageThree: function (wavesurfer, region) {
-        var my = this;
-        my.currentStage = 3;
+    appendEventListenersStageTwo: function (wavesurfer) {
+        wavesurfer.on('audioprocess', StageSpecificCallBacks.updateRegion);
+        wavesurfer.on('pause', StageSpecificCallBacks.updateRegion);
+    },
 
-        var container = $('<div>');
+    createStageThree: function (wavesurfer) {
+        var my = this;
+
+        var container = $('<div>', {class: 'stage'});
         var button = $('<button>', {
             class: 'btn btn_replay',
             html: '<i class="fa fa-refresh"></i>REPLAY SEGMENT',
         });
         button.click(function () {
-            region.play();
+            my.currentRegion.play();
         });
 
-        var time = my.createSegmentTime(region);
+        var time = Util.createSegmentTime();
         
-        return container.append([button, time]);
+        my.stageThreeDom = container.append([button, time]);
     },
 
-    updateStageThree: function (wavesurfer, region) {
-        $('input.start').val(Util.secondsToString(region.start));
-        $('input.end').val(Util.secondsToString(region.end));
+    appendEventListenersStageThree: function (wavesurfer) {
+        wavesurfer.on('region-update-end', StageSpecificCallBacks.switchToStageThree);
     },
 
-    changeStages: function(wavesurfer, newStage, region) {
+    updateStage: function(wavesurfer, newStage, region) {
         var my = this;
-        if (my.currentStage === newStage) {
-            my.updateStage(wavesurfer, newStage, region);
-        } else {
-            my.createStage(wavesurfer, newStage, region);
-        }
-    },
+        my.currentRegion = region;
 
-    createStage: function (wavesurfer, newStage, region) {
-        var my = this;
- 
-        StageSpecificCallBacks.region = region;
-        my.removeStageSpecificCallBacks(wavesurfer);
+        if (my.currentStage !== newStage) {
+            var newContent = null;
+            var appendEventListeners = null;
 
-        var newContent = null;
-        if (my.currentStage === 0) {
-            newContent = my.createStageOne(wavesurfer);
-        } else if (my.currentStage === 1 && newStage === 2) {
-            newContent = my.createStageTwo(wavesurfer, region);
-        } else if (my.currentStage === 1 && newStage === 3) {
-            newContent = my.createStageThree(wavesurfer, region);
-        } else if (my.currentStage === 2 && newStage === 3) {
-            newContent = my.createStageThree(wavesurfer, region);
-        }
+            if (newStage === 1) {
+                newContent = my.stageOneDom;
+                appendEventListeners = my.appendEventListenersStageOne;
+            } else if (newStage === 2) {
+                newContent = my.stageTwoDom;
+                appendEventListeners = my.appendEventListenersStageTwo;
+            } else if (newStage === 3) {
+                newContent = my.stageThreeDom;
+                appendEventListeners = my.appendEventListenersStageThree;
+            }
 
-        if (newContent) {
-            var container = $('.creation_stage_container');
-            container.fadeOut(10, function(){
-                container.empty().append(newContent).fadeIn();
-            });
+            if (newContent && appendEventListeners) {
+                // update current stage
+                my.currentStage = newStage;
+
+                // update dom of page
+                var container = $('.creation_stage_container');
+                container.fadeOut(10, function(){
+                    $('.stage').detach();
+                    container.append(newContent).fadeIn();
+                });
+
+                // update wavesurfer events for specific stage
+                my.removeStageSpecificCallBacks(wavesurfer);
+                appendEventListeners(wavesurfer);
+            }
         }
     },
 
@@ -157,15 +182,6 @@ var AnnotationStages = {
         if (wavesurfer.regions) {
             wavesurfer.disableDragSelection();
         }  
-    },
-
-    updateStage: function (wavesurfer, newStage, region) {
-        var my = this;
-
-        if (newStage === 3) {
-            my.updateStageThree(wavesurfer, region);
-        }
-           
     },
 };
 
