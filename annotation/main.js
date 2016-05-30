@@ -1,24 +1,6 @@
 'use strict';
 
-var wavesurfer;
-
-function addWaveSurferEvents (wavesurfer) {
-    wavesurfer.on('play', function () {
-        $('.play_audio').removeClass('fa-play-circle').addClass('fa-stop-circle');
-    });
-    
-    wavesurfer.on('pause', function () {
-        $('.play_audio').removeClass('fa-stop-circle').addClass('fa-play-circle');
-    }); 
-
-    wavesurfer.on('seek', function () {
-        PlayBar.updateTimer(wavesurfer);
-    });
-
-    wavesurfer.on('audioprocess', function () {
-        PlayBar.updateTimer(wavesurfer);
-    });
-
+function addWaveSurferEvents(wavesurfer) {
     wavesurfer.on('pause', function () {
         wavesurfer.seekTo(wavesurfer.getCurrentTime() / wavesurfer.getDuration());
     });
@@ -29,8 +11,7 @@ function addWaveSurferEvents (wavesurfer) {
 }
 
 function main() {
-    wavesurfer = Object.create(WaveSurfer);
-    var height = 128;
+    var wavesurfer = Object.create(WaveSurfer);
 
     var spectrogramColorMap = colormap({
         colormap: 'hot',
@@ -39,25 +20,32 @@ function main() {
         alpha: 1    
     });
 
+    var height = 128;
     wavesurfer.init({
         container: '#waveform',
         waveColor: '#FF00FF',
         visualization: experimentData["visualization_type"],
         fftSamples: height * 2,
         height: height,
-        noverlap: 128,
         colorMap: spectrogramColorMap,
     });
 
     addWaveSurferEvents(wavesurfer);
 
+    var stages = new AnnotationStages(
+        wavesurfer, 
+        experimentData["proximity_tags"], 
+        experimentData["annotation_tags"]
+    );
+    stages.createStages();
+
+    var playBar = new PlayBar(wavesurfer);
+    playBar.createPlayBar();
+
     wavesurfer.on('ready', function () {
-        PlayBar.createPlayBar(wavesurfer);
-        AnnotationStages.createStages(
-            wavesurfer, 
-            experimentData["proximity_tags"], 
-            experimentData["annotation_tags"]
-        );
+        wavesurfer.clearRegions()
+        playBar.updateTimer();
+        stages.updateStage(1);
     });
     
     wavesurfer.load(experimentData["url"]);
