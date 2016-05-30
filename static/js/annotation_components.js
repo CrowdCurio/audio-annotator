@@ -59,11 +59,10 @@ var AnnotationStages = {
     stageThreeDom: null,
 
     createStages: function (wavesurfer, proximityTags, annotationTags) {
-        var my = this;
-        my.createStageOne(wavesurfer);
-        my.createStageTwo(wavesurfer);
-        my.createStageThree(wavesurfer, proximityTags, annotationTags);
-        my.updateStage(wavesurfer, 1);
+        this.createStageOne(wavesurfer);
+        this.createStageTwo(wavesurfer);
+        this.createStageThree(wavesurfer, proximityTags, annotationTags);
+        this.updateStage(wavesurfer, 1);
     },
 
     createStageOne: function (wavesurfer) {
@@ -84,7 +83,7 @@ var AnnotationStages = {
 
         var time = Util.createSegmentTime();
 
-        my.stageOneDom = container.append([button, time]);
+        this.stageOneDom = container.append([button, time]);
     },
     
     appendEventListenersStageOne: function (wavesurfer) {
@@ -109,7 +108,7 @@ var AnnotationStages = {
 
         var time = Util.createSegmentTime();
         
-        my.stageTwoDom = container.append([button, time]);
+        this.stageTwoDom = container.append([button, time]);
     },
 
     appendEventListenersStageTwo: function (wavesurfer) {
@@ -131,6 +130,7 @@ var AnnotationStages = {
 
         var time = Util.createSegmentTime();
 
+        var proximity = $('<div>');
         var proximityLabel = $('<div>', {
             class: 'stage_3_label',
             text: 'Proximity:',
@@ -148,23 +148,41 @@ var AnnotationStages = {
             proximityContainer.append(tag);
         })
 
+        proximity.append([proximityLabel, proximityContainer]);
+
+        var choose = $('<div>');
         var chooseLabel = $('<div>', {
             class: 'stage_3_label',
             text: 'Choose a tag:',
         });
 
+        var chooseContainer = $('<div>', {
+            class: 'annotation_tags'
+        });
+
+        annotationTags.forEach(function (tagName) {
+            var tag = $('<button>', {
+                class: 'annotation_tag btn',
+                text: tagName,
+            });
+            chooseContainer.append(tag);
+        })
+        choose.append([chooseLabel, chooseContainer]);
+
+        var custom = $('<div>');
         var customLabel = $('<div>', {
             class: 'stage_3_label',
             text: 'OR use a custom tag:',
         });
+        custom.append(customLabel);
 
         var tagContainer = $('<div>', {
             class: 'tag_container',
         });
 
-        tagContainer.append([proximityLabel, proximityContainer, chooseLabel, customLabel])
+        tagContainer.append([proximity, choose, custom])
         
-        my.stageThreeDom = container.append([button, time, tagContainer]);
+        this.stageThreeDom = container.append([button, time, tagContainer]);
     },
 
     appendEventListenersStageThree: function (wavesurfer) {
@@ -172,27 +190,26 @@ var AnnotationStages = {
     },
 
     updateStage: function(wavesurfer, newStage, region) {
-        var my = this;
-        my.currentRegion = region;
+        this.currentRegion = region;
 
-        if (my.currentStage !== newStage) {
+        if (this.currentStage !== newStage) {
             var newContent = null;
             var appendEventListeners = null;
 
             if (newStage === 1) {
-                newContent = my.stageOneDom;
-                appendEventListeners = my.appendEventListenersStageOne;
+                newContent = this.stageOneDom;
+                appendEventListeners = this.appendEventListenersStageOne;
             } else if (newStage === 2) {
-                newContent = my.stageTwoDom;
-                appendEventListeners = my.appendEventListenersStageTwo;
+                newContent = this.stageTwoDom;
+                appendEventListeners = this.appendEventListenersStageTwo;
             } else if (newStage === 3) {
-                newContent = my.stageThreeDom;
-                appendEventListeners = my.appendEventListenersStageThree;
+                newContent = this.stageThreeDom;
+                appendEventListeners = this.appendEventListenersStageThree;
             }
 
             if (newContent && appendEventListeners) {
                 // update current stage
-                my.currentStage = newStage;
+                this.currentStage = newStage;
 
                 // update dom of page
                 var container = $('.creation_stage_container');
@@ -202,7 +219,7 @@ var AnnotationStages = {
                 });
 
                 // update wavesurfer events for specific stage
-                my.removeStageSpecificCallBacks(wavesurfer);
+                this.removeStageSpecificCallBacks(wavesurfer);
                 appendEventListeners(wavesurfer);
             }
         }
@@ -226,8 +243,6 @@ var PlayBar = {
     },
 
     createPlayBar: function (wavesurfer) {
-        var my = this;
-
         // Create the play button
         var playButton = $('<i>', {
             class: 'play_audio fa fa-play-circle',
@@ -238,7 +253,7 @@ var PlayBar = {
         
         // Create audio timer text
         var timer = $('<span>', {
-            text: my.getTimerText(wavesurfer),
+            text: this.getTimerText(wavesurfer),
             class: 'timer',
         });    
 
@@ -247,7 +262,6 @@ var PlayBar = {
     },
 
     updateTimer: function (wavesurfer) {
-        var my = this;
-        $('.timer').text(my.getTimerText(wavesurfer));
+        $('.timer').text(this.getTimerText(wavesurfer));
     }
 };
