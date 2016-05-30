@@ -44,7 +44,7 @@ function main() {
 
     wavesurfer.on('ready', function () {
         wavesurfer.clearRegions()
-        playBar.updateTimer();
+        playBar.update();
         stages.updateStage(1);
     });
     

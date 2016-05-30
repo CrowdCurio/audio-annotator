@@ -217,6 +217,7 @@ AnnotationStages.prototype.addWaveSurferEvents = function() {
 
 function PlayBar(wavesurfer) {
     this.wavesurfer = wavesurfer;
+    this.playBarDom = null;
 }
 
 PlayBar.prototype.getTimerText = function() {
@@ -226,6 +227,7 @@ PlayBar.prototype.getTimerText = function() {
 
 PlayBar.prototype.createPlayBar = function() {
     var my = this;
+    this.addWaveSurferEvents();
 
     // Create the play button
     var playButton = $('<i>', {
@@ -240,10 +242,13 @@ PlayBar.prototype.createPlayBar = function() {
         class: 'timer',
     });    
 
-    // Append the play button and audio timer test to the play_bar div
-    $('.play_bar').append([playButton, timer]);
-    this.addWaveSurferEvents();
+    this.playBarDom = [playButton, timer];
 };
+
+PlayBar.prototype.update = function() {
+    $('.play_bar').empty().append(this.playBarDom)
+    this.updateTimer();
+}
 
 PlayBar.prototype.updateTimer = function() {
     $('.timer').text(this.getTimerText());
