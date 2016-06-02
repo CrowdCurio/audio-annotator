@@ -67,7 +67,8 @@ AnnotationStages.prototype.createStageOne = function() {
     button.click(function () {
         var region = my.wavesurfer.addRegion({
             start: my.wavesurfer.getCurrentTime(),
-            end: my.wavesurfer.getCurrentTime()
+            end: my.wavesurfer.getCurrentTime(),
+            drag: false
         });
         my.updateStage(2, region);
     })
@@ -89,6 +90,7 @@ AnnotationStages.prototype.createStageTwo = function() {
         if (my.wavesurfer.isPlaying()) {
             my.wavesurfer.pause();
         }
+        my.currentRegion.update({drag: true});
         my.updateStage(3, my.currentRegion);
     })
 
