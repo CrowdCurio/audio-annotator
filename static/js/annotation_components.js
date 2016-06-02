@@ -46,7 +46,7 @@ function AnnotationStages(wavesurfer, proximityTags, annotationTags) {
     this.wavesurfer = wavesurfer;
     this.proximityTags = proximityTags;
     this.annotationTags = annotationTags
-    this.colors = ['rgba(236,0,251,0.1)', 'rgba(39,117,243,0.1)', 'rgba(33,177,4,0.1)'];
+    this.colors = ['rgba(236,0,251,0.2)', 'rgba(39,117,243,0.2)', 'rgba(33,177,4,0.2)'];
 }
 
 AnnotationStages.prototype.createStages = function() {
@@ -244,7 +244,8 @@ AnnotationStages.prototype.updateStage = function(newStage, region) {
 };
 
 AnnotationStages.prototype.updateRegion = function() {
-    if (this.currentStage === 2) {
+    var current = this.wavesurfer.getCurrentTime();
+    if (this.currentStage === 2 && current > this.currentRegion.end) {
         this.currentRegion.update({
             end: this.wavesurfer.getCurrentTime(),
         });
