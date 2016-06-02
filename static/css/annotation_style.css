@@ -4,16 +4,6 @@
   width: 100%;
 }
 
-#waveform,
-.annotation_list {
-  display: inline-block;
-}
-
-.annotation_list {
-  position: absolute;
-  top: 0px;
-}
-
 #waveform wave {
   height: 148px !important;
 }
@@ -120,7 +110,8 @@ body {
 }
 
 .proximity_tags,
-.annotation_tags {
+.annotation_tags,
+.custom_tag {
   display: inline-block;
   width: 80%;
   vertical-align: top;
@@ -139,7 +130,8 @@ body {
   color: #00B1B9 !important;
 }
 
-.annotation_tag:hover {
+.annotation_tag:hover,
+.annotation_tag.selected {
   color: #fff !important;
   background-color: #00B1B9;
 }
@@ -150,10 +142,17 @@ body {
   color: #006079 !important;
 }
 
-.proximity_tag:hover {
+.proximity_tag:hover,
+.proximity_tag.selected {
   color: #fff !important;
   background-color: #006079;
 }
 .btn:focus {
   outline: none !important;
+}
+
+.custom_tag input {
+  width: 175px;
+  font-weight: normal;
+  margin: 0px 10px 10px 10px;
 }
