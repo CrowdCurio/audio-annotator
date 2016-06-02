@@ -1,41 +1,41 @@
 'use strict';
 
-var Util = {
-    secondsToString: function (seconds) {
-        if (seconds === null) {
-            return '';
-        }
-        var timeStr = '00:';
-        if (seconds > 9) {
-            timeStr += seconds.toFixed(3);
-        } else {
-            timeStr += '0' + seconds.toFixed(3);
-        }
-        return timeStr;
-    },
+function Util() {};
 
-    createSegmentTime: function () {
-        var timeDiv = $('<div>', {class: 'time_segment'});
-        
-        var start = $('<span>', {text: 'Start:'});
-        var startInput = $('<input>', {
-            type: 'text',
-            class: 'form-control start',
-        });
-        var end = $('<span>', {text: 'End:'});
-        var endInput = $('<input>', {
-            type: 'text',
-            class: 'form-control end',
-        });
+Util.secondsToString = function(seconds) {
+    if (seconds === null) {
+        return '';
+    }
+    var timeStr = '00:';
+    if (seconds > 9) {
+        timeStr += seconds.toFixed(3);
+    } else {
+        timeStr += '0' + seconds.toFixed(3);
+    }
+    return timeStr;
+};
 
-        return timeDiv.append([start, startInput, end, endInput]);
-    },
+Util.createSegmentTime = function() {
+    var timeDiv = $('<div>', {class: 'time_segment'});
+    
+    var start = $('<span>', {text: 'Start:'});
+    var startInput = $('<input>', {
+        type: 'text',
+        class: 'form-control start',
+    });
+    var end = $('<span>', {text: 'End:'});
+    var endInput = $('<input>', {
+        type: 'text',
+        class: 'form-control end',
+    });
 
-    updateSegmentTime: function (start, end) {
-        $('input.start').value(Util.secondsToString(start));
-        $('input.end').value(Util.secondsToString(end));
-    },
-}
+    return timeDiv.append([start, startInput, end, endInput]);
+};
+
+Util.updateSegmentTime = function(start, end) {
+    $('input.start').value(Util.secondsToString(start));
+    $('input.end').value(Util.secondsToString(end));
+};
 
 function AnnotationStages(wavesurfer, proximityTags, annotationTags) {
     this.currentStage = 0;
