@@ -46,6 +46,7 @@ function AnnotationStages(wavesurfer, proximityTags, annotationTags) {
     this.wavesurfer = wavesurfer;
     this.proximityTags = proximityTags;
     this.annotationTags = annotationTags
+    this.colors = ['rgba(236,0,251,0.1)', 'rgba(39,117,243,0.1)', 'rgba(33,177,4,0.1)'];
 }
 
 AnnotationStages.prototype.createStages = function() {
@@ -96,6 +97,93 @@ AnnotationStages.prototype.createStageTwo = function() {
     this.stageTwoDom = container.append([button, time]);
 };
 
+AnnotationStages.prototype.createProximityTags = function() {
+    var my = this;
+
+    var proximity = $('<div>');
+    var proximityLabel = $('<div>', {
+        class: 'stage_3_label',
+        text: 'Proximity:',
+    });
+
+    var proximityContainer = $('<div>', {
+        class: 'proximity_tags'
+    });
+
+    this.proximityTags.forEach(function (tagName, index) {
+        var tag = $('<button>', {
+            class: 'proximity_tag btn',
+            text: tagName,
+        });
+        tag.click(function() {
+            my.currentRegion.proximity = tagName;
+            my.currentRegion.update({color: my.colors[index]})
+            $('.proximity_tag').removeClass('selected');
+            tag.addClass('selected');
+        });
+        proximityContainer.append(tag);
+    });
+
+    return proximity.append([proximityLabel, proximityContainer]);
+};
+
+AnnotationStages.prototype.createAnnotationTags = function() {
+    var my = this;
+
+    var annotation = $('<div>');
+    var annotationLabel = $('<div>', {
+        class: 'stage_3_label',
+        text: 'Choose a tag:',
+    });
+
+    var annotationContainer = $('<div>', {
+        class: 'annotation_tags'
+    });
+
+    this.annotationTags.forEach(function (tagName) {
+        var tag = $('<button>', {
+            class: 'annotation_tag btn',
+            text: tagName,
+        });
+        tag.click(function() {
+            my.currentRegion.annotation = tagName;
+            $('.custom_tag input').val('');
+            $('.annotation_tag').removeClass('selected');
+            tag.addClass('selected');
+        });
+        annotationContainer.append(tag);
+    });
+
+    return annotation.append([annotationLabel, annotationContainer]);
+};
+
+AnnotationStages.prototype.createCustomTag = function() {
+    var my = this;
+
+    var custom = $('<div>');
+    var customLabel = $('<div>', {
+        class: 'stage_3_label',
+        text: 'OR use a custom tag:',
+    });
+
+    var input = $('<input>', {
+        type: 'text',
+        class: 'form-control',
+        placeholder: 'Enter custom tag'
+    });
+    input.on('change', function() {
+        my.currentRegion.annotation = input.val();
+        $('.annotation_tag').removeClass('selected');
+    });
+
+    var customTag = $('<div>', {
+        class: 'custom_tag'
+    });
+    customTag.append(input);
+
+    return custom.append([customLabel, customTag]);
+};
+
 AnnotationStages.prototype.createStageThree = function() {
     var my = this;
 
@@ -110,57 +198,15 @@ AnnotationStages.prototype.createStageThree = function() {
 
     var time = Util.createSegmentTime();
 
-    var proximity = $('<div>');
-    var proximityLabel = $('<div>', {
-        class: 'stage_3_label',
-        text: 'Proximity:',
-    });
-
-    var proximityContainer = $('<div>', {
-        class: 'proximity_tags'
-    });
-
-    this.proximityTags.forEach(function (tagName) {
-        var tag = $('<button>', {
-            class: 'proximity_tag btn',
-            text: tagName,
-        });
-        proximityContainer.append(tag);
-    })
-
-    proximity.append([proximityLabel, proximityContainer]);
-
-    var choose = $('<div>');
-    var chooseLabel = $('<div>', {
-        class: 'stage_3_label',
-        text: 'Choose a tag:',
-    });
-
-    var chooseContainer = $('<div>', {
-        class: 'annotation_tags'
-    });
-
-    this.annotationTags.forEach(function (tagName) {
-        var tag = $('<button>', {
-            class: 'annotation_tag btn',
-            text: tagName,
-        });
-        chooseContainer.append(tag);
-    })
-    choose.append([chooseLabel, chooseContainer]);
-
-    var custom = $('<div>');
-    var customLabel = $('<div>', {
-        class: 'stage_3_label',
-        text: 'OR use a custom tag:',
-    });
-    custom.append(customLabel);
+    var proximity = this.createProximityTags();
+    var annotation = this.createAnnotationTags();
+    var custom = this.createCustomTag();
 
     var tagContainer = $('<div>', {
         class: 'tag_container',
     });
 
-    tagContainer.append([proximity, choose, custom])
+    tagContainer.append([proximity, annotation, custom])
     
     this.stageThreeDom = container.append([button, time, tagContainer]);
 };
