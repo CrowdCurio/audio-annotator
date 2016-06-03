@@ -240,6 +240,9 @@ AnnotationStages.prototype.updatedStageThreeDom = function(region) {
     var dom = this.stageThreeDom;
     $('.start', dom).val(Util.secondsToString(region.start));
     $('.end', dom).val(Util.secondsToString(region.end));
+    // Make them read only for now
+    $('.start', dom).attr('readonly', true);
+    $('.end', dom).attr('readonly', true);
     if (region.annotation) {
         var selectedTags = $('.annotation_tag', dom).filter(function() {
             return this.innerHTML === region.annotation;
