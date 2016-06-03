@@ -192,6 +192,39 @@ AnnotationStages.prototype.createCustomTag = function() {
     return custom.append([customLabel, customTag]);
 };
 
+AnnotationStages.prototype.createSaveOptions = function() {
+    var my = this;
+
+    var options = $('<div>', {class: 'option_container'});
+    var save = $('<button>', {
+        class: 'btn btn-sm save',
+        text: 'SAVE ANNOTATION',
+    });
+    save.click(function () {
+        if (my.currentRegion.annotation && my.currentRegion.proximity) {
+            my.currentRegion.update({
+                drag: false,
+                resize: false,
+            })
+            my.currentRegion.saved = true;
+            my.updateStage(1);
+        } else {
+            alert("Please select a proximity and an annotation tag");
+        }
+    });
+
+    var cancel = $('<button>', {
+        class: 'btn btn-sm cancel',
+        html: 'CANCEL<i class="fa fa-times"></i>',
+    });
+    cancel.click(function () {
+        my.currentRegion.remove();
+        my.updateStage(1);
+    });
+
+    return options.append([save, cancel])
+};
+
 AnnotationStages.prototype.createStageThree = function() {
     var my = this;
 
@@ -202,6 +235,7 @@ AnnotationStages.prototype.createStageThree = function() {
     });
     button.click(function () {
         my.currentRegion.play();
+        my.updateStage(1);
     });
 
     var time = Util.createSegmentTime();
@@ -209,12 +243,13 @@ AnnotationStages.prototype.createStageThree = function() {
     var proximity = this.createProximityTags();
     var annotation = this.createAnnotationTags();
     var custom = this.createCustomTag();
+    var options = this.createSaveOptions();
 
     var tagContainer = $('<div>', {
         class: 'tag_container',
     });
 
-    tagContainer.append([proximity, annotation, custom])
+    tagContainer.append([proximity, annotation, custom, options])
     
     this.stageThreeDom = container.append([button, time, tagContainer]);
 };
@@ -222,6 +257,7 @@ AnnotationStages.prototype.createStageThree = function() {
 AnnotationStages.prototype.updatedStageOneDom = function() {
     var dom = this.stageOneDom;
     $('.start', dom).val(Util.secondsToString(this.wavesurfer.getCurrentTime()));
+    $('.end', dom).val(Util.secondsToString(null));
     $('.start', dom).attr('readonly', true);
     $('.end', dom).attr('readonly', true);
     return dom;
@@ -238,11 +274,16 @@ AnnotationStages.prototype.updatedStageTwoDom = function(region) {
 
 AnnotationStages.prototype.updatedStageThreeDom = function(region) {
     var dom = this.stageThreeDom;
+    $('.annotation_tag', dom).removeClass('selected');
+    $('.proximity_tag', dom).removeClass('selected');
+    $('.custom_tag input', dom).val('');
+
     $('.start', dom).val(Util.secondsToString(region.start));
     $('.end', dom).val(Util.secondsToString(region.end));
     // Make them read only for now
     $('.start', dom).attr('readonly', true);
     $('.end', dom).attr('readonly', true);
+
     if (region.annotation) {
         var selectedTags = $('.annotation_tag', dom).filter(function() {
             return this.innerHTML === region.annotation;
@@ -253,11 +294,19 @@ AnnotationStages.prototype.updatedStageThreeDom = function(region) {
             $('.custom_tag input', dom).val(region.annotation); 
         }
     }
+
+    if (region.proximity) {
+        var selectedTags = $('.proximity_tag', dom).filter(function() {
+            return this.innerHTML === region.proximity;
+        });
+        selectedTags.addClass('selected');
+    }
     return dom;
 }
 
 AnnotationStages.prototype.updateStage = function(newStage, region) {
     this.currentRegion = region;
+
     if (this.currentStage !== newStage) {
         var newContent = null;
 
@@ -297,7 +346,7 @@ AnnotationStages.prototype.updateRegion = function() {
 };
 
 AnnotationStages.prototype.switchToStageThree = function(region) {
-    if (this.currentStage === 1) {
+    if (this.currentStage === 1 && !region.saved) {
         this.updateStage(3, region);
     }
 };

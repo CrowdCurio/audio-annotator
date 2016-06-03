@@ -51,8 +51,8 @@ body {
 .annotation .btn_start {
   width: 325px;
   color: #fff !important;
-  padding: 10px 30px !important;
-  font-weight: bold !important;
+  padding: 10px 30px;
+  font-weight: bold;
 }
 
 .btn_replay {
@@ -65,12 +65,14 @@ body {
   border-color: #5D005E;
 }
 
-.btn_start {
+.btn_start,
+.option_container .save {
   background-color: #18C501;
   border-color: #18C501;
 }
 
-.btn_start:hover {
+.btn_start:hover,
+.option_container .save:hover {
   background-color: #118C01;
   border-color: #118C01;
 }
@@ -155,4 +157,24 @@ body {
   width: 175px;
   font-weight: normal;
   margin: 0px 10px 10px 10px;
+}
+
+.option_container {
+  text-align: right;
+}
+
+.option_container .btn {
+  color: #fff !important;
+  margin-right: 25px;
+  padding: 5px 25px;
+  font-weight: bold;
+}
+.option_container .cancel .fa-times {
+  margin-left: 10px;
+  font-size: 14px;
+}
+
+.option_container .cancel:hover {
+  background-color: #8C8C8C;
+  border-color: #8C8C8C;
 }
