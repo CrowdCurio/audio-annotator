@@ -33,8 +33,8 @@ Util.createSegmentTime = function() {
 };
 
 Util.updateSegmentTime = function(start, end) {
-    $('input.start').value(Util.secondsToString(start));
-    $('input.end').value(Util.secondsToString(end));
+    $('input.start').val(Util.secondsToString(start));
+    $('input.end').val(Util.secondsToString(end));
 };
 
 function AnnotationStages(wavesurfer, proximityTags, annotationTags) {
@@ -46,7 +46,7 @@ function AnnotationStages(wavesurfer, proximityTags, annotationTags) {
     this.wavesurfer = wavesurfer;
     this.proximityTags = proximityTags;
     this.annotationTags = annotationTags
-    this.colors = ['rgba(236,0,251,0.1)', 'rgba(39,117,243,0.1)', 'rgba(33,177,4,0.1)'];
+    this.colors = ['rgba(236,0,251,0.2)', 'rgba(39,117,243,0.2)', 'rgba(33,177,4,0.2)'];
 }
 
 AnnotationStages.prototype.createStages = function() {
@@ -68,7 +68,10 @@ AnnotationStages.prototype.createStageOne = function() {
         var region = my.wavesurfer.addRegion({
             start: my.wavesurfer.getCurrentTime(),
             end: my.wavesurfer.getCurrentTime(),
-            drag: false
+        });
+        region.update({            
+            drag: false,
+            resize: false
         });
         my.updateStage(2, region);
     })
@@ -90,7 +93,10 @@ AnnotationStages.prototype.createStageTwo = function() {
         if (my.wavesurfer.isPlaying()) {
             my.wavesurfer.pause();
         }
-        my.currentRegion.update({drag: true});
+        my.currentRegion.update({
+            drag: true,
+            resize: true,
+        });
         my.updateStage(3, my.currentRegion);
     })
 
@@ -213,19 +219,56 @@ AnnotationStages.prototype.createStageThree = function() {
     this.stageThreeDom = container.append([button, time, tagContainer]);
 };
 
+AnnotationStages.prototype.updatedStageOneDom = function() {
+    var dom = this.stageOneDom;
+    $('.start', dom).val(Util.secondsToString(this.wavesurfer.getCurrentTime()));
+    $('.start', dom).attr('readonly', true);
+    $('.end', dom).attr('readonly', true);
+    return dom;
+}
+
+AnnotationStages.prototype.updatedStageTwoDom = function(region) {
+    var dom = this.stageTwoDom;
+    $('.start', dom).val(Util.secondsToString(region.start));
+    $('.end', dom).val(Util.secondsToString(region.end));
+    $('.start', dom).attr('readonly', true);
+    $('.end', dom).attr('readonly', true);
+    return dom;
+}
+
+AnnotationStages.prototype.updatedStageThreeDom = function(region) {
+    var dom = this.stageThreeDom;
+    $('.start', dom).val(Util.secondsToString(region.start));
+    $('.end', dom).val(Util.secondsToString(region.end));
+    // Make them read only for now
+    $('.start', dom).attr('readonly', true);
+    $('.end', dom).attr('readonly', true);
+    if (region.annotation) {
+        var selectedTags = $('.annotation_tag', dom).filter(function() {
+            return this.innerHTML === region.annotation;
+        });
+        if (selectedTags.length > 0) {
+            selectedTags.addClass('selected');       
+        } else {
+            $('.custom_tag input', dom).val(region.annotation); 
+        }
+    }
+    return dom;
+}
+
 AnnotationStages.prototype.updateStage = function(newStage, region) {
     this.currentRegion = region;
     if (this.currentStage !== newStage) {
         var newContent = null;
 
         if (newStage === 1) {
-            newContent = this.stageOneDom;
+            newContent = this.updatedStageOneDom();
             this.wavesurfer.enableDragSelection();
         } else if (newStage === 2) {
-            newContent = this.stageTwoDom;
-            this.wavesurfer.enableDragSelection();
+            newContent = this.updatedStageTwoDom(region);
+            this.wavesurfer.disableDragSelection();
         } else if (newStage === 3) {
-            newContent = this.stageThreeDom;
+            newContent = this.updatedStageThreeDom(region);
             this.wavesurfer.disableDragSelection();
         }
 
@@ -244,23 +287,40 @@ AnnotationStages.prototype.updateStage = function(newStage, region) {
 };
 
 AnnotationStages.prototype.updateRegion = function() {
-    if (this.currentStage === 2) {
+    var current = this.wavesurfer.getCurrentTime();
+    if (this.currentStage === 2 && current > this.currentRegion.end) {
         this.currentRegion.update({
             end: this.wavesurfer.getCurrentTime(),
         });
+        Util.updateSegmentTime(this.currentRegion.start, this.currentRegion.end);
     }
 };
 
 AnnotationStages.prototype.switchToStageThree = function(region) {
-    if (this.currentStage === 1 || this.currentStage === 3) {
+    if (this.currentStage === 1) {
         this.updateStage(3, region);
     }
 };
 
+AnnotationStages.prototype.updateStartEndStageThree = function() {
+    if (this.currentStage === 3) {
+        Util.updateSegmentTime(this.currentRegion.start, this.currentRegion.end);
+    }
+};
+
+AnnotationStages.prototype.updateStartInput = function() {
+    if (this.currentStage === 1) {
+        Util.updateSegmentTime(this.wavesurfer.getCurrentTime(), null);
+    }
+}
+
 AnnotationStages.prototype.addWaveSurferEvents = function() {
     this.wavesurfer.on('audioprocess', this.updateRegion.bind(this));
+    this.wavesurfer.on('audioprocess', this.updateStartInput.bind(this));
+    this.wavesurfer.on('seek', this.updateStartInput.bind(this));
     this.wavesurfer.on('pause', this.updateRegion.bind(this)); 
     this.wavesurfer.on('region-update-end', this.switchToStageThree.bind(this));
+    this.wavesurfer.on('region-update-end', this.updateStartEndStageThree.bind(this));
 };
 
 function PlayBar(wavesurfer) {
