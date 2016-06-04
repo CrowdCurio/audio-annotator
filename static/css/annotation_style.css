@@ -1,11 +1,22 @@
 #waveform,
 .progress_bar,
 .play_bar {   
-  width: 100%;
+  width: 95%;
+  margin: auto;
 }
 
 #waveform wave {
   height: 148px !important;
+  top: 20px;
+}
+
+#waveform > wave {
+  overflow: visible !important;
+}
+
+.waveform_container {
+  overflow-x: auto;
+  height: 200px; 
 }
 
 #waveform wave canvas {
@@ -13,8 +24,8 @@
   top: 10px !important;
 }
 .annotation {   
-  width: 90%;
-  margin: 50px auto;
+  width: 95%;
+  margin: 20px auto;
   position: relative;
 }
 
@@ -24,7 +35,7 @@ body {
 }
 
 .play_bar {
-  margin: 10px 0px;
+  margin: 10px auto;
   position: relative;
 }
 

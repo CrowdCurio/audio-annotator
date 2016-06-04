@@ -154,7 +154,7 @@ AnnotationStages.prototype.createAnnotationTags = function() {
             text: tagName,
         });
         tag.click(function() {
-            my.currentRegion.annotation = tagName;
+            my.currentRegion.update({annotation: tagName});
             $('.custom_tag input').val('');
             $('.annotation_tag').removeClass('selected');
             tag.addClass('selected');
@@ -180,7 +180,7 @@ AnnotationStages.prototype.createCustomTag = function() {
         placeholder: 'Enter custom tag'
     });
     input.on('change', function() {
-        my.currentRegion.annotation = input.val();
+        my.currentRegion.update({annotation: input.val()});
         $('.annotation_tag').removeClass('selected');
     });
 
@@ -235,7 +235,6 @@ AnnotationStages.prototype.createStageThree = function() {
     });
     button.click(function () {
         my.currentRegion.play();
-        my.updateStage(1);
     });
 
     var time = Util.createSegmentTime();
@@ -345,8 +344,15 @@ AnnotationStages.prototype.updateRegion = function() {
     }
 };
 
-AnnotationStages.prototype.switchToStageThree = function(region) {
+AnnotationStages.prototype.createRegionSwitchToStageThree = function(region) {
     if (this.currentStage === 1 && !region.saved) {
+        this.updateStage(3, region);
+    }
+};
+
+AnnotationStages.prototype.switchToStageThree = function(region) {
+    if (this.currentStage === 1) {
+        region.update({drag:true, resize:true});
         this.updateStage(3, region);
     }
 };
@@ -368,7 +374,8 @@ AnnotationStages.prototype.addWaveSurferEvents = function() {
     this.wavesurfer.on('audioprocess', this.updateStartInput.bind(this));
     this.wavesurfer.on('seek', this.updateStartInput.bind(this));
     this.wavesurfer.on('pause', this.updateRegion.bind(this)); 
-    this.wavesurfer.on('region-update-end', this.switchToStageThree.bind(this));
+    this.wavesurfer.on('region-dblclick', this.switchToStageThree.bind(this));
+    this.wavesurfer.on('region-update-end', this.createRegionSwitchToStageThree.bind(this));
     this.wavesurfer.on('region-update-end', this.updateStartEndStageThree.bind(this));
 };
 
