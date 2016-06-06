@@ -119,6 +119,8 @@ WaveSurfer.Region = {
         this.color = params.color || 'rgba(0, 0, 0, 0.1)';
         this.data = params.data || {};
         this.attributes = params.attributes || {};
+        this.annotation = params.annotation || '';
+        this.proximity = params.proximity || '';
 
         this.maxLength = params.maxLength;
         this.minLength = params.minLength;
@@ -161,6 +163,12 @@ WaveSurfer.Region = {
         }
         if (null != params.attributes) {
             this.attributes = params.attributes;
+        }
+        if (null != params.annotation) {
+            this.annotation = params.annotation;
+        }
+        if (null != params.proximity) {
+            this.proximity = params.proximity;
         }
 
         this.updateRender();
@@ -233,6 +241,18 @@ WaveSurfer.Region = {
             });
         }
 
+        var label = regionEl.appendChild(document.createElement('p'));
+
+        this.style(label, {
+            position: 'relative',
+            zIndex: '10',
+            top: '-20px',
+            textAlign: 'center',
+            textTransform: 'uppercase',
+            whiteSpace: 'nowrap'
+        });
+
+        this.label = label;
         this.element = this.wrapper.appendChild(regionEl);
         this.updateRender();
         this.bindEvents(regionEl);
@@ -288,6 +308,10 @@ WaveSurfer.Region = {
             }
 
             this.element.title = this.formatTime(this.start, this.end);
+        }
+
+        if (this.label != null) {
+            this.label.innerHTML = this.annotation;
         }
     },
 
@@ -345,6 +369,10 @@ WaveSurfer.Region = {
             e.preventDefault();
             my.fireEvent('click', e);
             my.wavesurfer.fireEvent('region-click', my, e);
+        });
+
+        this.label.addEventListener('click', function (e) {
+            e.stopPropagation();
         });
 
         this.element.addEventListener('dblclick', function (e) {
