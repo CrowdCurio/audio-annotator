@@ -1,3 +1,9 @@
+#!/bin/sh
+
+GENERATING_FILE="../static/js/colormap/gen_colormap.js"
+TMP_FILE="colormap.js"
+GENERATED_FILE="../static/js/colormap/colormap.min.js"
+
 if npm -v > /dev/null; then
     echo 'npm found!'
 else
@@ -27,9 +33,9 @@ else
 fi
 
 
-if browserify gen_colormap.js -o colormap.js; then
-    uglifyjs colormap.js -o colormap.min.js --comments "/license|License/"
-    rm colormap.js
+if browserify $GENERATING_FILE -o $TMP_FILE; then
+    uglifyjs $TMP_FILE -o $GENERATED_FILE --comments "/license|License/"
+    rm $TMP_FILE
     echo 'generated colormap.min.js'
 else
     echo 'failed to generate colormap.js'
