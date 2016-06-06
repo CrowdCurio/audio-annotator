@@ -180,12 +180,12 @@ body {
   padding: 5px 25px;
   font-weight: bold;
 }
-.option_container .cancel .fa-times {
+.option_container .fa {
   margin-left: 10px;
-  font-size: 14px;
 }
 
-.option_container .cancel:hover {
+.option_container .cancel:hover,
+.option_container .reset:hover {
   background-color: #8C8C8C;
   border-color: #8C8C8C;
 }

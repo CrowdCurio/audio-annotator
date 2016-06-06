@@ -371,6 +371,10 @@ WaveSurfer.Region = {
             my.wavesurfer.fireEvent('region-click', my, e);
         });
 
+        this.label.addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+
         this.element.addEventListener('dblclick', function (e) {
             e.stopPropagation();
             e.preventDefault();

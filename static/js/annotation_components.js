@@ -7,7 +7,7 @@ Util.secondsToString = function(seconds) {
         return '';
     }
     var timeStr = '00:';
-    if (seconds > 9) {
+    if (seconds >= 10) {
         timeStr += seconds.toFixed(3);
     } else {
         timeStr += '0' + seconds.toFixed(3);
@@ -43,9 +43,12 @@ function AnnotationStages(wavesurfer, proximityTags, annotationTags) {
     this.stageOneDom = null;
     this.stageTwoDom = null;
     this.stageThreeDom = null;
+    this.saveOptionsDom = null;
+    this.editOptionsDom = null;
     this.wavesurfer = wavesurfer;
     this.proximityTags = proximityTags;
-    this.annotationTags = annotationTags
+    this.annotationTags = annotationTags;
+    this.savedAnnotations = new SavedAnnotations();
     this.colors = ['rgba(236,0,251,0.2)', 'rgba(39,117,243,0.2)', 'rgba(33,177,4,0.2)'];
 }
 
@@ -205,8 +208,8 @@ AnnotationStages.prototype.createSaveOptions = function() {
             my.currentRegion.update({
                 drag: false,
                 resize: false,
-            })
-            my.currentRegion.saved = true;
+            });
+            my.savedAnnotations.save(my.currentRegion);
             my.updateStage(1);
         } else {
             alert("Please select a proximity and an annotation tag");
@@ -215,14 +218,58 @@ AnnotationStages.prototype.createSaveOptions = function() {
 
     var cancel = $('<button>', {
         class: 'btn btn-sm cancel',
-        html: 'CANCEL<i class="fa fa-times"></i>',
+        html: 'CANCEL<i class="fa fa-remove"></i>',
     });
     cancel.click(function () {
+        my.savedAnnotations.delete(my.currentRegion);
         my.currentRegion.remove();
         my.updateStage(1);
     });
 
     return options.append([save, cancel])
+};
+
+AnnotationStages.prototype.createEditOptions = function() {
+    var my = this;
+
+    var options = $('<div>', {class: 'option_container'});
+    var save = $('<button>', {
+        class: 'btn btn-sm save',
+        text: 'SAVE CHANGES',
+    });
+    save.click(function () {
+        if (my.currentRegion.annotation && my.currentRegion.proximity) {
+            my.currentRegion.update({
+                drag: false,
+                resize: false,
+            });
+            my.savedAnnotations.save(my.currentRegion);
+            my.updateStage(1);
+        } else {
+            alert("Please select a proximity and an annotation tag");
+        }
+    });
+
+    var reset = $('<button>', {
+        class: 'btn btn-sm reset',
+        html: 'RESET CHANGES<i class="fa fa-reply"></i>',
+    });
+    reset.click(function () {
+        my.savedAnnotations.restore(my.currentRegion);
+    });
+
+    var remove = $('<button>', {
+        class: 'btn btn-sm btn-danger remove',
+        html: 'DELETE<i class="fa fa-trash"></i>',
+    });
+    remove.click(function () {
+        my.savedAnnotations.delete(my.currentRegion);
+        my.currentRegion.remove();
+        my.updateStage(1);
+    });
+
+
+    return options.append([save, reset, remove]);
 };
 
 AnnotationStages.prototype.createStageThree = function() {
@@ -242,15 +289,16 @@ AnnotationStages.prototype.createStageThree = function() {
     var proximity = this.createProximityTags();
     var annotation = this.createAnnotationTags();
     var custom = this.createCustomTag();
-    var options = this.createSaveOptions();
 
     var tagContainer = $('<div>', {
         class: 'tag_container',
     });
 
-    tagContainer.append([proximity, annotation, custom, options])
+    tagContainer.append([proximity, annotation, custom])
     
     this.stageThreeDom = container.append([button, time, tagContainer]);
+    this.saveOptionsDom = this.createSaveOptions();
+    this.editOptionsDom = this.createEditOptions();
 };
 
 AnnotationStages.prototype.updatedStageOneDom = function() {
@@ -271,17 +319,13 @@ AnnotationStages.prototype.updatedStageTwoDom = function(region) {
     return dom;
 }
 
-AnnotationStages.prototype.updatedStageThreeDom = function(region) {
-    var dom = this.stageThreeDom;
+AnnotationStages.prototype.updateTags = function(region, dom) {
+    if (!dom) {
+        dom = document;
+    }
     $('.annotation_tag', dom).removeClass('selected');
     $('.proximity_tag', dom).removeClass('selected');
     $('.custom_tag input', dom).val('');
-
-    $('.start', dom).val(Util.secondsToString(region.start));
-    $('.end', dom).val(Util.secondsToString(region.end));
-    // Make them read only for now
-    $('.start', dom).attr('readonly', true);
-    $('.end', dom).attr('readonly', true);
 
     if (region.annotation) {
         var selectedTags = $('.annotation_tag', dom).filter(function() {
@@ -300,8 +344,27 @@ AnnotationStages.prototype.updatedStageThreeDom = function(region) {
         });
         selectedTags.addClass('selected');
     }
+}
+
+AnnotationStages.prototype.updatedStageThreeDom = function(region) {
+    var dom = this.stageThreeDom;
+
+    this.updateTags(region, dom);
+
+    $('.option_container', dom).detach();
+    var options = this.savedAnnotations.isSaved(region) ? this.editOptionsDom : this.saveOptionsDom;
+    $('.tag_container', dom).append(options);
+
+    $('.start', dom).val(Util.secondsToString(region.start));
+    $('.end', dom).val(Util.secondsToString(region.end));
+    // Make them read only for now
+    $('.start', dom).attr('readonly', true);
+    $('.end', dom).attr('readonly', true);
+
     return dom;
 }
+
+
 
 AnnotationStages.prototype.updateStage = function(newStage, region) {
     this.currentRegion = region;
@@ -345,7 +408,7 @@ AnnotationStages.prototype.updateRegion = function() {
 };
 
 AnnotationStages.prototype.createRegionSwitchToStageThree = function(region) {
-    if (this.currentStage === 1 && !region.saved) {
+    if (this.currentStage === 1 && !this.savedAnnotations.isSaved(region)) {
         this.updateStage(3, region);
     }
 };
@@ -377,6 +440,8 @@ AnnotationStages.prototype.addWaveSurferEvents = function() {
     this.wavesurfer.on('region-dblclick', this.switchToStageThree.bind(this));
     this.wavesurfer.on('region-update-end', this.createRegionSwitchToStageThree.bind(this));
     this.wavesurfer.on('region-update-end', this.updateStartEndStageThree.bind(this));
+    this.wavesurfer.on('region-updated', this.updateStartEndStageThree.bind(this));
+    this.wavesurfer.on('region-updated', this.updateTags.bind(this));
 };
 
 function PlayBar(wavesurfer) {
@@ -436,4 +501,32 @@ PlayBar.prototype.addWaveSurferEvents = function() {
     this.wavesurfer.on('audioprocess', function () {
         my.updateTimer();
     });
+}
+
+function SavedAnnotations() {
+    this.annotations = {};
+}
+
+SavedAnnotations.prototype.save = function(region) {
+    this.annotations[region.id] = {
+        start: region.start,
+        end: region.end,
+        annotation: region.annotation,
+        proximity: region.proximity,
+        color: region.color
+    };
+}
+
+SavedAnnotations.prototype.restore = function(region) {
+    if (this.isSaved(region)) {
+        region.update(this.annotations[region.id]);
+    }
+}
+
+SavedAnnotations.prototype.delete = function(region) {
+    delete this.annotations[region.id];
+}
+
+SavedAnnotations.prototype.isSaved = function(region) {
+    return region.id in this.annotations;
 }
