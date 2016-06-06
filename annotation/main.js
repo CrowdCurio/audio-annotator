@@ -14,7 +14,7 @@ function main() {
     var wavesurfer = Object.create(WaveSurfer);
 
     var spectrogramColorMap = colormap({
-        colormap: 'hot',
+        colormap: magma,
         nshades: 256,
         format: 'rgb',
         alpha: 1    
