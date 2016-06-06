@@ -32,5 +32,5 @@ if browserify gen_colormap.js -o colormap.js; then
     rm colormap.js
     echo 'generated colormap.min.js'
 else
-    echo 'failed to generat colormap.js'
+    echo 'failed to generate colormap.js'
 fi
