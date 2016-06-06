@@ -11,7 +11,6 @@ function addWaveSurferEvents(wavesurfer) {
 }
 
 function main() {
-
     var wavesurfer = Object.create(WaveSurfer);
 
     var spectrogramColorMap = colormap({
@@ -24,10 +23,10 @@ function main() {
     var height = 128;
     wavesurfer.init({
         container: '#waveform',
+        waveColor: '#FF00FF',
         visualization: experimentData["visualization_type"],
         fftSamples: height * 2,
         height: height,
-        waveColor: '#FF00FF',
         colorMap: spectrogramColorMap,
     });
 
