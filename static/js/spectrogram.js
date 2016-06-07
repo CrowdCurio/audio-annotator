@@ -1,5 +1,16 @@
+/*! wavesurfer.js 1.1.1 (Mon, 04 Apr 2016 09:49:47 GMT)
+* https://github.com/katspaugh/wavesurfer.js
+* @license CC-BY-3.0 */
+
 'use strict';
 
+/**
+ * Add methods getFrequencyRGB, getFrequencies, resample, drawSpectrogram 
+ * to WaveSurfer.Drawer.Canvas. These methods are modified versions from the the 
+ * spectrogram plugin to allow the wavesurfer drawer to draw a spectrogram representation 
+ * when this.params.visualization is set to "spectrogram"
+ * (https://github.com/katspaugh/wavesurfer.js/blob/master/plugin/wavesurfer.spectrogram.js)
+ */
 WaveSurfer.util.extend(WaveSurfer.Drawer.Canvas, {
     getFrequencyRGB: function(colorValue) {
         if (this.params.colorMap) {
@@ -114,6 +125,10 @@ WaveSurfer.util.extend(WaveSurfer.Drawer.Canvas, {
     },
 });
 
+/** 
+ * Override the method WaveSurfer.drawBuffer to pass in the this.backend.buffer to
+ * WaveSurfer.Drawer.drawPeaks since the buffer is needed to draw the spectrogram
+ */
 WaveSurfer.util.extend(WaveSurfer, {
     drawBuffer: function () {
         var nominalWidth = Math.round(
@@ -133,6 +148,10 @@ WaveSurfer.util.extend(WaveSurfer, {
     },
 });
 
+/** 
+ * Override the methods WaveSurfer.Drawer.drawPeaks to support invisible and 
+ * spectrogram representations
+ */
 WaveSurfer.util.extend(WaveSurfer.Drawer, {
     drawPeaks: function (peaks, length, buffer) {
         this.resetScroll();

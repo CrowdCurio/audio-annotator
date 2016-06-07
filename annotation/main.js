@@ -1,18 +1,26 @@
 'use strict';
 
-function addWaveSurferEvents(wavesurfer) {
-    wavesurfer.on('pause', function () {
-        wavesurfer.seekTo(wavesurfer.getCurrentTime() / wavesurfer.getDuration());
-    });
+function addWaveSurferEvents(wavesurfer, playBar, stages) {
+    var updateProgressBar = function () {
+        var progress = wavesurfer.getCurrentTime() / wavesurfer.getDuration();
+        wavesurfer.seekTo(progress);
+    };
+    // Update progress bar to the currentTime when the sound clip is 
+    // finished or paused since it is only updated on audioprocess
+    wavesurfer.on('pause', updateProgressBar);
+    wavesurfer.on('finish', updateProgressBar);
 
-    wavesurfer.on('finish', function () {
-        wavesurfer.seekTo(wavesurfer.getCurrentTime() / wavesurfer.getDuration());
+    // When a new sound file is loaded into the wavesurfer update the regions 
+    // on the wavesurfer obj, and update the play bar and annotations stages
+    wavesurfer.on('ready', function () {
+        wavesurfer.clearRegions()
+        playBar.update();
+        stages.updateStage(1);
     });
 }
 
 function main() {
-    var wavesurfer = Object.create(WaveSurfer);
-
+    // Create color map for spectrogram
     var spectrogramColorMap = colormap({
         colormap: magma,
         nshades: 256,
@@ -20,18 +28,24 @@ function main() {
         alpha: 1    
     });
 
+    // Create wavesurfer
     var height = 128;
+    var wavesurfer = Object.create(WaveSurfer);
     wavesurfer.init({
         container: '#waveform',
         waveColor: '#FF00FF',
         visualization: experimentData["visualization_type"],
+        // For the spectrogram the height is half the number of fftSamples
         fftSamples: height * 2,
         height: height,
-        colorMap: spectrogramColorMap,
+        colorMap: spectrogramColorMap
     });
 
-    addWaveSurferEvents(wavesurfer);
+    // Create the play button and time that appear below the wavesurfer
+    var playBar = new PlayBar(wavesurfer);
+    playBar.createPlayBar();
 
+    // Create the annotation stages that appear below the wavesurfer
     var stages = new AnnotationStages(
         wavesurfer, 
         experimentData["proximity_tags"], 
@@ -39,15 +53,8 @@ function main() {
     );
     stages.createStages();
 
-    var playBar = new PlayBar(wavesurfer);
-    playBar.createPlayBar();
-
-    wavesurfer.on('ready', function () {
-        wavesurfer.clearRegions()
-        playBar.update();
-        stages.updateStage(1);
-    });
-    
+    addWaveSurferEvents(wavesurfer, playBar, stages);
+    // Load sound file into wavesurfer
     wavesurfer.load(experimentData["url"]);
 }
 

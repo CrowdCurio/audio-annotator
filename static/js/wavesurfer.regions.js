@@ -1,4 +1,14 @@
+/*! wavesurfer.js 1.1.1 (Mon, 04 Apr 2016 09:49:47 GMT)
+* https://github.com/katspaugh/wavesurfer.js
+* @license CC-BY-3.0 */
 'use strict';
+
+/**
+ * Modifications
+ * - To fix issue when draging region past the end of the wavesurfer representation
+ *   this.wrapper.scrollWidth => this.wavesurfer.drawer.width
+ * - Added this.proximity and this.annotation fields
+ */
 
 /* Regions manager */
 WaveSurfer.Regions = {
@@ -249,6 +259,8 @@ WaveSurfer.Region = {
             top: '-20px',
             textAlign: 'center',
             textTransform: 'uppercase',
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
             whiteSpace: 'nowrap'
         });
 
