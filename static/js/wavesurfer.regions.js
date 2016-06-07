@@ -6,7 +6,8 @@
 /**
  * Modifications
  * - To fix issue when draging region past the end of the wavesurfer representation
- *   this.wrapper.scrollWidth => this.wavesurfer.drawer.width
+ *   by saving wavesurfer.drawer.wrapper.scrollWidth to this.width on init since
+ *   wavesurfer.drawer.wrapper.scrollWidth changes as regions are dragged outside 
  * - Added this.proximity and this.annotation fields
  */
 
@@ -116,12 +117,13 @@ WaveSurfer.Region = {
     init: function (params, wavesurfer) {
         this.wavesurfer = wavesurfer;
         this.wrapper = wavesurfer.drawer.wrapper;
+        this.width = wavesurfer.drawer.wrapper.scrollWidth;
 
         this.id = params.id == null ? WaveSurfer.util.getId() : params.id;
         this.start = Number(params.start) || 0;
         this.end = params.end == null ?
             // small marker-like region
-            this.start + (4 / this.wavesurfer.drawer.width) * this.wavesurfer.getDuration() :
+            this.start + (4 / this.width) * this.wavesurfer.getDuration() :
             Number(params.end);
         this.resize = params.resize === undefined ? true : Boolean(params.resize);
         this.drag = params.drag === undefined ? true : Boolean(params.drag);
@@ -221,7 +223,7 @@ WaveSurfer.Region = {
             regionEl.setAttribute('data-region-' + attrname, this.attributes[attrname]);
         }
 
-        var width = this.wavesurfer.drawer.width;
+        var width = this.width;
         this.style(regionEl, {
             position: 'absolute',
             zIndex: 2,
@@ -287,7 +289,7 @@ WaveSurfer.Region = {
             width = Math.round(this.wavesurfer.getDuration() * pxPerSec);
         }
         else {
-            width = this.wavesurfer.drawer.width;
+            width = this.width;
         }
 
         if (this.start < 0) {
