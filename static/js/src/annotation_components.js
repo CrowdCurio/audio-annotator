@@ -1,52 +1,54 @@
 'use strict';
 
-function Util() {};
+var Util = {
+    secondsToString: function(seconds) {
+        if (seconds === null) {
+            return '';
+        }
+        var timeStr = '00:';
+        if (seconds >= 10) {
+            timeStr += seconds.toFixed(3);
+        } else {
+            timeStr += '0' + seconds.toFixed(3);
+        }
+        return timeStr;
+    },
 
-Util.secondsToString = function(seconds) {
-    if (seconds === null) {
-        return '';
+    createSegmentTime: function() {
+        var timeDiv = $('<div>', {class: 'time_segment'});
+        
+        var start = $('<span>', {text: 'Start:'});
+        var startInput = $('<input>', {
+            type: 'text',
+            class: 'form-control start',
+            readonly: true
+        });
+        var end = $('<span>', {text: 'End:'});
+        var endInput = $('<input>', {
+            type: 'text',
+            class: 'form-control end',
+            readonly: true
+        });
+
+        return timeDiv.append([start, startInput, end, endInput]);
     }
-    var timeStr = '00:';
-    if (seconds >= 10) {
-        timeStr += seconds.toFixed(3);
-    } else {
-        timeStr += '0' + seconds.toFixed(3);
-    }
-    return timeStr;
-};
-
-Util.createSegmentTime = function() {
-    var timeDiv = $('<div>', {class: 'time_segment'});
-    
-    var start = $('<span>', {text: 'Start:'});
-    var startInput = $('<input>', {
-        type: 'text',
-        class: 'form-control start',
-        readonly: true
-    });
-    var end = $('<span>', {text: 'End:'});
-    var endInput = $('<input>', {
-        type: 'text',
-        class: 'form-control end',
-        readonly: true
-    });
-
-    return timeDiv.append([start, startInput, end, endInput]);
 };
 
 function StageOneView() {
     this.dom = null;
-    this.clickStartAnnotation = null;
 }
 
 StageOneView.prototype = {
     create: function() {
+        var my = this;
         var container = $('<div>', {class: 'stage'});
         var button = $('<button>', {
             class: 'btn btn_start',
             text: 'CLICK TO START A NEW ANNOTATION',
         });
-        button.click(this.clickStartAnnotation);
+        button.click(function () {
+            $(my).trigger('start-annotation');
+        });
 
         var time = Util.createSegmentTime();
 
@@ -61,17 +63,19 @@ StageOneView.prototype = {
 
 function StageTwoView() {
     this.dom = null;
-    this.clickStopAnnotation = null;
 }
 
 StageTwoView.prototype = {
     create: function() {
+        var my = this;
         var container = $('<div>', {class: 'stage'});
         var button = $('<button>', {
             class: 'btn btn_stop',
             text: 'CLICK TO END ANNOTATION',
         });
-        button.click(this.clickStopAnnotation);
+        button.click(function () {
+            $(my).trigger('stop-annotation');
+        });
 
         var time = Util.createSegmentTime();
         
@@ -88,36 +92,26 @@ function StageThreeView() {
     this.dom = null;
     this.saveOptionsDom = null;
     this.editOptionsDom = null;
-    this.clickReplay = null;
-    this.clickSave = null;
-    this.clickCancel = null;
-    this.clickReset = null;
-    this.clickDelete = null;
-    this.clickProximityTag = null;
-    this.clickAnnotationTag = null;
-    this.inputCustomTag = null;
+    this.colors = ['rgba(236,0,251,0.2)', 'rgba(39,117,243,0.2)', 'rgba(33,177,4,0.2)'];
 }
 
 StageThreeView.prototype = {
-    create: function(proximityTags, annotationTags) {
+    create: function() {
+        var my = this;
         var container = $('<div>', {class: 'stage'});
         var button = $('<button>', {
             class: 'btn btn_replay',
             html: '<i class="fa fa-refresh"></i>REPLAY SEGMENT',
         });
-        button.click(this.clickReplay);
+        button.click(function() {
+            $(my).trigger('replay');
+        });
 
         var time = Util.createSegmentTime();
-
-        var proximity = this.createProximityTags(proximityTags);
-        var annotation = this.createAnnotationTags(annotationTags);
-        var custom = this.createCustomTag();
 
         var tagContainer = $('<div>', {
             class: 'tag_container',
         });
-
-        tagContainer.append([proximity, annotation, custom]);
         
         this.dom = container.append([button, time, tagContainer]);
         this.saveOptionsDom = this.createSaveOptions();
@@ -125,41 +119,53 @@ StageThreeView.prototype = {
     },
 
     createSaveOptions: function() {
+        var my = this;
         var options = $('<div>', {class: 'option_container'});
         var save = $('<button>', {
             class: 'btn btn-sm save',
             text: 'SAVE ANNOTATION',
         });
-        save.click(this.clickSave);
+        save.click(function() {
+            $(my).trigger('save');
+        });
 
         var cancel = $('<button>', {
             class: 'btn btn-sm cancel',
             html: 'CANCEL<i class="fa fa-remove"></i>',
         });
-        cancel.click(this.clickCancel);
+        cancel.click(function() {
+            $(my).trigger('cancel-create');
+        });
 
         return options.append([save, cancel])
     },
 
     createEditOptions: function() {
+        var my = this;
         var options = $('<div>', {class: 'option_container'});
         var save = $('<button>', {
             class: 'btn btn-sm save',
             text: 'SAVE CHANGES',
         });
-        save.click(this.clickSave);
+        save.click(function() {
+            $(my).trigger('save');
+        });
 
         var reset = $('<button>', {
             class: 'btn btn-sm reset',
             html: 'RESET CHANGES<i class="fa fa-reply"></i>',
         });
-        reset.click(this.clickReset);
+        reset.click(function() {
+            $(my).trigger('reset');
+        });
 
         var remove = $('<button>', {
             class: 'btn btn-sm btn-danger remove',
             html: 'DELETE<i class="fa fa-trash"></i>',
         });
-        remove.click(this.clickDelete);
+        remove.click(function() {
+            $(my).trigger('delete');
+        });
 
 
         return options.append([save, reset, remove]);
@@ -183,7 +189,12 @@ StageThreeView.prototype = {
                 class: 'proximity_tag btn',
                 text: tagName,
             });
-            tag.click(my.clickProximityTag);
+            tag.click(function() {
+                $(my).trigger(
+                    'change-tag', 
+                    [{proximity: tagName, color: my.colors[index]}]
+                );
+            });
             proximityContainer.append(tag);
         });
 
@@ -208,7 +219,9 @@ StageThreeView.prototype = {
                 class: 'annotation_tag btn',
                 text: tagName,
             });
-            tag.click(my.clickAnnotationTag);
+            tag.click(function() {
+                $(my).trigger('change-tag', [{annotation: tagName}]);
+            });
             annotationContainer.append(tag);
         });
 
@@ -229,7 +242,9 @@ StageThreeView.prototype = {
             class: 'form-control',
             placeholder: 'Enter custom tag'
         });
-        input.on('change', this.inputCustomTag);
+        input.on('change', function(e) {
+            $(my).trigger('change-tag', [{annotation: e.target.value}]);
+        });
 
         var customTag = $('<div>', {
             class: 'custom_tag'
@@ -241,11 +256,11 @@ StageThreeView.prototype = {
 
     update: function(region, isSaved) {
         this.updateTime(region);
-        this.updateTags(region);
+        this.updateSelectedTags(region);
 
         $('.option_container', this.dom).detach();
         var options = isSaved ? this.editOptionsDom : this.saveOptionsDom;
-        $('.tag_container', this.dom).append(options);
+        $(this.dom).append(options);
     },
 
     updateTime: function(region) {
@@ -253,7 +268,7 @@ StageThreeView.prototype = {
         $('.end', this.dom).val(Util.secondsToString(region.end));
     },
 
-    updateTags: function(region) {
+    updateSelectedTags: function(region) {
         $('.annotation_tag', this.dom).removeClass('selected');
         $('.proximity_tag', this.dom).removeClass('selected');
         $('.custom_tag input', this.dom).val('');
@@ -276,27 +291,29 @@ StageThreeView.prototype = {
             selectedTags.addClass('selected');
         }
     },
+
+    updateTagContents: function(proximityTags, annotationTags) {
+        $('.tag_container', this.dom).empty();
+        var proximity = this.createProximityTags(proximityTags);
+        var annotation = this.createAnnotationTags(annotationTags);
+        var custom = this.createCustomTag();
+        $('.tag_container', this.dom).append([proximity, annotation, custom]);
+    },
 };
 
 
-function AnnotationStages(wavesurfer, proximityTags, annotationTags, colors) {
+function AnnotationStages(wavesurfer) {
     this.currentStage = 0;
     this.currentRegion = null;
     this.stageOneView = new StageOneView();
     this.stageTwoView = new StageTwoView();
     this.stageThreeView = new StageThreeView();
     this.wavesurfer = wavesurfer;
-    this.proximityTags = proximityTags;
-    this.annotationTags = annotationTags;
     this.savedAnnotations = new SavedAnnotations();
-    this.colors = {};
-    this.colors[proximityTags[0]] = 'rgba(236,0,251,0.2)';
-    this.colors[proximityTags[1]] = 'rgba(39,117,243,0.2)';
-    this.colors[proximityTags[2]] = 'rgba(33,177,4,0.2)';
 }
 
 AnnotationStages.prototype = {
-    createStages: function() {
+    create: function() {
         // Add events
         this.addStageOneEvents();
         this.addStageTwoEvents();
@@ -306,46 +323,79 @@ AnnotationStages.prototype = {
         // Create dom
         this.stageOneView.create();
         this.stageTwoView.create();
-        this.stageThreeView.create(this.proximityTags, this.annotationTags);
+        this.stageThreeView.create();
+
+    },
+
+    swapRegion: function(newStage, region) {
+        if (this.currentRegion) {
+            this.currentRegion.update({drag: false, resize: false});
+            $(this.currentRegion.element).removeClass('current_region');
+        }
+        if (region) {
+            if (newStage === 2) {
+                region.update({drag: false, resize: false});
+            } else if (newStage === 3) {
+                region.update({drag: true, resize: true});
+                $(region.element).addClass('current_region');
+            }
+        }
+        this.currentRegion = region;
 
     },
 
     updateStage: function(newStage, region) {
-        this.currentRegion = region;
+        this.swapRegion(newStage, region);
 
-        if (this.currentStage !== newStage) {
-            var newContent = null;
-
-            if (newStage === 1) {
-                this.stageOneView.update(this.wavesurfer.getCurrentTime());
-                newContent = this.stageOneView.dom;
+        var newContent = null;
+        if (newStage === 1) {
+            this.stageOneView.update(this.wavesurfer.getCurrentTime());
+            newContent = this.stageOneView.dom;
+            if (this.currentStage !== 1) {
                 this.wavesurfer.enableDragSelection();
-            } else if (newStage === 2) {
-                this.stageTwoView.update(region);
-                newContent = this.stageTwoView.dom;
-                this.wavesurfer.disableDragSelection();
-            } else if (newStage === 3) {
-                var isSaved = this.savedAnnotations.isSaved(region)
-                this.stageThreeView.update(region, isSaved);
-                newContent = this.stageThreeView.dom;
-                this.wavesurfer.disableDragSelection();
             }
-
-            if (newContent) {
-                // update current stage
-                this.currentStage = newStage;
-
-                // update dom of page
-                var container = $('.creation_stage_container');
-                container.fadeOut(10, function(){
-                    $('.stage').detach();
-                    container.append(newContent).fadeIn();
-                });
-            }
+        } else if (newStage === 2) {
+            this.stageTwoView.update(region);
+            newContent = this.stageTwoView.dom;
+            this.wavesurfer.disableDragSelection();
+        } else if (newStage === 3) {
+            var isSaved = this.savedAnnotations.isSaved(region)
+            this.stageThreeView.update(region, isSaved);
+            newContent = this.stageThreeView.dom;
+            this.wavesurfer.disableDragSelection();
         }
+
+        if (newContent) {
+            // update current stage
+            this.currentStage = newStage;
+
+            // update dom of page
+            var container = $('.creation_stage_container');
+            container.fadeOut(10, function(){
+                $('.stage').detach();
+                container.append(newContent).fadeIn();
+            });
+        }
+
+        $(this).trigger('stage-updated', [this.currentStage, this.savedAnnotations.getLength()]);
     },
 
-    updateRegion: function() {
+    reset: function(proximityTags, annotationTags) {
+        // Clear Regions
+        this.savedAnnotations = new SavedAnnotations();
+        this.wavesurfer.clearRegions();
+        // Update all Tags' Contents
+        this.updateContentsTags(proximityTags, annotationTags)
+    },
+
+    updateContentsTags: function(proximityTags, annotationTags) {
+        this.stageThreeView.updateTagContents(
+            proximityTags,
+            annotationTags
+        );
+    },
+
+    updateEndOfRegion: function() {
         var current = this.wavesurfer.getCurrentTime();
         if (this.currentStage === 2 && current > this.currentRegion.end) {
             this.currentRegion.update({
@@ -363,7 +413,6 @@ AnnotationStages.prototype = {
 
     switchToStageThree: function(region) {
         if (this.currentStage === 1) {
-            region.update({drag:true, resize:true});
             this.updateStage(3, region);
         }
     },
@@ -385,10 +434,6 @@ AnnotationStages.prototype = {
             start: this.wavesurfer.getCurrentTime(),
             end: this.wavesurfer.getCurrentTime(),
         });
-        region.update({            
-            drag: false,
-            resize: false
-        });
         this.updateStage(2, region);
     },
 
@@ -396,10 +441,6 @@ AnnotationStages.prototype = {
         if (this.wavesurfer.isPlaying()) {
             this.wavesurfer.pause();
         }
-        this.currentRegion.update({
-            drag: true,
-            resize: true,
-        });
         this.updateStage(3, this.currentRegion);
     },
 
@@ -409,21 +450,11 @@ AnnotationStages.prototype = {
 
     saveAnnotation: function() {
         if (this.currentRegion.annotation && this.currentRegion.proximity) {
-            this.currentRegion.update({
-                drag: false,
-                resize: false,
-            });
             this.savedAnnotations.save(this.currentRegion);
             this.updateStage(1);
         } else {
             alert("Please select a proximity and an annotation tag");
         }
-    },
-
-    cancelAnnotation: function() {
-        this.savedAnnotations.delete(this.currentRegion);
-        this.currentRegion.remove();
-        this.updateStage(1);
     },
 
     restoreAnnotation: function () {
@@ -436,51 +467,36 @@ AnnotationStages.prototype = {
         this.updateStage(1);
     },
 
-    updateAnnotationProximity: function(e) {
-        var tag = e.target.textContent;
-        this.currentRegion.proximity = tag;
-        this.currentRegion.update({color: this.colors[tag]});
-    },
-
-    updateAnnotationLabel: function(e) {
-        var tag = e.target.textContent;
-        this.currentRegion.update({annotation: tag});
-    },
-
-    updateAnnotationCustomLabel: function(e) {
-        var tag = e.target.value;
-        this.currentRegion.update({annotation: tag});
+    updateRegion: function(event, data) {
+        this.currentRegion.update(data);
     },
 
     addWaveSurferEvents: function() {
-        this.wavesurfer.on('audioprocess', this.updateRegion.bind(this));
+        this.wavesurfer.on('audioprocess', this.updateEndOfRegion.bind(this));
         this.wavesurfer.on('audioprocess', this.updateStartInput.bind(this));
         this.wavesurfer.on('seek', this.updateStartInput.bind(this));
-        this.wavesurfer.on('pause', this.updateRegion.bind(this)); 
+        this.wavesurfer.on('pause', this.updateEndOfRegion.bind(this)); 
         this.wavesurfer.on('region-dblclick', this.switchToStageThree.bind(this));
         this.wavesurfer.on('region-update-end', this.createRegionSwitchToStageThree.bind(this));
         this.wavesurfer.on('region-update-end', this.updateStartEndStageThree.bind(this));
         this.wavesurfer.on('region-updated', this.updateStartEndStageThree.bind(this));
-        this.wavesurfer.on('region-updated', this.stageThreeView.updateTags.bind(this));
+        this.wavesurfer.on('region-updated', this.stageThreeView.updateSelectedTags.bind(this));
     },
 
     addStageOneEvents: function() {
-        this.stageOneView.clickStartAnnotation = this.startAnnotation.bind(this);
+        $(this.stageOneView).on('start-annotation', this.startAnnotation.bind(this));
     },
 
     addStageTwoEvents: function() {
-        this.stageTwoView.clickStopAnnotation = this.stopAnnotation.bind(this);
+        $(this.stageTwoView).on('stop-annotation', this.stopAnnotation.bind(this));
     },
 
     addStageThreeEvents: function() {
-        this.stageThreeView.clickReplay = this.playCurrentRegion.bind(this);
-        this.stageThreeView.clickSave = this.saveAnnotation.bind(this);
-        this.stageThreeView.clickCancel = this.cancelAnnotation.bind(this);
-        this.stageThreeView.clickReset = this.restoreAnnotation.bind(this);
-        this.stageThreeView.clickDelete = this.deleteAnnotation.bind(this);
-        this.stageThreeView.clickProximityTag = this.updateAnnotationProximity.bind(this);
-        this.stageThreeView.clickAnnotationTag = this.updateAnnotationLabel.bind(this);
-        this.stageThreeView.inputCustomTag = this.updateAnnotationCustomLabel.bind(this);
+        $(this.stageThreeView).on('replay', this.playCurrentRegion.bind(this));
+        $(this.stageThreeView).on('save', this.saveAnnotation.bind(this));
+        $(this.stageThreeView).on('cancel-create delete', this.deleteAnnotation.bind(this));
+        $(this.stageThreeView).on('reset', this.restoreAnnotation.bind(this));
+        $(this.stageThreeView).on('change-tag', this.updateRegion.bind(this));
     },   
 };
 
@@ -495,7 +511,7 @@ PlayBar.prototype = {
                ' / ' + Util.secondsToString(this.wavesurfer.getDuration());
     },
 
-    createPlayBar: function() {
+    create: function() {
         var my = this;
         this.addWaveSurferEvents();
 
@@ -516,7 +532,8 @@ PlayBar.prototype = {
     },
 
     update: function() {
-        $('.play_bar').empty().append(this.playBarDom)
+        $(this.playBarDom).detach();
+        $('.play_bar').append(this.playBarDom);
         this.updateTimer();
     },
 
@@ -566,11 +583,44 @@ SavedAnnotations.prototype = {
         }
     },
 
+    getLength: function() {
+        return Object.keys(this.annotations).length
+    },
+
     delete: function(region) {
         delete this.annotations[region.id];
     },
 
     isSaved: function(region) {
         return region.id in this.annotations;
+    }
+};
+
+function NextTask() {
+    this.dom = null;
+    this.clickSubmitAnnotations = null;
+}
+
+NextTask.prototype = {
+    create: function() {
+        var my = this;
+        var nextButton = $('<button>', {
+            class: 'btn submit',
+        });
+        nextButton.click(function () {
+            $(my).trigger('submit-annotations');
+        });
+        this.dom = nextButton;
+    },
+
+    update: function(event, currentStage, numSavedAnnotations) {
+        $('.submit_container').append(this.dom);
+
+        $(this.dom).prop('disabled', currentStage !== 1);
+        var text = 'SUBMIT NO ANNOTATIONS';
+        if (numSavedAnnotations > 0) {
+            text = 'SUBMIT SAVED ANNOTATIONS';
+        }
+        $(this.dom).text(text);
     }
 };

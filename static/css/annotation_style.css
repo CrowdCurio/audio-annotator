@@ -1,6 +1,8 @@
 #waveform,
-.progress_bar,
-.play_bar {   
+.play_bar,
+.submit_container,
+.annotation,
+.creation_stage_container {   
   width: 95%;
   margin: auto;
 }
@@ -13,10 +15,13 @@
 #waveform > wave {
   overflow: visible !important;
 }
+#waveform > wave > canvas{
+  background-color: #EAEAEA;
+}
 
 .waveform_container {
   overflow-x: auto;
-  height: 200px; 
+  height: 180px; 
 }
 
 #waveform wave canvas {
@@ -24,7 +29,6 @@
   top: 10px !important;
 }
 .annotation {   
-  width: 95%;
   margin: 20px auto;
   position: relative;
 }
@@ -35,7 +39,7 @@ body {
 }
 
 .play_bar {
-  margin: 10px auto;
+  margin: 0px auto;
   position: relative;
 }
 
@@ -55,6 +59,7 @@ body {
 
 .creation_stage_container {
   text-align: center;
+  min-height: 315px;
 }
 
 .annotation .btn_replay,
@@ -110,7 +115,7 @@ body {
 }
 
 .time_segment {
-  margin: 20px 0px;
+  margin-top: 20px;
 }
 
 .tag_container {
@@ -176,7 +181,7 @@ body {
 
 .option_container .btn {
   color: #fff !important;
-  margin-right: 25px;
+  margin-left: 25px;
   padding: 5px 25px;
   font-weight: bold;
 }
@@ -188,4 +193,27 @@ body {
 .option_container .reset:hover {
   background-color: #8C8C8C;
   border-color: #8C8C8C;
+}
+
+.submit_container {
+  text-align: right;
+}
+
+.submit_container .btn {
+  color: #fff !important;
+  font-weight: bold;
+  background-color: #000080;
+  border-color: #000080;
+}
+.submit_container .btn:disabled {
+  color: #C9C9C9 !important;
+}
+
+.submit_container .btn:hover:enabled {
+  background-color: #000040;
+  border-color: #000040;
+}
+
+.current_region {
+  border: 0.5px solid rgba(0, 0, 0, 0.30);
 }
