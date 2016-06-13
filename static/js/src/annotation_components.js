@@ -1,37 +1,37 @@
 'use strict';
 
-function Util() {};
+var Util = {
+    secondsToString: function(seconds) {
+        if (seconds === null) {
+            return '';
+        }
+        var timeStr = '00:';
+        if (seconds >= 10) {
+            timeStr += seconds.toFixed(3);
+        } else {
+            timeStr += '0' + seconds.toFixed(3);
+        }
+        return timeStr;
+    },
 
-Util.secondsToString = function(seconds) {
-    if (seconds === null) {
-        return '';
+    createSegmentTime: function() {
+        var timeDiv = $('<div>', {class: 'time_segment'});
+        
+        var start = $('<span>', {text: 'Start:'});
+        var startInput = $('<input>', {
+            type: 'text',
+            class: 'form-control start',
+            readonly: true
+        });
+        var end = $('<span>', {text: 'End:'});
+        var endInput = $('<input>', {
+            type: 'text',
+            class: 'form-control end',
+            readonly: true
+        });    
+
+        return timeDiv.append([start, startInput, end, endInput]);
     }
-    var timeStr = '00:';
-    if (seconds >= 10) {
-        timeStr += seconds.toFixed(3);
-    } else {
-        timeStr += '0' + seconds.toFixed(3);
-    }
-    return timeStr;
-};
-
-Util.createSegmentTime = function() {
-    var timeDiv = $('<div>', {class: 'time_segment'});
-    
-    var start = $('<span>', {text: 'Start:'});
-    var startInput = $('<input>', {
-        type: 'text',
-        class: 'form-control start',
-        readonly: true
-    });
-    var end = $('<span>', {text: 'End:'});
-    var endInput = $('<input>', {
-        type: 'text',
-        class: 'form-control end',
-        readonly: true
-    });
-
-    return timeDiv.append([start, startInput, end, endInput]);
 };
 
 function StageOneView() {
@@ -99,7 +99,7 @@ function StageThreeView() {
 }
 
 StageThreeView.prototype = {
-    create: function(proximityTags, annotationTags) {
+    create: function() {
         var container = $('<div>', {class: 'stage'});
         var button = $('<button>', {
             class: 'btn btn_replay',
@@ -109,19 +109,21 @@ StageThreeView.prototype = {
 
         var time = Util.createSegmentTime();
 
-        var proximity = this.createProximityTags(proximityTags);
-        var annotation = this.createAnnotationTags(annotationTags);
-        var custom = this.createCustomTag();
-
         var tagContainer = $('<div>', {
             class: 'tag_container',
         });
-
-        tagContainer.append([proximity, annotation, custom]);
         
         this.dom = container.append([button, time, tagContainer]);
         this.saveOptionsDom = this.createSaveOptions();
         this.editOptionsDom = this.createEditOptions();
+    },
+
+    updateTagContents: function(proximityTags, annotationTags) {
+        $('.tag_container', this.dom).empty();
+        var proximity = this.createProximityTags(proximityTags);
+        var annotation = this.createAnnotationTags(annotationTags);
+        var custom = this.createCustomTag();
+        $('.tag_container', this.dom).append([proximity, annotation, custom]);
     },
 
     createSaveOptions: function() {
@@ -245,7 +247,7 @@ StageThreeView.prototype = {
 
         $('.option_container', this.dom).detach();
         var options = isSaved ? this.editOptionsDom : this.saveOptionsDom;
-        $('.tag_container', this.dom).append(options);
+        $(this.dom).append(options);
     },
 
     updateTime: function(region) {
@@ -279,20 +281,17 @@ StageThreeView.prototype = {
 };
 
 
-function AnnotationStages(wavesurfer, proximityTags, annotationTags, colors) {
+function AnnotationStages(wavesurfer) {
     this.currentStage = 0;
     this.currentRegion = null;
     this.stageOneView = new StageOneView();
     this.stageTwoView = new StageTwoView();
     this.stageThreeView = new StageThreeView();
     this.wavesurfer = wavesurfer;
-    this.proximityTags = proximityTags;
-    this.annotationTags = annotationTags;
+    this.proximityTags = null;
+    this.annotationTags = null;
     this.savedAnnotations = new SavedAnnotations();
     this.colors = {};
-    this.colors[proximityTags[0]] = 'rgba(236,0,251,0.2)';
-    this.colors[proximityTags[1]] = 'rgba(39,117,243,0.2)';
-    this.colors[proximityTags[2]] = 'rgba(33,177,4,0.2)';
 }
 
 AnnotationStages.prototype = {
@@ -313,13 +312,14 @@ AnnotationStages.prototype = {
     updateStage: function(newStage, region) {
         this.currentRegion = region;
 
-        if (this.currentStage !== newStage) {
             var newContent = null;
 
             if (newStage === 1) {
                 this.stageOneView.update(this.wavesurfer.getCurrentTime());
                 newContent = this.stageOneView.dom;
-                this.wavesurfer.enableDragSelection();
+                if (this.currentStage !== 1) {
+                    this.wavesurfer.enableDragSelection();
+                }
             } else if (newStage === 2) {
                 this.stageTwoView.update(region);
                 newContent = this.stageTwoView.dom;
@@ -342,7 +342,28 @@ AnnotationStages.prototype = {
                     container.append(newContent).fadeIn();
                 });
             }
-        }
+
+        $(this).trigger('stage-updated', [this.currentStage, this.savedAnnotations.getLength()]);
+    },
+
+    update: function(proximityTags, annotationTags) {
+        // Clear Regions
+        this.savedAnnotations = new SavedAnnotations();
+        this.wavesurfer.clearRegions();
+        // Update all Tags' Contents
+        this.updateTags(proximityTags, annotationTags)
+    },
+
+    updateTags: function(proximityTags, annotationTags) {
+        this.proximityTags = proximityTags;
+        this.annotationTags = annotationTags;
+        this.stageThreeView.updateTagContents(
+            this.proximityTags,
+            this.annotationTags
+        );
+        this.colors[proximityTags[0]] = 'rgba(236,0,251,0.2)';
+        this.colors[proximityTags[1]] = 'rgba(39,117,243,0.2)';
+        this.colors[proximityTags[2]] = 'rgba(33,177,4,0.2)';
     },
 
     updateRegion: function() {
@@ -516,7 +537,8 @@ PlayBar.prototype = {
     },
 
     update: function() {
-        $('.play_bar').empty().append(this.playBarDom)
+        $(this.playBarDom).detach();
+        $('.play_bar').append(this.playBarDom);
         this.updateTimer();
     },
 
@@ -566,11 +588,37 @@ SavedAnnotations.prototype = {
         }
     },
 
+    getLength: function() {
+        return Object.keys(this.annotations).length
+    },
+
     delete: function(region) {
         delete this.annotations[region.id];
     },
 
     isSaved: function(region) {
         return region.id in this.annotations;
+    }
+};
+
+function NextTask() {
+    this.dom = null;
+    this.clickSubmitAnnotations = null;
+}
+
+NextTask.prototype = {
+    create: function() {
+        var nextButton = $('<button>', {
+            class: 'btn submit',
+            text: 'SUBMIT SAVED ANNOTATIONS'
+        });
+        nextButton.click(this.clickSubmitAnnotations);
+        this.dom = nextButton;
+    },
+
+    update: function(event, currentStage, numSavedAnnotations) {
+        var disableSubmit = (currentStage !== 1 || numSavedAnnotations === 0);
+        $(this.dom).prop('disabled', disableSubmit); 
+        $('.submit_container').append(this.dom);
     }
 };

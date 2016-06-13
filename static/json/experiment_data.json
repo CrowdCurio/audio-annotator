@@ -1,23 +1,25 @@
-[
-    {
-        "visualization_type": "waveform",
-        "url": "../static/wav/traffic1.wav",
-        "task_id": 1,
-        "proximity_tags": ["near", "far", "not sure"],
-        "annotation_tags": ["air conditioner", "car horn", "children playing", "dog barking", "drilling", "engine idling", "gun shot", "jackhammer", "siren", "street music"],
-    },
-    {
-        "visualization_type": "spectrogram",
-        "url": "../static/wav/traffic2.wav",
-        "task_id": 1,
-        "proximity_tags": ["near", "far", "not sure"],
-        "annotation_tags": ["air conditioner", "car horn", "children playing", "dog barking", "drilling", "engine idling", "gun shot", "jackhammer", "siren", "street music"],
-    },
-    {
-        "visualization_type": "invisible",
-        "url": "../static/wav/traffic1.wav",
-        "task_id": 1,
-        "proximity_tags": ["near", "far", "not sure"],
-        "annotation_tags": ["air conditioner", "car horn", "children playing", "dog barking", "drilling", "engine idling", "gun shot", "jackhammer", "siren", "street music"],
-    },
-]
+{
+    "tasks": [
+        {
+            "visualization_type": "waveform",
+            "url": "../static/wav/traffic1.wav",
+            "task_id": 1,
+            "proximity_tags": ["near", "far", "not sure"],
+            "annotation_tags": ["air conditioner", "car horn", "children playing", "dog barking", "drilling", "engine idling", "gun shot", "jackhammer", "siren", "street music"]
+        },
+        {
+            "visualization_type": "spectrogram",
+            "url": "../static/wav/traffic2.wav",
+            "task_id": 1,
+            "proximity_tags": ["near", "far", "not sure"],
+            "annotation_tags": ["cat", "dog", "turtle", "elephant", "wolves"]
+        },
+        {
+            "visualization_type": "invisible",
+            "url": "../static/wav/traffic1.wav",
+            "task_id": 1,
+            "proximity_tags": ["near", "far", "not sure"],
+            "annotation_tags": ["air conditioner", "car horn", "children playing", "dog barking", "drilling", "engine idling", "gun shot", "jackhammer", "siren", "street music"]
+        }
+    ]
+}
