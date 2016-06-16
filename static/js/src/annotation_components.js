@@ -118,6 +118,14 @@ StageThreeView.prototype = {
         this.editOptionsDom = this.createEditOptions();
     },
 
+    updateTagContents: function(proximityTags, annotationTags) {
+        $('.tag_container', this.dom).empty();
+        var proximity = this.createProximityTags(proximityTags);
+        var annotation = this.createAnnotationTags(annotationTags);
+        var custom = this.createCustomTag();
+        $('.tag_container', this.dom).append([proximity, annotation, custom]);
+    },
+
     createSaveOptions: function() {
         var my = this;
         var options = $('<div>', {class: 'option_container'});
@@ -341,7 +349,6 @@ AnnotationStages.prototype = {
             }
         }
         this.currentRegion = region;
-
     },
 
     updateStage: function(newStage, region) {
