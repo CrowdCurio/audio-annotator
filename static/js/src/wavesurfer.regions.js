@@ -128,7 +128,7 @@ WaveSurfer.Region = {
         this.resize = params.resize === undefined ? true : Boolean(params.resize);
         this.drag = params.drag === undefined ? true : Boolean(params.drag);
         this.loop = Boolean(params.loop);
-        this.color = params.color || 'rgba(0, 0, 0, 0.1)';
+        this.color = params.color || 'rgba(0, 0, 0, 0.3)';
         this.data = params.data || {};
         this.attributes = params.attributes || {};
         this.annotation = params.annotation || '';
@@ -228,7 +228,8 @@ WaveSurfer.Region = {
             position: 'absolute',
             zIndex: 2,
             height: '100%',
-            top: '0px'
+            top: '0px',
+            textAlign: 'center'
         });
 
         /* Resize handles */
@@ -253,17 +254,25 @@ WaveSurfer.Region = {
             });
         }
 
-        var label = regionEl.appendChild(document.createElement('p'));
+        var labelContainer = regionEl.appendChild(document.createElement('p'));
+        var label = labelContainer.appendChild(document.createElement('span'));
 
-        this.style(label, {
+        this.style(labelContainer, {
             position: 'relative',
-            zIndex: '10',
             top: '-20px',
             textAlign: 'center',
             textTransform: 'uppercase',
             textOverflow: 'ellipsis',
             overflow: 'hidden',
-            whiteSpace: 'nowrap'
+            whiteSpace: 'nowrap',
+            color: '#fff'
+        });
+
+        this.style(label, {
+            borderRadius: '2px',
+            padding: '0px 10px',
+            backgroundColor: '#7C7C7C',
+            zIndex:5000
         });
 
         this.label = label;
@@ -310,11 +319,13 @@ WaveSurfer.Region = {
         }
 
         if (this.element != null) {
+            var regionWidth = ~~((this.end - this.start) / dur * width);
             this.style(this.element, {
                 left: ~~(this.start / dur * width) + 'px',
-                width: ~~((this.end - this.start) / dur * width) + 'px',
+                width: regionWidth + 'px',
                 backgroundColor: this.color,
-                cursor: this.drag ? 'move' : 'default'
+                cursor: this.drag ? 'move' : 'default',
+                zIndex: width - regionWidth
             });
 
             for (var attrname in this.attributes) {
@@ -387,6 +398,7 @@ WaveSurfer.Region = {
 
         this.label.addEventListener('click', function (e) {
             e.stopPropagation();
+            my.wavesurfer.fireEvent('region-label-click', my, e);
         });
 
         this.element.addEventListener('dblclick', function (e) {
@@ -404,7 +416,9 @@ WaveSurfer.Region = {
             var startTime;
 
             var onDown = function (e) {
-                e.stopPropagation();
+                if (my.drag) {
+                    e.stopPropagation();
+                }
                 startTime = my.wavesurfer.drawer.handleEvent(e) * duration;
 
                 if (e.target.tagName.toLowerCase() == 'handle') {

@@ -41,7 +41,7 @@ function StageOneView() {
 StageOneView.prototype = {
     create: function() {
         var my = this;
-        var container = $('<div>', {class: 'stage'});
+        var container = $('<div>');
         var button = $('<button>', {
             class: 'btn btn_start',
             text: 'CLICK TO START A NEW ANNOTATION',
@@ -50,14 +50,20 @@ StageOneView.prototype = {
             $(my).trigger('start-annotation');
         });
 
+        var hint = $('<div>', {
+            html: 'OR </br> Click and drag to create a new annotation',
+            class: 'hint'
+        });
+
         var time = Util.createSegmentTime();
 
-        this.dom = container.append([button, time]);
+        this.dom = container.append([button, time, hint]);
     },
 
-    update: function(start) {
+    update: function(start, enableCreate) {
         $('.start', this.dom).val(Util.secondsToString(start));
         $('.end', this.dom).val(Util.secondsToString(null));
+        $('.btn_start', this.dom).prop('disabled', !enableCreate);
     },
 };
 
@@ -68,7 +74,7 @@ function StageTwoView() {
 StageTwoView.prototype = {
     create: function() {
         var my = this;
-        var container = $('<div>', {class: 'stage'});
+        var container = $('<div>');
         var button = $('<button>', {
             class: 'btn btn_stop',
             text: 'CLICK TO END ANNOTATION',
@@ -92,18 +98,18 @@ function StageThreeView() {
     this.dom = null;
     this.saveOptionsDom = null;
     this.editOptionsDom = null;
-    this.colors = ['rgba(236,0,251,0.2)', 'rgba(39,117,243,0.2)', 'rgba(33,177,4,0.2)'];
+    this.colors = ['rgba(236,0,251,0.4)', 'rgba(39,117,243,0.4)', 'rgba(33,177,4,0.4)'];
 }
 
 StageThreeView.prototype = {
     create: function() {
         var my = this;
-        var container = $('<div>', {class: 'stage'});
+        var container = $('<div>');
         var button = $('<button>', {
             class: 'btn btn_replay',
             html: '<i class="fa fa-refresh"></i>REPLAY SEGMENT',
         });
-        button.click(function() {
+        button.click(function () {
             $(my).trigger('replay');
         });
 
@@ -133,7 +139,7 @@ StageThreeView.prototype = {
             class: 'btn btn-sm save',
             text: 'SAVE ANNOTATION',
         });
-        save.click(function() {
+        save.click(function () {
             $(my).trigger('save');
         });
 
@@ -141,7 +147,7 @@ StageThreeView.prototype = {
             class: 'btn btn-sm cancel',
             html: 'CANCEL<i class="fa fa-remove"></i>',
         });
-        cancel.click(function() {
+        cancel.click(function () {
             $(my).trigger('cancel-create');
         });
 
@@ -155,28 +161,28 @@ StageThreeView.prototype = {
             class: 'btn btn-sm save',
             text: 'SAVE CHANGES',
         });
-        save.click(function() {
+        save.click(function () {
             $(my).trigger('save');
         });
 
-        var reset = $('<button>', {
-            class: 'btn btn-sm reset',
-            html: 'RESET CHANGES<i class="fa fa-reply"></i>',
+        var cancelEdit = $('<button>', {
+            class: 'btn btn-sm',
+            html: 'CANCEL<i class="fa fa-remove"></i>',
         });
-        reset.click(function() {
-            $(my).trigger('reset');
+        cancelEdit.click(function () {
+            $(my).trigger('cancel-edit');
         });
 
         var remove = $('<button>', {
-            class: 'btn btn-sm btn-danger remove',
+            class: 'btn btn-sm btn-danger',
             html: 'DELETE<i class="fa fa-trash"></i>',
         });
-        remove.click(function() {
+        remove.click(function () {
             $(my).trigger('delete');
         });
 
 
-        return options.append([save, reset, remove]);
+        return options.append([save, cancelEdit, remove]);
     },
 
     createProximityTags: function(proximityTags) {
@@ -197,7 +203,7 @@ StageThreeView.prototype = {
                 class: 'proximity_tag btn',
                 text: tagName,
             });
-            tag.click(function() {
+            tag.click(function () {
                 $(my).trigger(
                     'change-tag', 
                     [{proximity: tagName, color: my.colors[index]}]
@@ -227,7 +233,7 @@ StageThreeView.prototype = {
                 class: 'annotation_tag btn',
                 text: tagName,
             });
-            tag.click(function() {
+            tag.click(function () {
                 $(my).trigger('change-tag', [{annotation: tagName}]);
             });
             annotationContainer.append(tag);
@@ -282,7 +288,7 @@ StageThreeView.prototype = {
         $('.custom_tag input', this.dom).val('');
 
         if (region.annotation) {
-            var selectedTags = $('.annotation_tag', this.dom).filter(function() {
+            var selectedTags = $('.annotation_tag', this.dom).filter(function () {
                 return this.innerHTML === region.annotation;
             });
             if (selectedTags.length > 0) {
@@ -293,7 +299,7 @@ StageThreeView.prototype = {
         }
 
         if (region.proximity) {
-            var selectedTags = $('.proximity_tag', this.dom).filter(function() {
+            var selectedTags = $('.proximity_tag', this.dom).filter(function () {
                 return this.innerHTML === region.proximity;
             });
             selectedTags.addClass('selected');
@@ -356,7 +362,7 @@ AnnotationStages.prototype = {
 
         var newContent = null;
         if (newStage === 1) {
-            this.stageOneView.update(this.wavesurfer.getCurrentTime());
+            this.stageOneView.update(this.wavesurfer.getCurrentTime(), this.wavesurfer.isPlaying());
             newContent = this.stageOneView.dom;
             if (this.currentStage !== 1) {
                 this.wavesurfer.enableDragSelection();
@@ -379,7 +385,7 @@ AnnotationStages.prototype = {
             // update dom of page
             var container = $('.creation_stage_container');
             container.fadeOut(10, function(){
-                $('.stage').detach();
+                container.children().detach();
                 container.append(newContent).fadeIn();
             });
         }
@@ -430,13 +436,16 @@ AnnotationStages.prototype = {
         }
     },
 
-    updateStartInput: function() {
+    updateStageOne: function() {
         if (this.currentStage === 1) {
-            this.stageOneView.update(this.wavesurfer.getCurrentTime());
+            this.stageOneView.update(
+                this.wavesurfer.getCurrentTime(), 
+                this.wavesurfer.isPlaying()
+            );
         }
     },
 
-    startAnnotation: function () {
+    startAnnotation: function() {
         var region = this.wavesurfer.addRegion({
             start: this.wavesurfer.getCurrentTime(),
             end: this.wavesurfer.getCurrentTime(),
@@ -444,7 +453,7 @@ AnnotationStages.prototype = {
         this.updateStage(2, region);
     },
 
-    stopAnnotation: function () {
+    stopAnnotation: function() {
         if (this.wavesurfer.isPlaying()) {
             this.wavesurfer.pause();
         }
@@ -464,11 +473,12 @@ AnnotationStages.prototype = {
         }
     },
 
-    restoreAnnotation: function () {
+    cancelAnnotationEdit: function() {
         this.savedAnnotations.restore(this.currentRegion);
+        this.updateStage(1);
     },
 
-    deleteAnnotation: function () {
+    deleteAnnotation: function() {
         this.savedAnnotations.delete(this.currentRegion);
         this.currentRegion.remove();
         this.updateStage(1);
@@ -480,10 +490,11 @@ AnnotationStages.prototype = {
 
     addWaveSurferEvents: function() {
         this.wavesurfer.on('audioprocess', this.updateEndOfRegion.bind(this));
-        this.wavesurfer.on('audioprocess', this.updateStartInput.bind(this));
-        this.wavesurfer.on('seek', this.updateStartInput.bind(this));
+        this.wavesurfer.on('audioprocess', this.updateStageOne.bind(this));
+        this.wavesurfer.on('seek', this.updateStageOne.bind(this));
         this.wavesurfer.on('pause', this.updateEndOfRegion.bind(this)); 
         this.wavesurfer.on('region-dblclick', this.switchToStageThree.bind(this));
+        this.wavesurfer.on('region-label-click', this.switchToStageThree.bind(this));
         this.wavesurfer.on('region-update-end', this.createRegionSwitchToStageThree.bind(this));
         this.wavesurfer.on('region-update-end', this.updateStartEndStageThree.bind(this));
         this.wavesurfer.on('region-updated', this.updateStartEndStageThree.bind(this));
@@ -502,7 +513,7 @@ AnnotationStages.prototype = {
         $(this.stageThreeView).on('replay', this.playCurrentRegion.bind(this));
         $(this.stageThreeView).on('save', this.saveAnnotation.bind(this));
         $(this.stageThreeView).on('cancel-create delete', this.deleteAnnotation.bind(this));
-        $(this.stageThreeView).on('reset', this.restoreAnnotation.bind(this));
+        $(this.stageThreeView).on('cancel-edit', this.cancelAnnotationEdit.bind(this));
         $(this.stageThreeView).on('change-tag', this.updateRegion.bind(this));
     },   
 };

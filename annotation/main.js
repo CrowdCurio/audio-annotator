@@ -39,6 +39,8 @@ function UrbanEars() {
     // Create Submit btn
     this.nextTask = new NextTask();
     this.nextTask.create();
+
+    this.addEvents();
 }
 
 UrbanEars.prototype = {
@@ -104,7 +106,6 @@ UrbanEars.prototype = {
 
 function main() {
     var urbanEars = new UrbanEars();
-    urbanEars.addEvents();
     urbanEars.loadNextTask();
 }
 main();

@@ -15,8 +15,9 @@
 #waveform > wave {
   overflow: visible !important;
 }
-#waveform > wave > canvas{
+#waveform > wave > canvas {
   background-color: #EAEAEA;
+  width: 0px;
 }
 
 .waveform_container {
@@ -87,7 +88,7 @@ body {
   border-color: #18C501;
 }
 
-.btn_start:hover,
+.btn_start:enabled:hover,
 .option_container .save:hover {
   background-color: #118C01;
   border-color: #118C01;
@@ -205,9 +206,6 @@ body {
   background-color: #000080;
   border-color: #000080;
 }
-.submit_container .btn:disabled {
-  color: #C9C9C9 !important;
-}
 
 .submit_container .btn:hover:enabled {
   background-color: #000040;
@@ -215,5 +213,20 @@ body {
 }
 
 .current_region {
+  z-index: 5000 !important;
   border: 0.5px solid rgba(0, 0, 0, 0.30);
+}
+
+region.current_region span {
+  background-color: #00B1B9 !important;
+}
+
+region span:empty {
+  padding: 0px !important;
+}
+
+.hint {
+  color: gray;
+  margin-top: 15px;
+  font-weight: normal;
 }
