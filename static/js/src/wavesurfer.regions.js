@@ -265,14 +265,16 @@ WaveSurfer.Region = {
             textOverflow: 'ellipsis',
             overflow: 'hidden',
             whiteSpace: 'nowrap',
-            color: '#fff'
+            color: '#fff',
+            pointerEvents: 'none'
         });
 
         this.style(label, {
             borderRadius: '2px',
             padding: '0px 10px',
             backgroundColor: '#7C7C7C',
-            zIndex:5000
+            zIndex:5000,
+            pointerEvents: 'all'
         });
 
         this.label = label;
