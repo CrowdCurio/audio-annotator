@@ -88,7 +88,7 @@ UrbanEars.prototype = {
         var my = this;
         if (this.experimentData.length === 0) {
             // Load more data
-            $.getJSON('../static/json/experiment_data.json')
+            $.getJSON('static/json/experiment_data.json')
                 .done(function(data) {
                     my.experimentData = data.tasks;
                     my.update();
