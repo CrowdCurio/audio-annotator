@@ -1,8 +1,8 @@
 #!/bin/sh
 
-GENERATING_FILE="../static/js/colormap/gen_colormap.js"
+GENERATING_FILE="gen_colormap.js"
 TMP_FILE="colormap.js"
-GENERATED_FILE="../static/js/colormap/colormap.min.js"
+GENERATED_FILE="colormap.min.js"
 
 if npm -v > /dev/null; then
     echo 'npm found!'
