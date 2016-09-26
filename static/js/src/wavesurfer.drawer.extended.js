@@ -10,6 +10,9 @@
  * spectrogram plugin to allow the wavesurfer drawer to draw a spectrogram representation 
  * when this.params.visualization is set to "spectrogram"
  * (https://github.com/katspaugh/wavesurfer.js/blob/master/plugin/wavesurfer.spectrogram.js)
+ * 
+ * Also added methods drawCoverForHiddenImage, clearCoverForRegion for hiding and displaying
+ * the background image as the user labels regions correctly
  */
 WaveSurfer.util.extend(WaveSurfer.Drawer.Canvas, {
     getFrequencyRGB: function(colorValue) {
@@ -105,9 +108,7 @@ WaveSurfer.util.extend(WaveSurfer.Drawer.Canvas, {
     },
 
     drawSpectrogram: function (buffer) {
-        var pixelRatio = this.params.pixelRatio || 
-                         window.devicePixelRatio || 
-                         screen.deviceXDPI / screen.logicalXDPIwindow.devicePixelRatio;
+        var pixelRatio = this.params.pixelRatio;
         var length = buffer.duration;
         var height = (this.params.fftSamples / 2) * pixelRatio;
         var frequenciesData = this.getFrequencies(buffer);
@@ -122,7 +123,7 @@ WaveSurfer.util.extend(WaveSurfer.Drawer.Canvas, {
                 this.waveCc.fillRect(i, height - j * heightFactor, 1, heightFactor);
             }
         }
-    },
+    }
 });
 
 /** 
@@ -165,6 +166,6 @@ WaveSurfer.util.extend(WaveSurfer.Drawer, {
             this.params.barWidth ?
                 this.drawBars(peaks) :
                 this.drawWave(peaks);
-         }
+        }
     }
 });

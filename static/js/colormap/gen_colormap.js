@@ -1,5 +1,5 @@
 /*
- * If modifiying this file make sure to run "sh gen_colormap.sh" in the scripts directory
+ * If modifiying this file make sure to run "sh gen_colormap.sh" in this directory
  * once you save to generate the colormap.min.js with the node modules browserified
  */
 window.colormap = require('colormap');

@@ -1,0 +1,9 @@
+{
+    "task": {
+        "feedback": "none",
+        "visualization": "spectrogram",
+        "proximityTag": ["near", "far", "not sure"],
+        "annotationTag": ["bicycle bell", "church bell", "human voice", "mechanical squeak", "music", "screeching train wheels", "single footstep", "siren", "vehicle brakes", "vehicle engine", "vehicle honk"],
+        "url": "/static/wav/paris.wav"
+    }
+}

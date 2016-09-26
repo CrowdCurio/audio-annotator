@@ -1,0 +1,25 @@
+{
+    "city" : "Paris",
+    "annotations" : [
+        {
+            "start": 0.000000,
+            "end": 1.810576,
+            "annotation": "vehicle brakes"
+        },
+        {
+            "start": 0.000000,
+            "end": 10.787662,
+            "annotation": "vehicle engine"
+        },
+        {
+            "start": 2.560070,
+            "end": 6.029638,
+            "annotation": "siren"
+        },
+        {
+            "start": 4.699075,
+            "end": 5.145403,
+            "annotation": "human voice"
+        }
+    ]
+}

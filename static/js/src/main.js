@@ -4,8 +4,11 @@ function UrbanEars() {
     this.wavesurfer;
     this.playBar;
     this.stages;
-    this.nextTask;
-    this.experimentData = [];
+    this.workflowBtns;
+    this.currentTask;
+    this.taskStartTime;
+    this.hiddenImage;
+    this.sendingResponse = false;
 
     // Create color map for spectrogram
     var spectrogramColorMap = colormap({
@@ -19,7 +22,7 @@ function UrbanEars() {
     var height = 128;
     this.wavesurfer = Object.create(WaveSurfer);
     this.wavesurfer.init({
-        container: '#waveform',
+        container: '.audio_visual',
         waveColor: '#FF00FF',
         progressColor: '#FF00FF',
         // For the spectrogram the height is half the number of fftSamples
@@ -28,17 +31,26 @@ function UrbanEars() {
         colorMap: spectrogramColorMap
     });
 
+    var labels = Object.create(WaveSurfer.Labels);
+    labels.init({
+        wavesurfer: this.wavesurfer,
+        container: '.labels'
+    });
+
+    this.hiddenImage = new HiddenImg('.hidden_img', 100);
+    this.hiddenImage.create();
+
     // Create the play button and time that appear below the wavesurfer
     this.playBar = new PlayBar(this.wavesurfer);
     this.playBar.create();
 
     // Create the annotation stages that appear below the wavesurfer
-    this.stages = new AnnotationStages(this.wavesurfer);
+    this.stages = new AnnotationStages(this.wavesurfer, this.hiddenImage);
     this.stages.create();
 
-    // Create Submit btn
-    this.nextTask = new NextTask();
-    this.nextTask.create();
+    // Create Workflow btns (submit and exit)
+    this.workflowBtns = new WorkflowBtns();
+    this.workflowBtns.create();
 
     this.addEvents();
 }
@@ -60,46 +72,114 @@ UrbanEars.prototype = {
         this.wavesurfer.on('ready', function () {
             my.playBar.update();
             my.stages.updateStage(1);
+            my.updateTaskTime();
+            my.workflowBtns.update();
+            if (my.currentTask.feedback === 'hiddenImage') {
+                my.hiddenImage.append(my.currentTask.imgUrl);
+            }
         });
     },
 
-    addNextTaskEvents: function() {
-        $(this.stages).on('stage-updated', this.nextTask.update.bind(this.nextTask));
-        $(this.nextTask).on('submit-annotations', this.loadNextTask.bind(this));
+    updateTaskTime: function() {
+        this.taskStartTime = new Date().getTime();
+    },
+
+    addWorkflowBtnEvents: function() {
+        $(this.workflowBtns).on('submit-annotations', this.submitAnnotations.bind(this));
     },
 
     addEvents: function() {
         this.addWaveSurferEvents();
-        this.addNextTaskEvents();
+        this.addWorkflowBtnEvents();
     },
 
     update: function() {
-        var data = this.experimentData.shift();
-        this.stages.reset(
-            data['proximity_tags'], 
-            data['annotation_tags']
-        );        
+        var my = this;
+        var mainUpdate = function(annotationSolutions) {
 
-        this.wavesurfer.params.visualization = data['visualization_type'];
-        this.wavesurfer.load(data['url']);
+            var proximityTags = my.currentTask.proximityTag;
+            var annotationTags = my.currentTask.annotationTag;
+            my.stages.reset(
+                proximityTags,
+                annotationTags,
+                annotationSolutions
+            );
+            my.wavesurfer.params.visualization = my.currentTask.visualization;
+            my.wavesurfer.params.feedback = my.currentTask.feedback;
+
+            my.wavesurfer.load(my.currentTask.url);
+        };
+
+        if (this.currentTask.feedback !== 'none') {
+            $.getJSON(this.currentTask.annotationSolutionsUrl)
+            .done(function(data) {
+                mainUpdate(data);
+            })
+            .fail(function() {
+                alert('Error: Unable to retrieve annotation solution set');
+            });
+        } else {
+            mainUpdate({});
+        }
     },
 
     loadNextTask: function() {
         var my = this;
-        if (this.experimentData.length === 0) {
-            // Load more data
-            $.getJSON('static/json/experiment_data.json')
-                .done(function(data) {
-                    my.experimentData = data.tasks;
-                    my.update();
-                })
-                .fail(function() {
-                    alert( "error" );
-                });
-        } else {
-            // Remove the old task and update the new one
-            this.update();
+        $.getJSON(dataUrl)
+        .done(function(data) {
+            my.currentTask = data.task;
+            my.update();
+        });
+    },
+
+    submitAnnotations: function() {
+        if (this.stages.annotationDataValidationCheck()) {
+            if (this.sendingResponse) {
+                return;
+            }
+            this.sendingResponse = true;
+            var content = {
+                task_start_time: this.taskStartTime,
+                task_end_time: new Date().getTime(),
+                visualization: this.wavesurfer.params.visualization,
+                annotations: this.stages.getAnnotations(),
+                deleted_annotations: this.stages.getDeletedAnnotations(),
+                annotation_events: this.stages.getEvents(),
+                play_events: this.playBar.getEvents(),
+                final_solution_shown: this.stages.aboveThreshold()
+            };
+            if (this.stages.aboveThreshold()) {
+                var my = this;
+                this.stages.displaySolution();
+                setTimeout(function() {
+                    my.post(content);
+                }, 2000);
+            } else {
+                this.post(content);
+            }
         }
+    },
+
+    post: function (content) {
+        var my = this;
+        $.ajax({
+            type: 'POST',
+            url: '/some/url',
+            contentType: 'application/json',
+            data: content
+        })
+        .done(function(data) {
+            if (my.currentTask.feedback === 'hiddenImage') {
+                my.hiddenImage.remove();
+            }
+            my.loadNextTask();
+        })
+        .fail(function() {
+            alert('Error: Unable to Submit Annotations');
+        })
+        .always(function() {
+            my.sendingResponse = false;
+        });
     }
 
 };
