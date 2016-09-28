@@ -1,8 +1,24 @@
 # urbanears
+### Description
+Urban Ears is a web interface that allows users to annotate sound clips.
+
+It has 3 types of audio visualizations (wavesurfer.params.visualization)
+   1. invisible (appears as a blank rectangle that users can draw regions on)
+   2. spectrogram (audio file is represented by a spectrogram that users can draw regions on)
+   3. waveform (audio file is represented by a waveform that users can draw regions on)
+   
+It has 4 types of ways of providing feedback to the user (wavesurfer.params.feedback)
+   1. none (There is no feedback provided. Solution set is not needed)
+   2. silent (The f1 score is calculated and recorded with each action the user takes. Solution set is required)
+   3. notify (The f1 score is calculated and recorded with each action the user takes. A message will appear telling the user if they are improving or not. Solution set is required)
+   4. hiddenImage (The f1 score is calculated and recorded with each action the user takes. A message will appear telling the user if they are improving or not. Also parts of a hidden image will be revealed to the user. Solution set and image src are required)
+   
 ### To Demo
-1. git clone https://github.com/StefanieMikloska/urbanears.git
-2. In the urbanears/ directory run `python -m SimpleHTTPServer`
-3. Visit <http://localhost:8000> in your browser
+1. In the urbanears/ directory run `python -m SimpleHTTPServer`
+2. Visit <http://localhost:8000/examples> in your browser to see the verison with annotation and proximity tags. This demo also uses the spectrogram visualization, and does not provide the user with feedback as they annotate the clip.
+3. Visit <http://localhost:8000/examples/curiosity.html> in your browser to see the verison with just annotation tags. This demo also uses the spectrogram visualization, and provides the user feedback in the form of revealing a hidden image as the user correctly annotate the sound clip.
+
+Note: In the examples, the submit annotations btn will output data to the web console, since the POST is not hooked up to the backend
 
 ### Files
 * [**index.html**](index.html)  
