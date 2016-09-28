@@ -5,6 +5,7 @@
  *   Create a img with a canvas over it, so you can slowly show random
  *   parts of the image
  * Dependencies:
+ *   None
  */
 
 function HiddenImg(container, height, width) {
@@ -17,6 +18,7 @@ function HiddenImg(container, height, width) {
 
 HiddenImg.prototype = {
 
+    // Create image, image container and canva elements
     create: function() {
         this.canvas = document.createElement('canvas');
         this.canvas.style.zIndex = 1;
@@ -38,6 +40,8 @@ HiddenImg.prototype = {
         this.image.style.position = 'absolute';
     },
 
+    // Appends the image, image container and canvas html elements to the container on 
+    // the page. Also modifies the container's style. 
     append: function(url) {
         this.container.style.position = 'relative';
         this.container.style.overflowX = 'auto';
@@ -50,6 +54,8 @@ HiddenImg.prototype = {
         this.reset(url);
     },
 
+    // Removes the image, image container and canvas elements from the container and resets
+    // the containers style.
     remove: function() {
         this.container.removeAttribute('style');
         this.container.removeChild(this.canvas);
@@ -57,6 +63,8 @@ HiddenImg.prototype = {
         this.imageContainer.removeChild(this.image);
     },
 
+    // Reset the canvas element to cover the whole image and 
+    // add back the blur style to the image element
     resetCover: function() {
         this.cover.fillStyle = 'white';       
         this.cover.fillRect(0, 0, this.width, this.height);
@@ -67,12 +75,15 @@ HiddenImg.prototype = {
         this.image.style['-webkit-filter'] = 'blur(2px)';
     },
 
+    // Add text in the middle of the canvas to prompt the user to complete the task
     resetText: function () {
         this.cover.textAlign = 'center';
         this.cover.textBaseline = 'middle'; 
         this.cover.fillText('Find all the sounds to reveal what city this clip comes from.', this.width / 2, this.height / 2);
     },
 
+    // Reset the cover, text and image source. It also re shuffles
+    // what parts of the canvas will be cleared
     reset: function(url) {
         this.resetCover();
         this.resetText();
@@ -81,12 +92,14 @@ HiddenImg.prototype = {
         this.shuffleTitles = this.shuffle(tiles);
     },
 
+    // Remove blur style from image and clear the canva colour to display the image hidden behind it
     showImage: function() {
         this.image.style['filter'] = 'blur(0px)';
         this.image.style['-webkit-filter'] = 'blur(0px)';
         this.cover.clearRect(0, 0, this.width, this.height);
     },
 
+    // Write a city's name in the middle of the canvas
     writeMessage: function(city) {
         this.cover.textAlign = 'center';
         this.cover.font = 'italic 50px Arial';
@@ -97,18 +110,24 @@ HiddenImg.prototype = {
         this.cover.fillText(city, this.width / 2, this.height / 2);
     },
 
+    // The canva is broken into 10 parts. The percent is the number of those parts will be uncovered
     showRandomParts: function(percent) {
+        // Get integer values
         var numTilesToShow = Math.floor(percent * 10);
 
         var tileWidth = this.width / this.shuffleTitles.length;
+        // Clear random sections of the canvas
         for (var i = 0; i < numTilesToShow; i++) {
+            // shuffleTitles is an array of shuffled integers that correspond to what parts of the canva to clear
             var left = this.shuffleTitles[i] * tileWidth;
             this.cover.clearRect(left, 0, tileWidth, this.height);
         }
     },
 
+    // Randomize the order of elements in an array
     shuffle: function(array) {
-        //http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+        // Algorithm to shuffle an array
+        // http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
         var currentIndex = array.length;
         var temporaryValue = 0;
         var randomIndex = 0;

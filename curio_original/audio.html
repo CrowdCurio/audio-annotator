@@ -1,0 +1,46 @@
+{% load staticfiles %}
+
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/urban-ears.css' %}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+
+<script>
+    /* record ids */
+    var user_id = {{ user.id }};
+    var curio_id = {{ curio.id }};
+    var task_id = {{ task.id }};
+    var total_num_tasks = {{ condition.configuration.task1.order|length }};
+    var num_required_tasks;
+    var experiment_id;
+    var condition_id;
+    var bonus_pay;
+    {% if experiment.id %}
+        bonus_pay = {{ condition.configuration.task1.bonus }};
+        experiment_id = {{ experiment.id }};
+        condition_id = {{ condition.id }};
+        num_required_tasks = {{ condition.configuration.task1.batch_size }};
+    {% endif %}
+</script>
+
+<div class="annotation">
+    <div class="labels"></div>
+    <div class="audio_visual"></div>
+    <div class="play_bar"></div>
+    <div class="hidden_img"></div>
+    <div class="creation_stage_container"></div>
+    <div class="submit_container"></div>
+</div>
+
+<script type="text/javascript" src="{% static 'tasks/js/labeling/audio/lib/wavesurfer.min.js'%}"></script>
+<script type="text/javascript" src="{% static 'tasks/js/labeling/audio/lib/wavesurfer.spectrogram.min.js'%}"></script>
+<script type="text/javascript" src="{% static 'tasks/js/labeling/audio/colormap/colormap.min.js'%}"></script>
+
+<script type="text/javascript" src="{% static 'tasks/js/labeling/audio/src/message.js'%}"></script>
+<script type="text/javascript" src="{% static 'tasks/js/labeling/audio/src/wavesurfer.regions.js'%}"></script>
+<script type="text/javascript" src="{% static 'tasks/js/labeling/audio/src/wavesurfer.drawer.extended.js'%}"></script>
+<script type="text/javascript" src="{% static 'tasks/js/labeling/audio/src/wavesurfer.labels.js'%}"></script>
+<script type="text/javascript" src="{% static 'tasks/js/labeling/audio/src/hidden_image.js'%}"></script>
+<script type="text/javascript" src="{% static 'tasks/js/labeling/audio/src/components.js'%}"></script>
+<script type="text/javascript" src="{% static 'tasks/js/labeling/audio/src/annotation_stages.js'%}"></script>
+<script type="text/javascript" src="{% static 'tasks/js/labeling/audio/src/main.js'%}"></script>

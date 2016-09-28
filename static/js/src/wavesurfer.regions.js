@@ -4,11 +4,22 @@
 'use strict';
 
 /**
- * Modifications
+ * Purpose:
+ *   User can add regions over the wavesurfer audio visualizations to help mark segments of the
+ *   audio clip. Original code can be found here:
+ *   https://github.com/katspaugh/wavesurfer.js/blob/master/plugin/wavesurfer.regions.js
+ * Modifications made:
  * - To fix issue when draging region past the end of the wavesurfer representation
  *   by saving wavesurfer.drawer.wrapper.scrollWidth to this.width on init since
  *   wavesurfer.drawer.wrapper.scrollWidth changes as regions are dragged outside 
+ * - Trigger region eventUp when user does a mouseup on anywhere on the document instead of just 
+ *   the wrapper element
  * - Added this.proximity and this.annotation fields
+ * - Added X button element to the top right corner of each region that deletes the region 
+ *   on click. The X icon uses font awesome styling
+ * - Pass regionUpdateType when the event 'region-update-end' is fired to show if the start or the end of the 
+ *   region was updated, or if the whole region was dragged
+ * - Give smaller regions higher z-indexs
  */
 
 /* Regions manager */

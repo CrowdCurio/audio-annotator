@@ -5,21 +5,25 @@
 'use strict';
 
 /**
- * Add methods getFrequencyRGB, getFrequencies, resample, drawSpectrogram 
- * to WaveSurfer.Drawer.Canvas. These methods are modified versions from the the 
- * spectrogram plugin to allow the wavesurfer drawer to draw a spectrogram representation 
- * when this.params.visualization is set to "spectrogram"
- * (https://github.com/katspaugh/wavesurfer.js/blob/master/plugin/wavesurfer.spectrogram.js)
- * 
- * Also added methods drawCoverForHiddenImage, clearCoverForRegion for hiding and displaying
- * the background image as the user labels regions correctly
+ * Purpose: 
+ *   Add methods getFrequencyRGB, getFrequencies, resample, drawSpectrogram 
+ *   to WaveSurfer.Drawer.Canvas. These methods are modified versions from the the 
+ *   spectrogram plugin (https://github.com/katspaugh/wavesurfer.js/blob/master/plugin/wavesurfer.spectrogram.js)
+ *   to allow the wavesurfer drawer to draw a spectrogram representation when this.params.visualization is 
+ *   set to "spectrogram"
+ * Dependencies:
+ *   WaveSurfer (lib/wavesurfer.min.js & lib/wavesurfer.spectrogram.min.js)
  */
 WaveSurfer.util.extend(WaveSurfer.Drawer.Canvas, {
+
+    // Takes in integer 0-255 and maps it to rgb string
     getFrequencyRGB: function(colorValue) {
         if (this.params.colorMap) {
+            // If the wavesurfer has a specified colour map
             var rgb = this.params.colorMap[colorValue];
             return 'rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
         } else {
+            // If not just use gray scale
             return 'rgb(' + colorValue + ',' + colorValue + ',' + colorValue + ')';
         }
         

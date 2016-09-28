@@ -8,6 +8,7 @@
  */
 
 var Util = {
+    // Convert seconds to timestamp string
     secondsToString: function(seconds) {
         if (seconds === null) {
             return '';
@@ -21,6 +22,7 @@ var Util = {
         return timeStr;
     },
 
+    // Return input elements that will contain the start, end and duration times of a sound segment
     createSegmentTime: function() {
         var timeDiv = $('<div>', {class: 'time_segment'});
         
@@ -44,6 +46,7 @@ var Util = {
             readonly: true
         });
 
+        // Return the parent element with the all the time elements appended 
         return timeDiv.append([start, startInput, end, endInput, duration, durationInput]);
     }
 };
@@ -57,16 +60,23 @@ var Util = {
 
 function PlayBar(wavesurfer) {
     this.wavesurfer = wavesurfer;
+    // Dom element containing play button and progress timestamp
     this.playBarDom = null;
+    // List of user actions (click-pause, click-play, spacebar-pause, spacebar-play) with
+    // timestamps of when the user took the action
     this.events = [];
 }
 
 PlayBar.prototype = {
+
+    // Return a string of the form "<current_time> / <clip_duration>" (Ex "00:03.644 / 00:10.796")
     getTimerText: function() {
         return Util.secondsToString(this.wavesurfer.getCurrentTime()) +
                ' / ' + Util.secondsToString(this.wavesurfer.getDuration());
     },
 
+    // Create the play bar and progress timestamp html elements and append eventhandlers for updating
+    // these elements for when the clip is played and paused
     create: function() {
         var my = this;
         this.addWaveSurferEvents();
@@ -88,6 +98,7 @@ PlayBar.prototype = {
         this.playBarDom = [playButton, timer];
     },
 
+    // Append the play buttom and the progress timestamp to the .play_bar container
     update: function() {
         $(this.playBarDom).detach();
         $('.play_bar').append(this.playBarDom);
@@ -95,10 +106,12 @@ PlayBar.prototype = {
         this.updateTimer();
     },
 
+    // Update the progress timestamp (called when audio is playing)
     updateTimer: function() {
         $('.timer').text(this.getTimerText());
     },
 
+    // Used to track events related to playing and pausing the clip (click or spacebar)
     trackEvent: function(eventString) {
         var eventData = {
             event: eventString,
@@ -107,11 +120,14 @@ PlayBar.prototype = {
         this.events.push(eventData);
     },
 
+    // Return the list of events representing the actions the user did related to playing and
+    // pausing the audio
     getEvents: function() {
         // Return shallow copy
         return this.events.slice();
     },
 
+    // Add wavesurfer event handlers to update the play button and progress timestamp
     addWaveSurferEvents: function() {
         var my = this;
 
@@ -131,6 +147,7 @@ PlayBar.prototype = {
             my.updateTimer();
         });
 
+        // Play and pause on spacebar keydown
         $(document).on("keydown", function (event) {
             if (event.keyCode === 32) {
                 event.preventDefault();
@@ -149,14 +166,19 @@ PlayBar.prototype = {
  */
 
 function WorkflowBtns(exitUrl) {
+    // Dom of submit and load next btn
     this.nextBtn = null;
+    // Dom of exit task btn
     this.exitBtn = null;
+    // The url the user will be directed to when they exit
     this.exitUrl = exitUrl;
 
+    // Boolean that determined if the exit button is shown
     this.showExitBtn = false;
 }
 
 WorkflowBtns.prototype = {
+    // Create dom elements for the next and exit btns
     create: function() {
         var my = this;
         this.nextBtn = $('<button>', {
@@ -176,6 +198,7 @@ WorkflowBtns.prototype = {
         });
     },
 
+    // Append the next and exit elements to the the parent container
     update: function() {
         $('.submit_container').append(this.nextBtn);
         if (this.showExitBtn) {
@@ -183,6 +206,7 @@ WorkflowBtns.prototype = {
         }
     },
 
+    // Set the value of showExitBtn
     setExitBtnFlag: function(showExitBtn) {
         this.showExitBtn = showExitBtn;
     }

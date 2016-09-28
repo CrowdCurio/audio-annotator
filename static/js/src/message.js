@@ -2,8 +2,9 @@
 
 /*
  * Purpose:
- *   Used to notify user of hints on how to use the interface
- *   and if they are improving or not 
+ *   Used to notify user of hints on how to use the interface and if they are improving or not. 
+ *   Materialize toast makes the text appear in a message box in the top right hand corner for a specified 
+ *   amount of time.
  * Dependencies:
  *   Materlize, Font Awesome, urban-ears.css
  */
@@ -22,10 +23,12 @@ var Message = {
     },
 
     notifyAlert: function(message) {
+        // Add class red, materlialize's built css will make the box appear red
         Materialize.toast('<i class="fa fa-exclamation-triangle"></i>' + message , 5000, 'red');
     },
 
     notifyHint: function(message) {
+        // Add class toastHint (css defined in urban-ears.css) 
         Materialize.toast('<i class="fa fa-lightbulb-o"></i>' + message, 3000, 'toastHint');
     }
 };
