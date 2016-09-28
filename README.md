@@ -21,14 +21,17 @@ It has 4 types of ways of providing feedback to the user (wavesurfer.params.feed
 Note: In the examples, the submit annotations btn will output data to the web console, since the POST is not hooked up to the backend
 
 ### Files
-* [**index.html**](index.html)  
-   html file for urbanears
+* [**urbanears/examples/**](examples/)
+   * [index.html](examples/index.html)  
+      HTML file for the normal version of the interface
+   * [curiosity.html](examples/curiosity.html)  
+      HTML file for the curiosity version of the interface
 
 * [**urbanears/static/css/**](static/css/)
-   * [annotation_style.css](static/css/annotation_style.css)  
+   * [urban-ears.css](static/css/urban-ears.css)  
       Custom css for urbanears interface
-   * [bootstrap.min.css](static/css/bootstrap.min.css)  
-      Minified version of bootstrap css
+   * [materialize.min.css](static/css/materialize.min.css)  
+      Minified version of materlize css
 
 * [**urbanears/static/js/**](static/js/)
    * [colormap/](static/js/colormap/)
@@ -44,27 +47,30 @@ Note: In the examples, the submit annotations btn will output data to the web co
    * [lib/](static/js/lib/)
       * Non modified minified external JS libraries used by the  urbanears interface
    * [src/](static/js/src/)
-      * [annotation_components.js](static/js/src/annotation_components.js)  
-         Definition of class associated with different components of the page.  
-         * Util: Util class to create Start and End time component
-         * StageOneView, StageTwoView, StageThreeView: Views for the different stages of the interface
-         * AnnotationStages: controller to switch between views when as the user annotated the sound clip
-         * PlayBar: the play button and time displayed below the wave visualization
-         * SavedAnnotations: Class to help store which annotations have been saved
-         * NextTask: logic for the submit annotations button to load the next sound clip
+      * [annotation_stages.js](static/js/src/annotation_stages.js)  
+         Defines: StageOneView (view when no region is selected), StageTwoView (online mode creation view), StageThreeView (view when region is selected, 
+         it displays the tags to annotate the region), AnnotationStages (controller of the annotation work flow)
+      * [components.js](static/js/src/components.js)  
+         Defines: Util (helper functions for creating timestamp elements), PlayBar (play events, play button and progress time stamp), 
+         WorkflowBtns (submit button and exit button)
+      * [hidden_image.js](static/js/src/hidden_image.js)  
+         Defines: HiddenImg (Creates elements to hide an image behind a canvas, and reveal random parts of the image)
       * [main.js](static/js/src/main.js)  
-         Definition of UrbanEars class and main function. This file also calls the main function which  
-         renders the urbanears interface
-      * [spectrogram.js](static/js/src/spectrogram.js)  
-         Using the logic from the wavesurfer spectrogram plugin to override the wavesurfer drawer logic  
-         in order to have waveform visiualizations as well as spectrogram and inivisble visiualizations  
+         Defines: UrbanEars (Creates and and updates all parts of the interface when a new task is loaded. Also submits task data) 
+      * [message.js](static/js/src/message.js)  
+         Defines: Message (helper functions that alert the user of different messages using Materlize toast)
+      * [wavesurfer.drawer.extended.js](static/js/src/wavesurfer.drawer.extended.js)  
+         Using the logic from the wavesurfer spectrogram plugin to override the wavesurfer drawer logic in order to have waveform visiualizations as well as spectrogram and inivisble visiualizations
+      * [wavesurfer.labels.js](static/js/src/wavesurfer.labels.js)  
+         Defines: WaveSurfer.Labels (creates container element for lables and controls the positioning of the labels), WaveSurfer.Labels (individual label elements)
       * [wavesurfer.regions.js](static/js/src/wavesurfer.regions.js)  
-         Modified version of wavesurfer regions plugin (https://github.com/katspaugh/wavesurfer.js/blob/master/plugin/wavesurfer.regions.js) 
+         Modified version of wavesurfer regions plugin           
+ (https://github.com/katspaugh/wavesurfer.js/blob/master/plugin/wavesurfer.regions.js) 
 
 * [**urbanears/static/json/**](static/json/)
-   * [experiment_data.json](static/json/experiment_data.json)  
-      Fake data in JSON format that the urbanears makes a http GET request to
-
-* [**urbanears/static/wav/**](static/wav/)
-   * [traffic1.wav](static/wav/traffic1.wav), [traffic2.wav](static/wav/traffic2.wav)  
-      Test WAV files the interface loads
+   * [paris.json](static/json/paris.json)  
+      Solutions to paris audio clip annotations
+   * [sample_curiosity_data.json](static/json/sample_curiosity_data.json)  
+      Sample data for curiosity example
+   * [sample_data.json](static/json/sample_data.json)  
+      Sample data for normal urban ears example      
