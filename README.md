@@ -20,7 +20,17 @@ It has 4 types of ways of providing feedback to the user (wavesurfer.params.feed
 
 Note: In the examples, the submit annotations btn will output data to the web console, since the POST is not hooked up to the backend
 
+### Note about Curio system
+The examples in the **urbanears/examples/** do not depend on the curio system. They make a call to json containing fake data in order to render the the interface. The dependencies on the curio django layer have been removed from the html files in **urbanears/examples/**  and static/js/src/main.js.
+
+To view the curio versions of these files, take a look at **curio_original/audio.html** and **curio_original/main.js**. **main.js** loads and submits the task data. It contains both the GET and POST API calls. All the other JS files can be found in **static/js/**. They are not dependent on the curio system and have not been changed
 ### Files
+* [**urbanears/curio_original/**](curio_original/)
+   * [audio.html](curio_original/audio.html)  
+      django view of interface from curio repo
+   * [main.js](curio_original/main.js)  
+      Curio repo version that makes API calls using user information provided by the django layer.
+      Defines: UrbanEars (Creates and and updates all parts of the interface when a new task is loaded. Also submits task data) 
 * [**urbanears/examples/**](examples/)
    * [index.html](examples/index.html)  
       HTML file for the normal version of the interface
@@ -62,7 +72,7 @@ Note: In the examples, the submit annotations btn will output data to the web co
       * [wavesurfer.drawer.extended.js](static/js/src/wavesurfer.drawer.extended.js)  
          Using the logic from the wavesurfer spectrogram plugin to override the wavesurfer drawer logic in order to have waveform visiualizations as well as spectrogram and inivisble visiualizations
       * [wavesurfer.labels.js](static/js/src/wavesurfer.labels.js)  
-         Defines: WaveSurfer.Labels (creates container element for lables and controls the positioning of the labels), WaveSurfer.Labels (individual label elements)
+         Defines: WaveSurfer.Labels (creates container element for lables and controls the positioning of the labels), WaveSurfer.Label (individual label elements)
       * [wavesurfer.regions.js](static/js/src/wavesurfer.regions.js)  
          Modified version of wavesurfer regions plugin           
  (https://github.com/katspaugh/wavesurfer.js/blob/master/plugin/wavesurfer.regions.js) 
