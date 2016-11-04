@@ -25,7 +25,7 @@ var Util = {
     // Return input elements that will contain the start, end and duration times of a sound segment
     createSegmentTime: function() {
         var timeDiv = $('<div>', {class: 'time_segment'});
-        
+
         var start = $('<span>', {text: 'Start:'});
         var startInput = $('<input>', {
             type: 'text',
@@ -46,7 +46,7 @@ var Util = {
             readonly: true
         });
 
-        // Return the parent element with the all the time elements appended 
+        // Return the parent element with the all the time elements appended
         return timeDiv.append([start, startInput, end, endInput, duration, durationInput]);
     }
 };
@@ -72,7 +72,7 @@ PlayBar.prototype = {
     // Return a string of the form "<current_time> / <clip_duration>" (Ex "00:03.644 / 00:10.796")
     getTimerText: function() {
         return Util.secondsToString(this.wavesurfer.getCurrentTime()) +
-               ' / ' + Util.secondsToString(this.wavesurfer.getDuration());
+            ' / ' + Util.secondsToString(this.wavesurfer.getDuration());
     },
 
     // Create the play bar and progress timestamp html elements and append eventhandlers for updating
@@ -89,11 +89,11 @@ PlayBar.prototype = {
             my.trackEvent('click-' + (my.wavesurfer.isPlaying() ? 'pause' : 'play'));
             my.wavesurfer.playPause();
         });
-        
+
         // Create audio timer text
         var timer = $('<span>', {
             class: 'timer',
-        });    
+        });
 
         this.playBarDom = [playButton, timer];
     },
@@ -113,10 +113,15 @@ PlayBar.prototype = {
 
     // Used to track events related to playing and pausing the clip (click or spacebar)
     trackEvent: function(eventString) {
+        var my = this;
+        var clickTime = my.wavesurfer.getCurrentTime();
+
         var eventData = {
             event: eventString,
-            time: new Date().getTime()
+            time: new Date().getTime(),
+            click_time: clickTime
         };
+
         this.events.push(eventData);
     },
 
@@ -134,10 +139,10 @@ PlayBar.prototype = {
         this.wavesurfer.on('play', function () {
             $('.play_audio').removeClass('fa-play-circle').addClass('fa-stop-circle');
         });
-        
+
         this.wavesurfer.on('pause', function () {
             $('.play_audio').removeClass('fa-stop-circle').addClass('fa-play-circle');
-        }); 
+        });
 
         this.wavesurfer.on('seek', function () {
             my.updateTimer();
@@ -153,6 +158,7 @@ PlayBar.prototype = {
                 event.preventDefault();
                 my.trackEvent('spacebar-' + (my.wavesurfer.isPlaying() ? 'pause' : 'play'));
                 my.wavesurfer.playPause();
+                console.log("playedspacebar");
             }
         });
     },
