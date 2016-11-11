@@ -57,11 +57,22 @@
         <div class="col s6 ">
             <div class="right">
                 <h5>Sound Tagging Hit</h5>
-                <h6 class="right">Tutorial Video</h6>
+                <a class="waves-effect waves-light modal-trigger right" href="#modal1">Tutorial Video</a>
+                <!--<h6 class="right">Tutorial Video</h6>-->
             </div>
         </div>
         <div class="col s12">
             <div class="divider bottom"></div>
+        </div>
+    </div>
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <h4>Tutorial Video</h4>
+            <iframe width="100%" height="480" src="https://www.youtube.com/embed/Bg8-83heFRM" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class=" modal-action modal-close waves-effect waves-red btn-flat">Close</a>
         </div>
     </div>
     <div class="row prompt">
@@ -78,6 +89,11 @@
     </div>
     <script>
         var dataUrl = '/static/json/sample_data.json';
+
+        $(document).ready(function(){
+            $('.modal-trigger').leanModal();
+        });
+
     </script>
 </body>
 </html>
