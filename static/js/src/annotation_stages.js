@@ -2,7 +2,8 @@
 
 /*
  * Purpose:
- *   The view the user sees when no region has been seleted
+ *   The view the user sees when no region has been selected. This view is not used if the current version
+ *   of the interface.
  * Dependencies:
  *   jQuey, urban-ears.css
  */
@@ -69,7 +70,7 @@ StageTwoView.prototype = {
         });
 
         var time = Util.createSegmentTime();
-        
+
         this.dom = container.append([button, time]);
     },
 
@@ -105,10 +106,11 @@ StageThreeView.prototype = {
 
         var time = Util.createSegmentTime();
 
+
         var tagContainer = $('<div>', {
             class: 'tag_container',
         });
-        
+
         this.dom = container.append([message, time, tagContainer]);
     },
 
@@ -145,7 +147,7 @@ StageThreeView.prototype = {
             // colour that proximity is associated with
             tag.click(function () {
                 $(my).trigger(
-                    'change-tag', 
+                    'change-tag',
                     [{proximity: tagName, color: my.colors[index]}]
                 );
             });
@@ -210,9 +212,9 @@ StageThreeView.prototype = {
                 return this.innerHTML === region.annotation;
             });
             if (selectedTags.length > 0) {
-                selectedTags.addClass('selected');       
+                selectedTags.addClass('selected');
             } else {
-                $('.custom_tag input', this.dom).val(region.annotation); 
+                $('.custom_tag input', this.dom).val(region.annotation);
             }
         }
 
@@ -310,9 +312,9 @@ AnnotationStages.prototype = {
                 var region = this.wavesurfer.regions.list[region_id];
                 if (region.annotation === '' || (this.usingProximity && region.proximity === '')) {
                     if (this.usingProximity) {
-                        Message.notifyAlert('Make sure all your annotations have an annotation tag and a proximity tag!'); 
+                        Message.notifyAlert('Make sure all your annotations have an annotation tag and a proximity tag!');
                     } else {
-                        Message.notifyAlert('Make sure all your annotations have a tag!'); 
+                        Message.notifyAlert('Make sure all your annotations have a tag!');
                     }
                     return false;
                 }
@@ -323,7 +325,7 @@ AnnotationStages.prototype = {
 
     // Switch the currently selected region
     swapRegion: function(newStage, region) {
-        // Disable drag and resize editing for the old current region. 
+        // Disable drag and resize editing for the old current region.
         // Also remove the highlight of the label and region border
         if (this.currentRegion) {
             this.currentRegion.update({drag: false, resize: false});
@@ -331,7 +333,7 @@ AnnotationStages.prototype = {
             $(this.currentRegion.annotationLabel.element).removeClass('current_label');
         }
 
-        // If the user is switch to stage 3, enable drag and resize editing for the new current region. 
+        // If the user is switch to stage 3, enable drag and resize editing for the new current region.
         // Also highlight the label and region border
         if (region) {
             if (newStage === 2) {
@@ -347,21 +349,23 @@ AnnotationStages.prototype = {
 
     // Switch stages and the current region
     updateStage: function(newStage, region) {
-        // Swap regions 
+        // Swap regions
         this.swapRegion(newStage, region);
 
         // Update the dom of which ever stage the user is switching to
-        var newContent = null;
-        if (newStage === 1) {
-            this.stageOneView.update(null, null, this.wavesurfer.isPlaying());
-            newContent = this.stageOneView.dom;
-        } else if (newStage === 2) {
-            this.stageTwoView.update(region);
-            newContent = this.stageTwoView.dom;
-        } else if (newStage === 3) {
-            this.stageThreeView.update(region);
-            newContent = this.stageThreeView.dom;
-        }
+        var newContent = this.stageThreeView.dom;
+
+        // Use the code bellow to hide the tags initially
+        // if (newStage === 1) {
+        //     this.stageOneView.update(null, null, this.wavesurfer.isPlaying());
+        //     newContent = this.stageOneView.dom;
+        // } else if (newStage === 2) {
+        //     this.stageTwoView.update(region);
+        //     newContent = this.stageTwoView.dom;
+        // } else if (newStage === 3) {
+        //     this.stageThreeView.update(region);
+        //     newContent = this.stageThreeView.dom;
+        // }
 
 
         if (newContent) {
@@ -370,9 +374,9 @@ AnnotationStages.prototype = {
 
             // Detach the previous stage dom and append the updated stage dom to the stage container
             var container = $('.creation_stage_container');
-            container.fadeOut(10, function(){
+            container.hide(10, function(){
                 container.children().detach();
-                container.append(newContent).fadeIn();
+                container.append(newContent).show();
             });
         }
         // Alert the user of a hint
@@ -440,7 +444,7 @@ AnnotationStages.prototype = {
         }
     },
 
-    // Event Handler: when the user finishes drawing the region, track the action and 
+    // Event Handler: when the user finishes drawing the region, track the action and
     // select the new region and switch to stage 3 so the user can tag the region
     createRegionSwitchToStageThree: function(region) {
         if (region !== this.currentRegion) {
@@ -482,7 +486,7 @@ AnnotationStages.prototype = {
         if (this.currentStage === 1) {
             this.stageOneView.update(
                 null,
-                null, 
+                null,
                 this.wavesurfer.isPlaying()
             );
         }
@@ -728,7 +732,7 @@ AnnotationStages.prototype = {
         if (regionLabel) {
             eventData.region_label = regionLabel;
         }
-        // If the user has silent, notify, or hiddenImage feedback, recored the 
+        // If the user has silent, notify, or hiddenImage feedback, recored the
         // current f1 score with the event data
         if (this.wavesurfer.params.feedback !== 'none') {
             eventData.f1 = this.previousF1Score;
@@ -782,5 +786,5 @@ AnnotationStages.prototype = {
     // Attach event handlers for stage three events
     addStageThreeEvents: function() {
         $(this.stageThreeView).on('change-tag', this.updateRegion.bind(this));
-    },   
+    },
 };
