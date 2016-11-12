@@ -250,11 +250,12 @@ WaveSurfer.Region = {
             handleRight.className = 'wavesurfer-handle wavesurfer-handle-end';
             var css = {
                 position: 'absolute',
-                left: '0px',
+                left: '-10px',
                 top: '0px',
-                width: '1%',
+                width: '20%',
                 maxWidth: '4px',
-                height: '100%'
+                height: '100%',
+                padding: '5px',
             };
             this.style(handleLeft, css);
             this.style(handleRight, css);
