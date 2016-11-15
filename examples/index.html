@@ -23,6 +23,42 @@
     <script type="text/javascript" src="/static/js/src/main.js" defer></script>
 </head>
 <body>
+    <div class="row header">
+        <div class="col s12">
+            <div class="divider"></div>
+        </div>
+        <div class="col s6">
+            <div class="left">
+                <h5>Clip 1 of 9</h5>
+                <h6 class="left">approx. 14 minutes remaining</h6>
+            </div>
+        </div>
+        <div class="col s6 ">
+            <div class="right">
+                <h5>Sound Tagging Task</h5>
+                <a class="waves-effect waves-light modal-trigger right" href="#modal1">Tutorial Video</a>
+            </div>
+        </div>
+        <div class="col s12">
+            <div class="divider bottom"></div>
+        </div>
+    </div>
+    <!-- Modal Structure -->
+        <div id="modal1" class="modal">
+            <div class="modal-content">
+                <h4>Tutorial Video</h4>
+                <div class="videowrapper">
+                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/Bg8-83heFRM" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class=" modal-action modal-close waves-effect waves-red btn-flat">Close</a>
+            </div>
+        </div>
+    <div class="row prompt">
+        <h4 class="center">Highlight &amp; Tag Each Sound</h4>
+        <h6 class="center">Click and drag to create a new annotation. Listen for sound events and tag them from the list below.</h6>
+    </div>
     <div class="annotation">
         <div class="labels"></div>
         <div class="audio_visual"></div>
@@ -33,6 +69,10 @@
     </div>
     <script>
         var dataUrl = '/static/json/sample_data.json';
+
+        $(document).ready(function(){
+            $('.modal-trigger').leanModal();
+        });
     </script>
 </body>
 </html>
