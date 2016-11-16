@@ -29,18 +29,18 @@
       <file leaf-file-name="main.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/static/js/src/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="595">
-              <caret line="69" column="30" lean-forward="false" selection-start-line="69" selection-start-column="30" selection-end-line="69" selection-end-column="30" />
+            <state relative-caret-position="610">
+              <caret line="68" column="50" lean-forward="true" selection-start-line="68" selection-start-column="50" selection-end-line="68" selection-end-column="64" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="annotation_stages.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="annotation_stages.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/static/js/src/annotation_stages.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="583">
-              <caret line="353" column="31" lean-forward="false" selection-start-line="353" selection-start-column="31" selection-end-line="353" selection-end-column="31" />
+            <state relative-caret-position="613">
+              <caret line="354" column="9" lean-forward="false" selection-start-line="354" selection-start-column="9" selection-end-line="354" selection-end-column="9" />
               <folding />
             </state>
           </provider>
@@ -76,11 +76,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="sample_data.json" pinned="false" current-in-tab="false">
+      <file leaf-file-name="sample_data.json" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/static/json/sample_data.json">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="105">
-              <caret line="7" column="30" lean-forward="false" selection-start-line="7" selection-start-column="30" selection-end-line="7" selection-end-column="30" />
+              <caret line="7" column="31" lean-forward="false" selection-start-line="7" selection-start-column="31" selection-end-line="7" selection-end-column="31" />
               <folding />
             </state>
           </provider>
@@ -107,7 +107,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>updateTagContents</find>
       <find>showta</find>
       <find>time_se</find>
       <find>region</find>
@@ -137,6 +136,7 @@
       <find>loadnexttask</find>
       <find>nnotationStages</find>
       <find>===</find>
+      <find>swap</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -150,9 +150,9 @@
         <option value="$PROJECT_DIR$/static/js/src/components.js" />
         <option value="$PROJECT_DIR$/examples/index.html" />
         <option value="$PROJECT_DIR$/static/css/urban-ears.css" />
-        <option value="$PROJECT_DIR$/static/json/sample_data.json" />
-        <option value="$PROJECT_DIR$/static/js/src/main.js" />
         <option value="$PROJECT_DIR$/static/js/src/annotation_stages.js" />
+        <option value="$PROJECT_DIR$/static/js/src/main.js" />
+        <option value="$PROJECT_DIR$/static/json/sample_data.json" />
       </list>
     </option>
   </component>
@@ -263,12 +263,12 @@
       <workItem from="1479230529331" duration="1730000" />
       <workItem from="1479234742763" duration="11497000" />
       <workItem from="1479307723049" duration="9036000" />
-      <workItem from="1479336967085" duration="416000" />
+      <workItem from="1479336967085" duration="593000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="22778000" />
+    <option name="totallyTimeSpent" value="22955000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1618" y="25" width="930" height="1334" extended-state="0" />
@@ -432,26 +432,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/json/sample_data.json">
+    <entry file="file://$PROJECT_DIR$/static/js/src/annotation_stages.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="30" lean-forward="false" selection-start-line="7" selection-start-column="30" selection-end-line="7" selection-end-column="30" />
+        <state relative-caret-position="613">
+          <caret line="354" column="9" lean-forward="false" selection-start-line="354" selection-start-column="9" selection-end-line="354" selection-end-column="9" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/static/js/src/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="595">
-          <caret line="69" column="30" lean-forward="false" selection-start-line="69" selection-start-column="30" selection-end-line="69" selection-end-column="30" />
+        <state relative-caret-position="610">
+          <caret line="68" column="50" lean-forward="true" selection-start-line="68" selection-start-column="50" selection-end-line="68" selection-end-column="64" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/js/src/annotation_stages.js">
+    <entry file="file://$PROJECT_DIR$/static/json/sample_data.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="583">
-          <caret line="353" column="31" lean-forward="false" selection-start-line="353" selection-start-column="31" selection-end-line="353" selection-end-column="31" />
+        <state relative-caret-position="105">
+          <caret line="7" column="31" lean-forward="false" selection-start-line="7" selection-start-column="31" selection-end-line="7" selection-end-column="31" />
           <folding />
         </state>
       </provider>

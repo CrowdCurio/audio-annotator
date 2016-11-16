@@ -350,6 +350,10 @@ AnnotationStages.prototype = {
         // Swap regions 
         this.swapRegion(newStage, region);
 
+        if (alwaysShowTags === false){
+            console.log("yes");
+        }
+
         // Update the dom of which ever stage the user is switching to
         var newContent = null;
         if (newStage === 1) {
