@@ -125,27 +125,21 @@ UrbanEars.prototype = {
             // annotation task if the user is suppose to recieve feedback
             var proximityTags = my.currentTask.proximityTag;
             var annotationTags = my.currentTask.annotationTag;
-            var clip = my.currentTask.clip_tracker;
-            var clips = my.currentTask.total_clips;
-            var tutorial = my.currentTask.tutorial_video;
+            var recordingIndex = my.currentTask.recordingIndex || 1;
+            var numRecordings = my.currentTask.numRecordings || 1;
+            var tutorialVideoURL = my.currentTask.tutorialVideoURL;
             my.stages.reset(
                 proximityTags,
                 annotationTags,
-                annotationSolutions,
-                clip,
-                clips,
-                tutorial
+                annotationSolutions
             );
 
             // Update clip & time tracker of Header
-            var header_clip = document.getElementById('clip_tracker'),
-                header_time = document.getElementById('time_tracker')
+            $('#recording-index').html(recordingIndex);
+            $('#time-remaining').html((numRecordings - recordingIndex) * 1.5 + 5); // e.g. each clip should take 1.5 minutes, and all post-annotation tasks 5 mins.
 
-            header_clip.innerHTML = clip;
-            header_time.innerHTML = clips - clip * 1.5 + 5;
-
-            var video = document.getElementById('vid');
-            video.src = tutorial;
+            // set video url
+            $('#tutorial-video').attr('src', tutorialVideoURL);
 
             // Update the visualization type and the feedback type and load in the new audio clip
             my.wavesurfer.params.visualization = my.currentTask.visualization; // invisible, spectrogram, waveform
