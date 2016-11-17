@@ -125,11 +125,22 @@ UrbanEars.prototype = {
             // annotation task if the user is suppose to recieve feedback
             var proximityTags = my.currentTask.proximityTag;
             var annotationTags = my.currentTask.annotationTag;
+            var clip = my.currentTask.clip_tracker;
+            var time = my.currentTask.time_tracker;
             my.stages.reset(
                 proximityTags,
                 annotationTags,
-                annotationSolutions
+                annotationSolutions,
+                time,
+                clip
             );
+
+            // Update clip & time tracker of Header
+            var header_clip = document.getElementById('clip_tracker'),
+                header_time = document.getElementById('time_tracker')
+
+            header_clip.innerHTML = clip;
+            header_time.innerHTML = time;
 
             // Update the visualization type and the feedback type and load in the new audio clip
             my.wavesurfer.params.visualization = my.currentTask.visualization; // invisible, spectrogram, waveform
