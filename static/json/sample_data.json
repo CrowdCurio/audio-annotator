@@ -6,6 +6,7 @@
         "annotationTag": ["bicycle bell", "church bell", "human voice", "mechanical squeak", "music", "screeching train wheels", "single footstep", "siren", "vehicle brakes", "vehicle engine", "vehicle honk"],
         "url": "/static/wav/spectrogram_demo_doorknock_mono.wav",
         "total_clips": 9,
-        "clip_tracker": 1
+        "clip_tracker": 1,
+        "tutorial_video":"https://www.youtube.com/embed/Bg8-83heFRM"
     }
 }

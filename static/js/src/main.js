@@ -127,12 +127,14 @@ UrbanEars.prototype = {
             var annotationTags = my.currentTask.annotationTag;
             var clip = my.currentTask.clip_tracker;
             var clips = my.currentTask.total_clips;
+            var tutorial = my.currentTask.tutorial_video;
             my.stages.reset(
                 proximityTags,
                 annotationTags,
                 annotationSolutions,
                 clip,
-                clips
+                clips,
+                tutorial
             );
 
             // Update clip & time tracker of Header
@@ -141,6 +143,9 @@ UrbanEars.prototype = {
 
             header_clip.innerHTML = clip;
             header_time.innerHTML = clips - clip * 1.5 + 5;
+
+            var video = document.getElementById('vid');
+            video.src = tutorial;
 
             // Update the visualization type and the feedback type and load in the new audio clip
             my.wavesurfer.params.visualization = my.currentTask.visualization; // invisible, spectrogram, waveform
