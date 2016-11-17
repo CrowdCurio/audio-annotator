@@ -113,9 +113,12 @@ PlayBar.prototype = {
 
     // Used to track events related to playing and pausing the clip (click or spacebar)
     trackEvent: function(eventString) {
+        var audioSourceTime = this.wavesurfer.getCurrentTime();
+
         var eventData = {
             event: eventString,
-            time: new Date().getTime()
+            time: new Date().getTime(),
+            audioSourceTime: audioSourceTime
         };
         this.events.push(eventData);
     },
