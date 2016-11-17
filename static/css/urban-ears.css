@@ -51,6 +51,7 @@
 
 .play_audio.fa {
   font-size: 40px;
+  color: #000080;
 }
 
 .creation_stage_container {
@@ -104,6 +105,9 @@
 
 .time_segment span {
   margin: 0px 8px;
+  color: gray;
+  font-style: italic;
+  font-weight: normal;
 }
 
 .tag_container {
@@ -219,4 +223,51 @@ input[type=text][readonly="readonly"] {
   color: rgba(0, 0, 0, 0.5);
   border-bottom: 1px dotted rgba(0, 0, 0, 0.5);
   text-align: center;
+}
+
+.header {
+  padding-top: 20px;
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+h6 {
+  margin-top: 0px;
+}
+
+.bottom{
+  margin-top: 10px;
+}
+
+.prompt {
+  margin-bottom: 0px;
+  padding-top: 20px;
+}
+
+.videowrapper {
+  float: none;
+  clear: both;
+  width: 100%;
+  position: relative;
+  padding-bottom: 56.25%;
+  padding-top: 25px;
+  height: 0;
+}
+
+.videowrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#modal1{
+  z-index: 10000 !important;
+}
+
+input.form-control.start,
+input.form-control.end,
+input.form-control.duration {
+  border-bottom-width: 0px;
 }

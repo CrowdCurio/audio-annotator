@@ -25,14 +25,11 @@ StageOneView.prototype = {
             $(my).trigger('start-annotation');
         });
 
-        var hint = $('<div>', {
-            html: 'Click and drag to create a new annotation',
-            class: 'hint'
-        });
-
         var time = Util.createSegmentTime();
 
-        this.dom = container.append([hint, time]);
+        time.hide();
+
+        this.dom = container.append([time]);
     },
 
     // Update start and end times. Enable the 'CLICK TO START A NEW ANNOTATION' if the audio is playing
@@ -104,6 +101,8 @@ StageThreeView.prototype = {
         });
 
         var time = Util.createSegmentTime();
+
+        time.show();
 
         var tagContainer = $('<div>', {
             class: 'tag_container',
