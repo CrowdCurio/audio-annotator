@@ -443,7 +443,7 @@ AnnotationStages.prototype = {
     // select the new region and switch to stage 3 so the user can tag the region
     createRegionSwitchToStageThree: function(region) {
         if (region !== this.currentRegion) {
-            this.trackEvent('offline-create', region.id);
+            this.trackEvent('offline-create', region.id, null, region.start, region.end);
             this.updateStage(3, region);
         }
     },
@@ -471,7 +471,7 @@ AnnotationStages.prototype = {
     trackMovement: function(region, event, type) {
         if (this.currentStage === 3) {
             this.giveFeedback();
-            this.trackEvent('region-moved-' + type, this.currentRegion.id);
+            this.trackEvent('region-moved-' + type, this.currentRegion.id, null, this.currentRegion.start, this.currentRegion.end);
         }
     },
 
@@ -514,7 +514,7 @@ AnnotationStages.prototype = {
         if (this.wavesurfer.isPlaying()) {
             this.wavesurfer.pause();
         }
-        this.trackEvent('online-create', this.currentRegion.id);
+        this.trackEvent('online-create', this.currentRegion.id, null, this.currentRegion.start, this.currentRegion.end);
         this.updateStage(3, this.currentRegion);
     },
 
@@ -717,7 +717,7 @@ AnnotationStages.prototype = {
     },
 
     // Adds event tracking object to events list
-    trackEvent: function(eventString, regionId, regionLabel) {
+    trackEvent: function(eventString, regionId, regionLabel, regionStart, regionEnd) {
         var eventData = {
             event: eventString,
             time: new Date().getTime(),
@@ -726,6 +726,14 @@ AnnotationStages.prototype = {
         // If the region's current label is passed in, append it to the event data
         if (regionLabel) {
             eventData.region_label = regionLabel;
+        }
+
+        if (regionStart) {
+            eventData.region_start = regionStart;
+        }
+
+        if (regionEnd) {
+            eventData.region_end = regionEnd;
         }
         // If the user has silent, notify, or hiddenImage feedback, recored the 
         // current f1 score with the event data
