@@ -128,10 +128,12 @@ UrbanEars.prototype = {
             var recordingIndex = my.currentTask.recordingIndex || 1;
             var numRecordings = my.currentTask.numRecordings || 1;
             var tutorialVideoURL = my.currentTask.tutorialVideoURL;
+            var alwaysShowTags = my.currentTask.alwaysShowTags;
             my.stages.reset(
                 proximityTags,
                 annotationTags,
-                annotationSolutions
+                annotationSolutions,
+                alwaysShowTags
             );
 
             // Update clip & time tracker of Header
