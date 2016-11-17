@@ -105,6 +105,9 @@
 
 .time_segment span {
   margin: 0px 8px;
+  color: gray;
+  font-style: italic;
+  font-weight: normal;
 }
 
 .tag_container {
@@ -261,4 +264,10 @@ h6 {
 
 #modal1{
   z-index: 10000 !important;
+}
+
+input.form-control.start,
+input.form-control.end,
+input.form-control.duration {
+  border-bottom-width: 0px;
 }
