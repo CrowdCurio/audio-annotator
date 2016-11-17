@@ -245,6 +245,7 @@ function AnnotationStages(wavesurfer, hiddenImage) {
     this.city = '';
     this.previousF1Score = 0;
     this.events = [];
+    this.alwaysShowTags = false;
 
     // These are not reset, since they should only be shown for the first clip
     this.shownTagHint = false;
@@ -350,21 +351,21 @@ AnnotationStages.prototype = {
         // Swap regions 
         this.swapRegion(newStage, region);
 
-        if (alwaysShowTags === false){
-            console.log("yes");
-        }
-
         // Update the dom of which ever stage the user is switching to
         var newContent = null;
-        if (newStage === 1) {
-            this.stageOneView.update(null, null, this.wavesurfer.isPlaying());
-            newContent = this.stageOneView.dom;
-        } else if (newStage === 2) {
-            this.stageTwoView.update(region);
-            newContent = this.stageTwoView.dom;
-        } else if (newStage === 3) {
-            this.stageThreeView.update(region);
+        if (this.alwaysShowTags){
             newContent = this.stageThreeView.dom;
+        } else {
+            if (newStage === 1) {
+                this.stageOneView.update(null, null, this.wavesurfer.isPlaying());
+                newContent = this.stageOneView.dom;
+            } else if (newStage === 2) {
+                this.stageTwoView.update(region);
+                newContent = this.stageTwoView.dom;
+            } else if (newStage === 3) {
+                this.stageThreeView.update(region);
+                newContent = this.stageThreeView.dom;
+            }
         }
 
 
@@ -374,10 +375,17 @@ AnnotationStages.prototype = {
 
             // Detach the previous stage dom and append the updated stage dom to the stage container
             var container = $('.creation_stage_container');
-            container.fadeOut(10, function(){
-                container.children().detach();
-                container.append(newContent).fadeIn();
-            });
+            if (this.alwaysShowTags) {
+                container.hide(10, function(){
+                    container.children().detach();
+                    container.append(newContent).show();
+                });
+            } else {
+                container.fadeOut(10, function(){
+                    container.children().detach();
+                    container.append(newContent).fadeIn();
+                });          
+            }
         }
         // Alert the user of a hint
         this.hint();
@@ -412,12 +420,14 @@ AnnotationStages.prototype = {
         this.wavesurfer.clearRegions();
         this.events = [];
         this.deletedAnnotations = [];
+        this.alwaysShowTags = false;
     },
 
     // Reset field values and update the proximity tags, annotation tages and annotation solutions
-    reset: function(proximityTags, annotationTags, solution) {
+    reset: function(proximityTags, annotationTags, solution, alwaysShowTags) {
         this.clear();
         // Update all Tags' Contents
+        this.alwaysShowTags = alwaysShowTags || false;
         this.updateContentsTags(proximityTags, annotationTags);
         this.usingProximity = proximityTags.length > 0;
         // Update solution set
