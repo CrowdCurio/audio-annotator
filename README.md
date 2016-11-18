@@ -29,32 +29,32 @@ audio-annotator also provides mechanisms for providing real-time feedback to the
    4. hiddenImage (Annotation score is calculated and recorded with each action the user takes. A message will appear telling the user if they are improving or not. Also parts of a hidden image will be revealed to the user. Solution set and image src are required)
    
 ### To Demo
-1. In the urbanears/ directory run `python -m SimpleHTTPServer`
+1. In the audio-annotator/ directory run `python -m SimpleHTTPServer`
 2. Visit <http://localhost:8000/examples> in your browser to see the verison with annotation and proximity tags. This demo also uses the spectrogram visualization, and does not provide the user with feedback as they annotate the clip.
 3. Visit <http://localhost:8000/examples/curiosity.html> in your browser to see the verison with just annotation tags. This demo also uses the spectrogram visualization, and provides the user feedback in the form of revealing a hidden image as the user correctly annotate the sound clip.
 
 Note: In the examples, the submit annotations btn will output data to the web console, since the POST is not hooked up to the backend
 
 ### Interfacing with backends
-The examples in the **urbanears/examples/** do not depend on any specific backend. They make a call to json containing fake data in order to render the interface. Extra information for specific backends:
+The examples in the **examples/** do not depend on any specific backend. They make a call to json containing fake data in order to render the interface. Extra information for specific backends:
 
 #### CrowdCurio
 To view the curio versions of these files, take a look at **curio_original/audio.html** and **curio_original/main.js**. **main.js** loads and submits the task data. It contains both the GET and POST API calls. All the other JS files can be found in **static/js/**. They are not dependent on the curio system and have not been changed
 
 ### Files
-* [**urbanears/examples/**](examples/)
+* [**examples/**](examples/)
    * [index.html](examples/index.html)  
       HTML file for the normal version of the interface
    * [curiosity.html](examples/curiosity.html)  
       HTML file for the curiosity version of the interface
 
-* [**urbanears/static/css/**](static/css/)
+* [**static/css/**](static/css/)
    * [urban-ears.css](static/css/urban-ears.css)  
       Custom css for urbanears interface
    * [materialize.min.css](static/css/materialize.min.css)  
       Minified version of materlize css
 
-* [**urbanears/static/js/**](static/js/)
+* [**static/js/**](static/js/)
    * [colormap/](static/js/colormap/)
       * [gen_colormap.sh](static/js/colormap/gen_colormap.sh)  
          Shell script used to generate colormap.min.js. If gen_colormap.js is modified  
@@ -88,7 +88,7 @@ To view the curio versions of these files, take a look at **curio_original/audio
          Modified version of wavesurfer regions plugin           
  (https://github.com/katspaugh/wavesurfer.js/blob/master/plugin/wavesurfer.regions.js)
 
-* [**urbanears/static/json/**](static/json/)
+* [**static/json/**](static/json/)
    * [paris.json](static/json/paris.json)  
       Solutions to paris audio clip annotations
    * [sample_curiosity_data.json](static/json/sample_curiosity_data.json)  
@@ -96,7 +96,7 @@ To view the curio versions of these files, take a look at **curio_original/audio
    * [sample_data.json](static/json/sample_data.json)  
       Sample data for normal urban ears example      
 
-* [**urbanears/curio_original/**](curio_original/)
+* [**curio_original/**](curio_original/)
    * [audio.html](curio_original/audio.html)  
       django view of interface from curio repo
    * [main.js](curio_original/main.js)  
