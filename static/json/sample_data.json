@@ -8,7 +8,6 @@
         "numRecordings": 9,
         "recordingIndex": 1,
         "tutorialVideoURL":"https://www.youtube.com/embed/Bg8-83heFRM",
-        "url": "/static/wav/paris.wav",
         "alwaysShowTags": true
     }
 }
