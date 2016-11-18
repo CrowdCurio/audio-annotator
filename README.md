@@ -1,17 +1,32 @@
-# urbanears
+# audio-annotator
+
+[![MIT licensed](https://img.shields.io/badge/license-BSD2-blue.svg)](https://github.com/CrowdCurio/audio-annotator/blob/master/LICENSE.txt)
+
+Javascript web interface for annotating audio data.
+
+Developed by [StefanieMikloska](github.com/StefanieMikloska), [CrowdLab @ Univertsity of Waterloo](http://edithlaw.ca/people.html) and [MARL @ New York University](http://steinhardt.nyu.edu/marl/).
+
+When used in academic work please cite: TBD.
+
 ### Description
-Urban Ears is a web interface that allows users to annotate sound clips.
+audio-annotator is a web interface that allows users to annotate audio recordings.
 
 It has 3 types of audio visualizations (wavesurfer.params.visualization)
    1. invisible (appears as a blank rectangle that users can draw regions on)
    2. spectrogram (audio file is represented by a spectrogram that users can draw regions on)
    3. waveform (audio file is represented by a waveform that users can draw regions on)
-   
-It has 4 types of ways of providing feedback to the user (wavesurfer.params.feedback)
+
+Screenshot:
+<kbd>
+![audio-annotator screenshot](https://github.com/CrowdCurio/audio-annotator/blob/master/static/img/task-interface.png)
+</kbd>
+
+### Feedback mechanisms
+audio-annotator also provides mechanisms for providing real-time feedback to the user based on their annotations: (wavesurfer.params.feedback)
    1. none (There is no feedback provided. Solution set is not needed)
-   2. silent (The f1 score is calculated and recorded with each action the user takes. Solution set is required)
-   3. notify (The f1 score is calculated and recorded with each action the user takes. A message will appear telling the user if they are improving or not. Solution set is required)
-   4. hiddenImage (The f1 score is calculated and recorded with each action the user takes. A message will appear telling the user if they are improving or not. Also parts of a hidden image will be revealed to the user. Solution set and image src are required)
+   2. silent (Annotation score is calculated and recorded with each action the user takes. Solution set is required)
+   3. notify (Annotation score is calculated and recorded with each action the user takes. A message will appear telling the user if they are improving or not. Solution set is required)
+   4. hiddenImage (Annotation score is calculated and recorded with each action the user takes. A message will appear telling the user if they are improving or not. Also parts of a hidden image will be revealed to the user. Solution set and image src are required)
    
 ### To Demo
 1. In the urbanears/ directory run `python -m SimpleHTTPServer`
@@ -20,17 +35,13 @@ It has 4 types of ways of providing feedback to the user (wavesurfer.params.feed
 
 Note: In the examples, the submit annotations btn will output data to the web console, since the POST is not hooked up to the backend
 
-### Note about Curio system
-The examples in the **urbanears/examples/** do not depend on the curio system. They make a call to json containing fake data in order to render the the interface. The dependencies on the curio django layer have been removed from the html files in **urbanears/examples/**  and static/js/src/main.js.
+### Interfacing with backends
+The examples in the **urbanears/examples/** do not depend on any specific backend. They make a call to json containing fake data in order to render the interface. Extra information for specific backends:
 
+#### CrowdCurio
 To view the curio versions of these files, take a look at **curio_original/audio.html** and **curio_original/main.js**. **main.js** loads and submits the task data. It contains both the GET and POST API calls. All the other JS files can be found in **static/js/**. They are not dependent on the curio system and have not been changed
+
 ### Files
-* [**urbanears/curio_original/**](curio_original/)
-   * [audio.html](curio_original/audio.html)  
-      django view of interface from curio repo
-   * [main.js](curio_original/main.js)  
-      Curio repo version that makes API calls using user information provided by the django layer.
-      Defines: UrbanEars (Creates and and updates all parts of the interface when a new task is loaded. Also submits task data) 
 * [**urbanears/examples/**](examples/)
    * [index.html](examples/index.html)  
       HTML file for the normal version of the interface
@@ -75,7 +86,7 @@ To view the curio versions of these files, take a look at **curio_original/audio
          Defines: WaveSurfer.Labels (creates container element for lables and controls the positioning of the labels), WaveSurfer.Label (individual label elements)
       * [wavesurfer.regions.js](static/js/src/wavesurfer.regions.js)  
          Modified version of wavesurfer regions plugin           
- (https://github.com/katspaugh/wavesurfer.js/blob/master/plugin/wavesurfer.regions.js) 
+ (https://github.com/katspaugh/wavesurfer.js/blob/master/plugin/wavesurfer.regions.js)
 
 * [**urbanears/static/json/**](static/json/)
    * [paris.json](static/json/paris.json)  
@@ -84,3 +95,10 @@ To view the curio versions of these files, take a look at **curio_original/audio
       Sample data for curiosity example
    * [sample_data.json](static/json/sample_data.json)  
       Sample data for normal urban ears example      
+
+* [**urbanears/curio_original/**](curio_original/)
+   * [audio.html](curio_original/audio.html)  
+      django view of interface from curio repo
+   * [main.js](curio_original/main.js)  
+      Curio repo version that makes API calls using user information provided by the django layer.
+      Defines: UrbanEars (Creates and and updates all parts of the interface when a new task is loaded. Also submits task data) 
