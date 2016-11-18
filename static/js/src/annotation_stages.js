@@ -102,7 +102,12 @@ StageThreeView.prototype = {
 
         var time = Util.createSegmentTime();
 
-        time.show();
+        time.hide();
+
+        var button = $('.audio_visual');
+        button.click(function () {
+            time.show();
+        });
 
         var tagContainer = $('<div>', {
             class: 'tag_container',
