@@ -3,7 +3,7 @@
         "feedback": "none",
         "visualization": "spectrogram",
         "proximityTag": ["near", "far", "not sure"],
-        "annotationTag": ["bicycle bell", "church bell", "human voice", "mechanical squeak", "music", "screeching train wheels", "single footstep", "siren", "vehicle brakes", "vehicle engine", "vehicle honk"],
+        "annotationTag": ["bicycle bell", "church bell", "knocking", "whistle", "human voice", "mechanical squeak", "music", "screeching train wheels", "single footstep", "siren", "vehicle brakes", "vehicle engine", "vehicle honk"],
         "url": "/static/wav/spectrogram_demo_doorknock_mono.wav",
         "numRecordings": 9,
         "recordingIndex": 1,
