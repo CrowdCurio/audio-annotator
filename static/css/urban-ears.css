@@ -32,8 +32,7 @@
   top: 10px !important;
 }
 
-.annotation {   
-  padding-top: 20px;
+.annotation {
   margin: 0px auto;
   position: relative;
 }
@@ -177,6 +176,7 @@
 
 .submit_container {
   text-align: center;
+  padding-top: 30px;
 }
 
 .submit_container .btn,
@@ -233,6 +233,7 @@ input[type=text][readonly="readonly"] {
 
 h6 {
   margin-top: 0px;
+  margin-bottom: 10px;
 }
 
 .bottom{
@@ -270,4 +271,15 @@ input.form-control.start,
 input.form-control.end,
 input.form-control.duration {
   border-bottom-width: 0px;
+}
+
+.instructions {
+  padding-top: 20px;
+  margin: 0 auto;
+  width: 515px;
+}
+
+.time {
+  color: #999;
+  font-style: italic;
 }
