@@ -3,12 +3,11 @@
         "feedback": "none",
         "visualization": "spectrogram",
         "proximityTag": ["near", "far", "not sure"],
-        "annotationTag": ["bicycle bell", "church bell", "human voice", "mechanical squeak", "music", "screeching train wheels", "single footstep", "siren", "vehicle brakes", "vehicle engine", "vehicle honk"],
+        "annotationTag": ["horn honking", "dog barking", "knocking", "whistle", "engine idling", "jackhammer drilling", "music playing", "people talking", "single footstep", "siren wailing", "gun shooting", "industrial HVAC", "people shouting", "engine passing"],
         "url": "/static/wav/spectrogram_demo_doorknock_mono.wav",
         "numRecordings": 9,
         "recordingIndex": 1,
         "tutorialVideoURL":"https://www.youtube.com/embed/Bg8-83heFRM",
-        "url": "/static/wav/paris.wav",
         "alwaysShowTags": true
     }
 }

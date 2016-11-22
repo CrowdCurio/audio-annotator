@@ -186,7 +186,7 @@ WorkflowBtns.prototype = {
         var my = this;
         this.nextBtn = $('<button>', {
             class: 'btn submit',
-            text: 'SUMBIT & LOAD NEXT CLIP'
+            text: 'SUMBIT & LOAD NEXT RECORDING'
         });
         this.nextBtn.click(function () {
             $(my).trigger('submit-annotations');
