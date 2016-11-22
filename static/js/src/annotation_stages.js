@@ -166,7 +166,7 @@ StageThreeView.prototype = {
         var annotation = $('<div>');
         var annotationLabel = $('<div>', {
             class: 'stage_3_label',
-            text: 'Tag:',
+            text: 'Label:',
         });
 
         var annotationContainer = $('<div>', {
