@@ -126,8 +126,8 @@ UrbanEars.prototype = {
         });
         $('#task-progress-bar').html([progress, value]);
         // Update clip & time tracker of Header
-        $('#recording-index').html(recordingIndex);
-        $('#time-remaining').html((numRecordings - recordingIndex) * 1.5 + 5); // e.g. each clip should take 1.5 minutes, and all post-annotation tasks 5 mins.
+        $('#recording-index').html(currentTaskNumber);
+        $('#time-remaining').html((total_num_tasks - currentTaskNumber) * 1.5 + 5); // e.g. each clip should take 1.5 minutes, and all post-annotation tasks 5 mins.
     },
 
     // If the user has completed more than the required amount of tasks, show the exit button
