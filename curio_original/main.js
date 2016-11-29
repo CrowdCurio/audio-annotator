@@ -125,6 +125,9 @@ UrbanEars.prototype = {
             text: currentTaskNumber + ' / ' + total_num_tasks
         });
         $('#task-progress-bar').html([progress, value]);
+        // Update clip & time tracker of Header
+        $('#recording-index').html(recordingIndex);
+        $('#time-remaining').html((numRecordings - recordingIndex) * 1.5 + 5); // e.g. each clip should take 1.5 minutes, and all post-annotation tasks 5 mins.
     },
 
     // If the user has completed more than the required amount of tasks, show the exit button
@@ -165,11 +168,17 @@ UrbanEars.prototype = {
             // annotation task if the user is suppose to recieve feedback
             var proximityTags = my.currentTask.data.content.proximityTag;
             var annotationTags = my.currentTask.data.content.annotationTag;
+            var tutorialVideoURL = my.currentTask.data.content.tutorialVideoURL;
+            var alwaysShowTags = my.currentTask.data.content.alwaysShowTags;
             my.stages.reset(
                 proximityTags,
                 annotationTags,
-                annotationSolutions
+                annotationSolutions,
+                alwaysShowTags
             );
+
+            // set video url
+            $('#tutorial-video').attr('src', tutorialVideoURL);
 
             // Update the visualization type and the feedback type and load in the new audio clip
             my.wavesurfer.params.visualization = my.currentTask.data.content.visualization; // invisible, spectrogram, waveform
