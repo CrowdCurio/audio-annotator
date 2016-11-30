@@ -5,7 +5,7 @@
 .annotation,
 .creation_stage_container,
 .hidden_img {
-  width: 95%;
+  width: 97%;
   margin: auto;
 }
 
@@ -32,7 +32,7 @@
   top: 10px !important;
 }
 
-.annotation {
+.annotation {   
   margin: 0px auto;
   position: relative;
 }
@@ -176,7 +176,6 @@
 
 .submit_container {
   text-align: center;
-  padding-top: 30px;
 }
 
 .submit_container .btn,
@@ -219,30 +218,39 @@ tag.current_label {
   background-color: #fff59d;
 }
 
+/* START: CSS to override curio defaults */
+.row .subtitle {
+  display: none;
+}
+
+#task-container {
+  width: 1500px !important;
+}
+
+html, body {
+  background-color: #fff;
+}
+
+hr {
+  margin: 5px;
+}
+
+nav {
+  z-index: 10000;
+}
+
 input[type=text][readonly="readonly"] {
   color: rgba(0, 0, 0, 0.5);
   border-bottom: 1px dotted rgba(0, 0, 0, 0.5);
-  text-align: center;
 }
 
-.header {
-  padding-top: 20px;
-  padding-left: 50px;
-  padding-right: 50px;
+i.fa {
+  vertical-align: inherit;
 }
 
-h6 {
+h6.instruction {
   margin-top: 0px;
   margin-bottom: 10px;
-}
-
-.bottom{
-  margin-top: 10px;
-}
-
-.prompt {
-  margin-bottom: 0px;
-  padding-top: 20px;
 }
 
 .videowrapper {
@@ -263,7 +271,7 @@ h6 {
   height: 100%;
 }
 
-#modal1{
+#video-modal{
   z-index: 10000 !important;
 }
 
@@ -276,10 +284,11 @@ input.form-control.duration {
 .instructions {
   padding-top: 20px;
   margin: 0 auto;
-  width: 515px;
+  width: 650px;
 }
 
 .time {
   color: #999;
   font-style: italic;
 }
+/* END: CSS to override curio defaults */

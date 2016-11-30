@@ -101,8 +101,8 @@ UrbanEars.prototype = {
             my.stages.updateStage(1);
             my.updateTaskTime();
             my.workflowBtns.update();
-            if (my.currentTask.data.content.feedback === 'hiddenImage') {
-                my.hiddenImage.append(static_url + my.currentTask.data.content.imgUrl);
+            if (my.currentTask.attributes.data_content.feedback === 'hiddenImage') {
+                my.hiddenImage.append(static_url + my.currentTask.attributes.data_content.img_url);
             }
         });
     },
@@ -125,9 +125,6 @@ UrbanEars.prototype = {
             text: currentTaskNumber + ' / ' + total_num_tasks
         });
         $('#task-progress-bar').html([progress, value]);
-        // Update clip & time tracker of Header
-        $('#recording-index').html(currentTaskNumber);
-        $('#time-remaining').html((total_num_tasks - currentTaskNumber) * 1.5 + 5); // e.g. each clip should take 1.5 minutes, and all post-annotation tasks 5 mins.
     },
 
     // If the user has completed more than the required amount of tasks, show the exit button
@@ -152,8 +149,8 @@ UrbanEars.prototype = {
         this.currentTask = this.tasks.shift();
 
         // In the case where the api returns the content field as a string, convert it to JSON
-        if (typeof this.currentTask.data.content === 'string') {
-            this.currentTask.data.content = JSON.parse(this.currentTask.data.content);
+        if (typeof this.currentTask.attributes.data_content === 'string') {
+            this.currentTask.attributes.data_content = JSON.parse(this.currentTask.attributes.data_content);
         }
 
         var my = this;
@@ -166,10 +163,10 @@ UrbanEars.prototype = {
 
             // Update the different tags the user can use to annotate, also update the solutions to the
             // annotation task if the user is suppose to recieve feedback
-            var proximityTags = my.currentTask.data.content.proximityTag;
-            var annotationTags = my.currentTask.data.content.annotationTag;
-            var tutorialVideoURL = my.currentTask.data.content.tutorialVideoURL;
-            var alwaysShowTags = my.currentTask.data.content.alwaysShowTags;
+            var proximityTags = my.currentTask.attributes.data_content.proximity_tag;
+            var annotationTags = my.currentTask.attributes.data_content.annotation_tag;
+            var tutorialVideoURL = my.currentTask.attributes.data_content.tutorial_video_url;
+            var alwaysShowTags = my.currentTask.attributes.data_content.always_show_tags;
             my.stages.reset(
                 proximityTags,
                 annotationTags,
@@ -181,15 +178,15 @@ UrbanEars.prototype = {
             $('#tutorial-video').attr('src', tutorialVideoURL);
 
             // Update the visualization type and the feedback type and load in the new audio clip
-            my.wavesurfer.params.visualization = my.currentTask.data.content.visualization; // invisible, spectrogram, waveform
-            my.wavesurfer.params.feedback = my.currentTask.data.content.feedback; // hiddenImage, silent, notify, none 
-            my.wavesurfer.load(my.currentTask.data.url);
+            my.wavesurfer.params.visualization = my.currentTask.attributes.data_content.visualization; // invisible, spectrogram, waveform
+            my.wavesurfer.params.feedback = my.currentTask.attributes.data_content.feedback; // hiddenImage, silent, notify, none
+            my.wavesurfer.load(my.currentTask.attributes.data_url);
         };
 
-        if (this.currentTask.data.content.feedback !== 'none') {
+        if (this.currentTask.attributes.data_content.feedback !== 'none') {
             // If the current task gives the user feedback, load the tasks solutions and then update
             // interface components
-            $.getJSON(static_url + this.currentTask.data.content.annotationSolutionsUrl)
+            $.getJSON(static_url + this.currentTask.attributes.data_content.annotation_solutions_url)
             .done(function(data) {
                 mainUpdate(data);
             })
@@ -219,13 +216,14 @@ UrbanEars.prototype = {
             }
             $.getJSON('/api/route/', data)
             .done(function(data) {
-                if (data.results.length > 0) {
-                    my.numRemainingTasks = data.count;
-                    my.tasks = data.results;
+                if (data.data.length > 0) {
+                    my.numRemainingTasks = data.meta.pagination.count;
+                    my.tasks = data.data;
                     my.update();
                 } else {
                     // If there is no more tasks for the user to complete
                     if (experiment_id) {
+                        console.log("No more tasks.")
                         window.location = '/experiments/' + experiment_id + '/workflow/next';
                     } else {
                         $('#ending_modal p').html(
@@ -287,28 +285,54 @@ UrbanEars.prototype = {
     post: function (content) {
         $('#loading_modal').openModal({dismissible: false});
         var my = this;
-        var data = {
-            content: content,
-            owner: user_id,
-            data: this.currentTask.data.id,
-            task: task_id,
-            curio: curio_id,
-            csrfmiddlewaretoken: csrftoken
-        };
-        if (experiment_id) {
-            data.experiment = experiment_id;
-            data.condition = condition_id;
+        var data;
+
+        if(!experiment_id) {
+            data = {
+                data: {
+                    type: "Response",
+                    attributes: {
+                        "content": content
+                    },
+                    relationships: {
+                        owner: {"data": {type: "User", id: user_id}},
+                        data: {"data": {type: "Data", id: this.currentTask.attributes.data_id}},
+                        task: {"data": {type: "Task", id: task_id}},
+                        curio: {"data": {type: "Curio", id: curio_id}}
+                    }
+                },
+                csrfmiddlewaretoken: csrftoken
+            };
+        } else {
+            data = {
+                data: {
+                    type: "Response",
+                    attributes: {
+                        "content": content
+                    },
+                    relationships: {
+                        owner: {"data": {type: "User", id: user_id}},
+                        data: {"data": {type: "Data", id: this.currentTask.attributes.data_id}},
+                        task: {"data": {type: "Task", id: task_id}},
+                        curio: {"data": {type: "Curio", id: curio_id}},
+                        experiment: { "data" : { type : "Experiment", id: experiment_id }},
+                        condition: { "data" : { type : "Condition", id: condition_id }}
+                    }
+                },
+                csrfmiddlewaretoken: csrftoken
+            };
         }
+
         $.ajax({
             type: 'POST',
             url: '/api/response/',
-            contentType: 'application/json',
+            contentType: 'application/vnd.api+json',
             data: JSON.stringify(data)
         })
         .done(function(data) {
             my.numRemainingTasks -= 1;
             // If the last task had a hiddenImage component, remove it
-            if (my.currentTask.data.content.feedback === 'hiddenImage') {
+            if (my.currentTask.attributes.data_content.feedback === 'hiddenImage') {
                 my.hiddenImage.remove();
             }
             my.loadNextTask();
