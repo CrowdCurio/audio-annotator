@@ -215,15 +215,12 @@ UrbanEars.prototype = {
 
     // Make POST request, passing back the content data. On success load in the next task
     post: function (content) {
-        console.log("This post will fail since this is a frontend demo.");
-        console.log("Here is the data about the annotation task");
-        console.log(content);
         var my = this;
         $.ajax({
             type: 'POST',
-            url: '/<post_url>',
+            url: $.getJSON(postUrl),
             contentType: 'application/json',
-            data: content
+            data: JSON.stringify(content)
         })
         .done(function(data) {
             // If the last task had a hiddenImage component, remove it
