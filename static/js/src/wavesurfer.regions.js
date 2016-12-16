@@ -264,21 +264,6 @@ WaveSurfer.Region = {
             });
         }
 
-        this.deleteRegion = regionEl.appendChild(document.createElement('i'));
-        this.deleteRegion.className = 'fa fa-times-circle'
-
-        this.style(this.deleteRegion, {
-            position: 'absolute',
-            right: '0px',
-            top: '0px',
-            cursor: 'pointer',
-            fontSize: '20px',
-            borderRadius: '50%',
-            backgroundColor: 'white',
-            height: '17px',
-            width: '17px'
-        });
-
         this.element = this.wrapper.appendChild(regionEl);
         this.handleLeft = handleLeft;
         this.handleRight = handleRight;
@@ -406,11 +391,6 @@ WaveSurfer.Region = {
             e.preventDefault();
             my.fireEvent('click', e);
             my.wavesurfer.fireEvent('region-click', my, e);
-        });
-
-        this.deleteRegion.addEventListener('click', function (e) {
-            e.stopPropagation();
-            my.remove();
         });
 
         this.element.addEventListener('dblclick', function (e) {
