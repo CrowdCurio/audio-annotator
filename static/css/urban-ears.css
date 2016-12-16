@@ -192,7 +192,7 @@
 
 .current_region {
   z-index: 5000 !important;
-  border: 2px solid rgba(0, 177, 185, 0.40);
+  border: 2px solid rgba(0, 177, 185, 0.85);
 }
 
 tag.current_label {

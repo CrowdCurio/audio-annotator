@@ -725,6 +725,8 @@ AnnotationStages.prototype = {
     // Event Handler: triggered when region is first started to be created, adds action to event list
     trackBeginingOfRegionCreation: function(region) {
         this.trackEvent('start-to-create', region.id);
+        $(region.element).addClass('current_region');
+        $(region.annotationLabel.element).addClass('current_label');
     },
 
     // Event Handler: triggered when region is first started to be created

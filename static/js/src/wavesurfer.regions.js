@@ -328,7 +328,6 @@ WaveSurfer.Region = {
             this.style(this.element, {
                 left: ~~(this.start / dur * width) + 'px',
                 width: regionWidth + 'px',
-                backgroundColor: this.color,
                 cursor: this.drag ? 'move' : 'default',
                 zIndex: width - regionWidth
             });
