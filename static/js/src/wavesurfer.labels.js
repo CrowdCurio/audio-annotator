@@ -216,11 +216,11 @@ WaveSurfer.Label = {
     // The bottom parameter is how many pixels away from the label container's bottom the label element will be placed
     updateRender: function(bottom) {
         this.text.innerHTML = (this.region.annotation || '?');
-        var offset = (this.region.element.offsetWidth - this.element.offsetWidth) / 2
         this.style(this.element, {
-            left: Math.max(this.region.element.offsetLeft + offset, 0) + 'px',
+            left: this.region.element.offsetLeft + 'px',
             bottom: bottom + 'px',
-            zIndex: this.wavesurfer.drawer.wrapper.scrollWidth - this.element.offsetWidth
+            width: this.region.element.offsetWidth + 'px',
+            zIndex: this.wavesurfer.drawer.wrapper.scrollWidth - this.element.offsetWidth,
         });
     },
 
