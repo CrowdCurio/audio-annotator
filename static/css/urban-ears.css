@@ -15,7 +15,7 @@
 }
 
 .audio_visual wave {
-  height: 148px !important;
+  height: 276px !important;
 }
 
 .audio_visual > wave {
@@ -55,7 +55,7 @@
 
 .creation_stage_container {
   text-align: center;
-  min-height: 175px;
+  min-height: 303px;
   position: relative;
 }
 
