@@ -139,7 +139,7 @@ WaveSurfer.Region = {
         this.resize = params.resize === undefined ? true : Boolean(params.resize);
         this.drag = params.drag === undefined ? true : Boolean(params.drag);
         this.loop = Boolean(params.loop);
-        this.color = params.color || 'rgba(252, 238, 137, 0.5)';
+        this.color = params.color || '#7C7C7C';
         this.data = params.data || {};
         this.attributes = params.attributes || {};
         this.annotation = params.annotation || '';

@@ -87,7 +87,7 @@ StageTwoView.prototype = {
 function StageThreeView() {
     this.dom = null;
     this.editOptionsDom = null;
-    this.colors = ['rgba(236,0,251,0.4)', 'rgba(39,117,243,0.4)', 'rgba(33,177,4,0.4)'];
+    this.colors = ['#870f4f', '#000080', '#6a1b9a'];
 }
 
 StageThreeView.prototype = {
