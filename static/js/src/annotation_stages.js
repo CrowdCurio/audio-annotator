@@ -87,7 +87,11 @@ StageTwoView.prototype = {
 function StageThreeView() {
     this.dom = null;
     this.editOptionsDom = null;
+    // Note that this assumes there are never more than 3 proximity labels
     this.colors = ['#870f4f', '#000080', '#6a1b9a'];
+    this.colors.forEach(function (color, index) {
+        $('<style>.proximity1_tag:hover,.proximity' + index + '_tag.selected{background-color: ' + color + '}</style>').appendTo('head');
+    });
 }
 
 StageThreeView.prototype = {
@@ -142,7 +146,7 @@ StageThreeView.prototype = {
 
         proximityTags.forEach(function (tagName, index) {
             var tag = $('<button>', {
-                class: 'proximity_tag btn',
+                class: 'proximity_tag btn proximity' + index + '_tag',
                 text: tagName,
             });
             // When a proximity tag is clicked fire the 'change-tag' event with what proximity it is and
