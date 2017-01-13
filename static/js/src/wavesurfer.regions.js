@@ -139,7 +139,7 @@ WaveSurfer.Region = {
         this.resize = params.resize === undefined ? true : Boolean(params.resize);
         this.drag = params.drag === undefined ? true : Boolean(params.drag);
         this.loop = Boolean(params.loop);
-        this.color = params.color || 'rgba(252, 238, 137, 0.5)';
+        this.color = params.color || '#7C7C7C';
         this.data = params.data || {};
         this.attributes = params.attributes || {};
         this.annotation = params.annotation || '';
@@ -264,21 +264,6 @@ WaveSurfer.Region = {
             });
         }
 
-        this.deleteRegion = regionEl.appendChild(document.createElement('i'));
-        this.deleteRegion.className = 'fa fa-times-circle'
-
-        this.style(this.deleteRegion, {
-            position: 'absolute',
-            right: '0px',
-            top: '0px',
-            cursor: 'pointer',
-            fontSize: '20px',
-            borderRadius: '50%',
-            backgroundColor: 'white',
-            height: '17px',
-            width: '17px'
-        });
-
         this.element = this.wrapper.appendChild(regionEl);
         this.handleLeft = handleLeft;
         this.handleRight = handleRight;
@@ -328,7 +313,6 @@ WaveSurfer.Region = {
             this.style(this.element, {
                 left: ~~(this.start / dur * width) + 'px',
                 width: regionWidth + 'px',
-                backgroundColor: this.color,
                 cursor: this.drag ? 'move' : 'default',
                 zIndex: width - regionWidth
             });
@@ -407,11 +391,6 @@ WaveSurfer.Region = {
             e.preventDefault();
             my.fireEvent('click', e);
             my.wavesurfer.fireEvent('region-click', my, e);
-        });
-
-        this.deleteRegion.addEventListener('click', function (e) {
-            e.stopPropagation();
-            my.remove();
         });
 
         this.element.addEventListener('dblclick', function (e) {

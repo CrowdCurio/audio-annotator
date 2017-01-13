@@ -15,7 +15,7 @@
 }
 
 .audio_visual wave {
-  height: 148px !important;
+  height: 276px !important;
 }
 
 .audio_visual > wave {
@@ -55,7 +55,7 @@
 
 .creation_stage_container {
   text-align: center;
-  min-height: 175px;
+  min-height: 303px;
   position: relative;
 }
 
@@ -192,7 +192,7 @@
 
 .current_region {
   z-index: 5000 !important;
-  border: 2px solid rgba(0, 177, 185, 0.40);
+  border: 2px solid rgba(0, 177, 185, 0.85);
 }
 
 tag.current_label {
@@ -283,8 +283,6 @@ input.form-control.duration {
 
 .instructions {
   padding-top: 20px;
-  margin: 0 auto;
-  width: 650px;
 }
 
 .time {

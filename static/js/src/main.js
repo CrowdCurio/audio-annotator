@@ -33,7 +33,7 @@ function Annotator() {
     });
 
     // Create wavesurfer (audio visualization component)
-    var height = 128;
+    var height = 256;
     this.wavesurfer = Object.create(WaveSurfer);
     this.wavesurfer.init({
         container: '.audio_visual',

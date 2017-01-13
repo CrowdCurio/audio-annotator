@@ -29,9 +29,11 @@ WaveSurfer.Labels = {
 
         this.width = drawer.width;
         this.pixelRatio = this.drawer.params.pixelRatio;
-        this.height = this.params.height || 40;
         this.labelsElement = null;
         this.labels = {};
+        this.rowHeight = this.params.rowHeight || 20;
+        this.maxRows = this.params.maxRows || 6;
+        this.height = this.params.height || (this.rowHeight * this.maxRows);
 
         // Create & append wrapper element to container
         this.createWrapper();
@@ -51,6 +53,8 @@ WaveSurfer.Labels = {
         wavesurfer.on('region-created', this.add.bind(this));
         // Update a label when its region is updated
         wavesurfer.on('region-updated', this.rearrange.bind(this));
+        // Rearrange labels when a region is deleted
+        wavesurfer.on('region-removed', this.rearrange.bind(this));
     },
 
     // Remove the wrapper element
@@ -129,32 +133,42 @@ WaveSurfer.Labels = {
         // First place all label elements in bottom row
         for (var id in this.labels) {
             // 2 px above wavesurfer canvas
-            this.labels[id].updateRender(2);
+            this.labels[id].row = 0;
         }
 
-        // If a label overlaps with another, move it up to the top row
+        this.assignRows();
+
         for (var id in this.labels) {
-            if (this.doesItOverlap(this.labels[id])) {
-                // 22 px above wavesurfer canvas
-                this.labels[id].updateRender(22);
-            }
+            this.labels[id].updateRender(2 + (this.rowHeight * (this.labels[id].row % this.maxRows)));
         }
     },
 
-    // Calcuates if a label overlaps with any other label elements
-    doesItOverlap: function(label) {
+    // Assign a label a row to reduce overlap. Wider labels are prioritized to lower rows.
+    assignRows: function() {
         for (var id in this.labels) {
-            var otherLabel = this.labels[id];
-            if (otherLabel === label) {
-                continue;
-            }
-            if ((label.left() <=  otherLabel.right() && label.left() >=  otherLabel.left()) ||
-                (label.right() >=  otherLabel.left() && label.right()  <= otherLabel.right()) ||
-                (label.right() >=  otherLabel.right() && label.left()  <= otherLabel.left())) {
-                return label.region.element.offsetWidth < otherLabel.region.element.offsetWidth;
+            this.labels[id].row = 0;
+        }
+
+        for (var row=0; row < (this.maxRows * 2); row++) {
+            for (var id1 in this.labels) {
+                var label = this.labels[id1];
+
+                for (var id2 in this.labels) {
+                    var otherLabel = this.labels[id2];
+                    if ((otherLabel === label) || (otherLabel.row !== label.row)) {
+                        continue;
+                    }
+
+                    if ((label.left() <=  otherLabel.right() && label.left() >=  otherLabel.left()) ||
+                        (label.right() >=  otherLabel.left() && label.right()  <= otherLabel.right()) ||
+                        (label.right() >=  otherLabel.right() && label.left()  <= otherLabel.left())) {
+                        if (label.region.element.offsetWidth < otherLabel.region.element.offsetWidth) {
+                            label.row += 1;
+                        }
+                    }
+                }
             }
         }
-        return false;
     }
 };
 
@@ -178,6 +192,7 @@ WaveSurfer.Label = {
         region.annotationLabel = this;
         this.region = region;
         this.render();
+        this.row = 0;
     },
 
     // Create and append individual label element
@@ -207,6 +222,18 @@ WaveSurfer.Label = {
         this.text = this.element.appendChild(document.createElement('span'));
         this.text.innerHTML = '?';
 
+        // add delete region to the right
+        this.deleteRegion = labelEl.appendChild(document.createElement('i'));
+        this.deleteRegion.className = 'fa fa-times-circle'
+
+        this.style(this.deleteRegion, {
+            position: 'absolute',
+            marginTop: '3px',
+            right: '0px',
+            marginRight: '5px',
+            cursor: 'pointer'
+        });
+
         // Place the label on the bottom row
         this.updateRender(2);
         this.bindEvents();
@@ -216,11 +243,12 @@ WaveSurfer.Label = {
     // The bottom parameter is how many pixels away from the label container's bottom the label element will be placed
     updateRender: function(bottom) {
         this.text.innerHTML = (this.region.annotation || '?');
-        var offset = (this.region.element.offsetWidth - this.element.offsetWidth) / 2
         this.style(this.element, {
-            left: Math.max(this.region.element.offsetLeft + offset, 0) + 'px',
+            left: this.region.element.offsetLeft + 'px',
             bottom: bottom + 'px',
-            zIndex: this.wavesurfer.drawer.wrapper.scrollWidth - this.element.offsetWidth
+            width: this.region.element.offsetWidth + 'px',
+            backgroundColor: this.region.color,
+            zIndex: this.wavesurfer.drawer.wrapper.scrollWidth - this.element.offsetWidth,
         });
     },
 
@@ -246,6 +274,11 @@ WaveSurfer.Label = {
         // If the user dbl clicks the label, trigger the dblclick event for the assiciated region
         this.element.addEventListener('dblclick', function (e) {
             my.region.wavesurfer.fireEvent('label-dblclick', my.region, e);
+        });
+
+        this.deleteRegion.addEventListener('click', function (e) {
+            e.stopPropagation();
+            my.region.remove();
         });
     }
 };
