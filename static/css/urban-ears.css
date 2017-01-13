@@ -271,7 +271,7 @@ h6.instruction {
   height: 100%;
 }
 
-#video-modal{
+#instructions-modal{
   z-index: 10000 !important;
 }
 
@@ -281,12 +281,12 @@ input.form-control.duration {
   border-bottom-width: 0px;
 }
 
-.instructions {
+#instructions-container {
   padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .time {
   color: #999;
   font-style: italic;
 }
-/* END: CSS to override curio defaults */

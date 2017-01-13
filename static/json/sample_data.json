@@ -8,6 +8,14 @@
         "numRecordings": 9,
         "recordingIndex": 1,
         "tutorialVideoURL":"https://www.youtube.com/embed/Bg8-83heFRM",
-        "alwaysShowTags": true
+        "alwaysShowTags": true,
+        "instructions": [
+            "Highlight &amp; Label Each Sound",
+            "1. &nbsp; Familiarize yourself with the list of sound labels under the audio recording.", 
+            "2. &nbsp; Click the play button and listen to the recording.", 
+            "3. &nbsp; For each sound event that you hear click and drag on the visualization to create a new annotation.",
+            "4. &nbsp; When creating a new annotation be as precise as possible.",
+            "5. &nbsp; Select the appropriate label and indicate whether the sound is near or far."
+        ]
     }
 }
