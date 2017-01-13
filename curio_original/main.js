@@ -15,7 +15,7 @@
  *       magma // color scheme array that maps 0 - 255 to rgb values
  *    
  */
-function UrbanEars() {
+function Annotator() {
     this.wavesurfer;
     this.playBar;
     this.stages;
@@ -77,7 +77,7 @@ function UrbanEars() {
     this.addEvents();
 }
 
-UrbanEars.prototype = {
+Annotator.prototype = {
 
     addWaveSurferEvents: function() {
         var my = this;
@@ -352,8 +352,8 @@ UrbanEars.prototype = {
 
 function main() {
     // Create all the components
-    var urbanEars = new UrbanEars();
+    var annotator = new Annotator();
     // Load the first audio annotation task
-    urbanEars.loadNextTask();
+    annotator.loadNextTask();
 }
 main();
