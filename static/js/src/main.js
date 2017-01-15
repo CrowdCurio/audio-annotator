@@ -125,8 +125,6 @@ Annotator.prototype = {
             // annotation task if the user is suppose to recieve feedback
             var proximityTags = my.currentTask.proximityTag;
             var annotationTags = my.currentTask.annotationTag;
-            var recordingIndex = my.currentTask.recordingIndex || 1;
-            var numRecordings = my.currentTask.numRecordings || 1;
             var tutorialVideoURL = my.currentTask.tutorialVideoURL;
             var alwaysShowTags = my.currentTask.alwaysShowTags;
             var instructions = my.currentTask.instructions;
@@ -136,10 +134,6 @@ Annotator.prototype = {
                 annotationSolutions,
                 alwaysShowTags
             );
-
-            // Update clip & time tracker of Header
-            $('#recording-index').html(recordingIndex);
-            $('#time-remaining').html((numRecordings - recordingIndex) * 1.5 + 5); // e.g. each clip should take 1.5 minutes, and all post-annotation tasks 5 mins.
 
             // set video url
             $('#tutorial-video').attr('src', tutorialVideoURL);

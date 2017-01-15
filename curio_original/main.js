@@ -78,7 +78,6 @@ function Annotator() {
 }
 
 Annotator.prototype = {
-
     addWaveSurferEvents: function() {
         var my = this;
 
@@ -167,6 +166,7 @@ Annotator.prototype = {
             var annotationTags = my.currentTask.attributes.data_content.annotation_tag;
             var tutorialVideoURL = my.currentTask.attributes.data_content.tutorial_video_url;
             var alwaysShowTags = my.currentTask.attributes.data_content.always_show_tags;
+            var instructions = my.currentTask.attributes.data_content.instructions;
             my.stages.reset(
                 proximityTags,
                 annotationTags,
@@ -176,6 +176,24 @@ Annotator.prototype = {
 
             // set video url
             $('#tutorial-video').attr('src', tutorialVideoURL);
+
+            // add instructions
+            var instructionsContainer = $('#instructions-container');
+            instructions.forEach(function (instruction, index) {
+                if (index==0) {
+                    // first instruction is the header
+                    var instr = $('<h4>', {
+                        html: instruction
+                    });
+                } else {
+                    var instr = $('<h6>', {
+                        "class": "instruction",
+                        html: instruction
+                    });                    
+                }
+                instructionsContainer.append(instr);
+            });
+
 
             // Update the visualization type and the feedback type and load in the new audio clip
             my.wavesurfer.params.visualization = my.currentTask.attributes.data_content.visualization; // invisible, spectrogram, waveform
