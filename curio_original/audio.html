@@ -1,7 +1,7 @@
 {% load staticfiles %}
 
 <head>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/urban-ears.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/audio-annotator.css' %}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 
@@ -23,15 +23,9 @@
     {% endif %}
 </script>
 <!-- Modal Structure -->
-<div id="video-modal" class="modal">
+<div id="instructions-modal" class="modal" style="max-height: 100% !important;">
     <div class="modal-content">
-        <h4>Highlight &amp; Label Each Sound</h4>
-        <h6 class="instruction"><span style="color: #00B1B9; font-size: 18px; font-weight: 600;">&#9312;</span> &nbsp; Familiarize yourself with the list of sound labels under the audio recording.</h6>
-        <h6 class="instruction"><span style="color: #00B1B9; font-size: 18px; font-weight: 600;">&#9313;</span> &nbsp; Click the play button and listen to the recording.</h6>
-        <h6 class="instruction"><span style="color: #00B1B9; font-size: 18px; font-weight: 600;">&#9314;</span> &nbsp; For each sound event that you hear click and drag on the visualization to create a new annotation.</h6>
-        <h6 class="instruction"><span style="color: #00B1B9; font-size: 18px; font-weight: 600;">&#9315;</span> &nbsp; When creating a new annotation be as precise as possible. </h6>
-        <h6 class="instruction"><span style="color: #00B1B9; font-size: 18px; font-weight: 600;">&#9316;</span> &nbsp; Select the appropriate label and indicate whether the sound is near or far.</h6>
-        <br>
+        <div id="instructions-container"></div>
         <div class="videowrapper">
             <iframe id="tutorial-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
         </div>
@@ -45,7 +39,7 @@
     <div class="col s6">
     </div>
     <div class="col s3 right">
-        <a class="waves-effect waves-light modal-trigger right btn" href="#video-modal">Instructions</a>
+        <a class="waves-effect waves-light modal-trigger right btn" href="#instructions-modal">Instructions</a>
     </div>
 </div>
 <div class="annotation">
@@ -69,3 +63,8 @@
 <script type="text/javascript" src="{% static 'tasks/js/labeling/audio/src/components.js'%}"></script>
 <script type="text/javascript" src="{% static 'tasks/js/labeling/audio/src/annotation_stages.js'%}"></script>
 <script type="text/javascript" src="{% static 'tasks/js/labeling/audio/src/main.js'%}"></script>
+<script>
+    $(document).ready(function(){
+        $('#instructions-modal').openModal();
+    });
+</script>

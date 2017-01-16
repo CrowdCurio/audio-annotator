@@ -4,7 +4,7 @@
  * Purpose:
  *   Used to create the timestamps of segment start and end times and play bar
  * Dependencies:
- *   jQuey, urban-ears.css
+ *   jQuey, audio-annotator.css
  */
 
 var Util = {
@@ -55,7 +55,7 @@ var Util = {
  * Purpose:
  *   Used for the play button and timestamp that controls how the wavesurfer audio is played
  * Dependencies:
- *   jQuery, Font Awesome, Wavesurfer (lib/wavesurfer.min.js), Util (src/components.js), urban-ears.css
+ *   jQuery, Font Awesome, Wavesurfer (lib/wavesurfer.min.js), Util (src/components.js), audio-annotator.css
  */
 
 function PlayBar(wavesurfer) {
@@ -165,7 +165,7 @@ PlayBar.prototype = {
  * Purpose:
  *   Used for the workflow buttons that are used to submit annotations or to exit the task
  * Dependencies:
- *   jQuery, urban-ears.css
+ *   jQuery, audio-annotator.css
  */
 
 function WorkflowBtns(exitUrl) {
