@@ -146,7 +146,7 @@ StageThreeView.prototype = {
 
         proximityTags.forEach(function (tagName, index) {
             var tag = $('<button>', {
-                class: 'proximity_tag btn proximity' + index + '_tag',
+                class: 'proximity_tag btn proximity' + index + '_tag' + ' disabled',
                 text: tagName,
             });
             // When a proximity tag is clicked fire the 'change-tag' event with what proximity it is and
@@ -179,7 +179,7 @@ StageThreeView.prototype = {
 
         annotationTags.forEach(function (tagName) {
             var tag = $('<button>', {
-                class: 'annotation_tag btn',
+                class: 'annotation_tag btn disabled',
                 text: tagName,
             });
             // When a proximity tag is clicked fire the 'change-tag' event with what annotation tag it is
@@ -212,6 +212,8 @@ StageThreeView.prototype = {
         $('.annotation_tag', this.dom).removeClass('selected');
         $('.proximity_tag', this.dom).removeClass('selected');
         $('.custom_tag input', this.dom).val('');
+        $('.annotation_tag', this.dom).removeClass('disabled');
+        $('.proximity_tag', this.dom).removeClass('disabled');
 
         if (region.annotation) {
             var selectedTags = $('.annotation_tag', this.dom).filter(function () {
@@ -339,9 +341,11 @@ AnnotationStages.prototype = {
             $(this.currentRegion.element).removeClass('current_region');
             $(this.currentRegion.annotationLabel.element).removeClass('current_label');
 
-            // Remove the highlated label.
+            // Remove the highlated label and disable.
             $('.annotation_tag', this.dom).removeClass('selected');
             $('.proximity_tag', this.dom).removeClass('selected');
+            $('.annotation_tag', this.dom).addClass('disabled');
+            $('.proximity_tag', this.dom).addClass('disabled');
         }
 
         // If the user is switch to stage 3, enable drag and resize editing for the new current region. 
