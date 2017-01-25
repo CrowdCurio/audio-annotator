@@ -336,19 +336,7 @@ AnnotationStages.prototype = {
 
     // Switch the currently selected region
     swapRegion: function(newStage, region) {
-        // Disable drag and resize editing for the old current region. 
-        // Also remove the highlight of the label and region border
-        if (this.currentRegion) {
-            this.currentRegion.update({drag: false, resize: false});
-            $(this.currentRegion.element).removeClass('current_region');
-            $(this.currentRegion.annotationLabel.element).removeClass('current_label');
-
-            // Remove the highlated label and disable.
-            $('.annotation_tag', this.dom).removeClass('selected');
-            $('.proximity_tag', this.dom).removeClass('selected');
-            $('.annotation_tag', this.dom).addClass('disabled');
-            $('.proximity_tag', this.dom).addClass('disabled');
-        }
+        this.deselectCurrentRegion();
 
         // If the user is switch to stage 3, enable drag and resize editing for the new current region. 
         // Also highlight the label and region border
@@ -370,9 +358,17 @@ AnnotationStages.prototype = {
             this.blockDeselect = false;
         } else {
             if (this.currentRegion != null) {
+                // Disable drag and resize editing for the old current region. 
+                // Also remove the highlight of the label and region border
                 this.currentRegion.update({drag: false, resize: false});
                 $(this.currentRegion.element).removeClass('current_region');
                 $(this.currentRegion.annotationLabel.element).removeClass('current_label');
+
+                // Remove the highlated label and disable.
+                $('.annotation_tag', this.dom).removeClass('selected');
+                $('.proximity_tag', this.dom).removeClass('selected');
+                $('.annotation_tag', this.dom).addClass('disabled');
+                $('.proximity_tag', this.dom).addClass('disabled');
             }
         }
     },
