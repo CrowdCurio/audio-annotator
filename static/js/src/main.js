@@ -100,6 +100,14 @@ Annotator.prototype = {
                 my.hiddenImage.append(my.currentTask.imgUrl);
             }
         });
+
+        this.wavesurfer.on('click', function (e) {
+            my.stages.deselectCurrentRegion();
+        });
+
+        this.wavesurfer.on('region-update-end', function (e) {
+            my.stages.blockDeselect = true;
+        });
     },
 
     updateTaskTime: function() {
