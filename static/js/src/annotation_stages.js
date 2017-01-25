@@ -258,6 +258,8 @@ function AnnotationStages(wavesurfer, hiddenImage) {
     // These are not reset, since they should only be shown for the first clip
     this.shownTagHint = false;
     this.shownSelectHint = false;
+
+    this.blockDeselect = false;
 }
 
 AnnotationStages.prototype = {
@@ -352,6 +354,19 @@ AnnotationStages.prototype = {
             }
         }
         this.currentRegion = region;
+    },
+
+    deselectCurrentRegion: function() {
+        if (this.blockDeselect) {
+            // A region-update-end occurred, toggle blockDeselect
+            this.blockDeselect = false;
+        } else {
+            if (this.currentRegion != null) {
+                this.currentRegion.update({drag: false, resize: false});
+                $(this.currentRegion.element).removeClass('current_region');
+                $(this.currentRegion.annotationLabel.element).removeClass('current_label');
+            }
+        }
     },
 
     // Switch stages and the current region
@@ -496,6 +511,8 @@ AnnotationStages.prototype = {
             this.giveFeedback();
             this.trackEvent('region-moved-' + type, this.currentRegion.id, null, this.currentRegion.start, this.currentRegion.end);
         }
+
+        this.blockDeselect = true;
     },
 
     // Event handler: called when there is audio progress. Updates the online creation

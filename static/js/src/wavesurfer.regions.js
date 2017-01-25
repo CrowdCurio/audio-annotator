@@ -30,6 +30,8 @@ WaveSurfer.Regions = {
 
         /* Id-based hash of regions. */
         this.list = {};
+
+        this.addEvents();
     },
 
     /* Add a region. */
@@ -51,6 +53,13 @@ WaveSurfer.Regions = {
         Object.keys(this.list).forEach(function (id) {
             this.list[id].remove();
         }, this);
+    },
+
+    addEvents: function() {
+        var my = this;
+        this.wrapper.addEventListener('click', function (e) {
+            my.wavesurfer.fireEvent('click', e);
+        });
     },
 
     enableDragSelection: function (params) {
@@ -388,6 +397,11 @@ WaveSurfer.Region = {
         });
 
         this.element.addEventListener('click', function (e) {
+            if ($(this).hasClass('current_region')) {
+                // stop this click from propgagating and deselecting the current region
+                e.stopPropagation();
+            }
+
             e.preventDefault();
             my.fireEvent('click', e);
             my.wavesurfer.fireEvent('region-click', my, e);
