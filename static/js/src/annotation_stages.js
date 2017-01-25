@@ -338,6 +338,10 @@ AnnotationStages.prototype = {
             this.currentRegion.update({drag: false, resize: false});
             $(this.currentRegion.element).removeClass('current_region');
             $(this.currentRegion.annotationLabel.element).removeClass('current_label');
+
+            // Remove the highlated label.
+            $('.annotation_tag', this.dom).removeClass('selected');
+            $('.proximity_tag', this.dom).removeClass('selected');
         }
 
         // If the user is switch to stage 3, enable drag and resize editing for the new current region. 
