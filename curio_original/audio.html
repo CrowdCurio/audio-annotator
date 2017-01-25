@@ -38,7 +38,7 @@
     <div class="col s3">&nbsp; </div>
     <div class="col s6">
     </div>
-    <div class="col s3 right">
+    <div class="col s3 right", id="instructions-btn">
         <a class="waves-effect waves-light modal-trigger right btn" href="#instructions-modal">Instructions</a>
     </div>
 </div>
@@ -63,8 +63,3 @@
 <script type="text/javascript" src="{% static 'tasks/js/labeling/audio/src/components.js'%}"></script>
 <script type="text/javascript" src="{% static 'tasks/js/labeling/audio/src/annotation_stages.js'%}"></script>
 <script type="text/javascript" src="{% static 'tasks/js/labeling/audio/src/main.js'%}"></script>
-<script>
-    $(document).ready(function(){
-        $('#instructions-modal').openModal();
-    });
-</script>
