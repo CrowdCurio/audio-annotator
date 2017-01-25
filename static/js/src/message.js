@@ -6,7 +6,7 @@
  *   Materialize toast makes the text appear in a message box in the top right hand corner for a specified 
  *   amount of time.
  * Dependencies:
- *   Materlize, Font Awesome, urban-ears.css
+ *   Materlize, Font Awesome, audio-annotator.css
  */
 
 var Message = {
@@ -28,7 +28,7 @@ var Message = {
     },
 
     notifyHint: function(message) {
-        // Add class toastHint (css defined in urban-ears.css) 
+        // Add class toastHint (css defined in audio-annotator.css) 
         Materialize.toast('<i class="fa fa-lightbulb-o"></i>' + message, 3000, 'toastHint');
     }
 };

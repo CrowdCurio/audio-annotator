@@ -4,7 +4,7 @@
  * Purpose:
  *   The view the user sees when no region has been seleted
  * Dependencies:
- *   jQuey, urban-ears.css
+ *   jQuey, audio-annotator.css
  */
 function StageOneView() {
     this.dom = null;
@@ -46,7 +46,7 @@ StageOneView.prototype = {
  *   (the region grows as the audio plays). This view is not used if the current version
  *   of the interface
  * Dependencies:
- *   jQuey, urban-ears.css
+ *   jQuey, audio-annotator.css
  */
 function StageTwoView() {
     this.dom = null;
@@ -82,7 +82,7 @@ StageTwoView.prototype = {
  * Purpose:
  *   The view the user sees when they have a region selected
  * Dependencies:
- *   jQuey, urban-ears.css
+ *   jQuey, audio-annotator.css
  */
 function StageThreeView() {
     this.dom = null;
@@ -237,7 +237,7 @@ StageThreeView.prototype = {
  * Purpose:
  *   Control the workflow of annotating regions.
  * Dependencies:
- *   jQuey, urban-ears.css, Wavesurfer (lib/wavesurfer.js), Message (src/message.js)
+ *   jQuey, audio-annotator.css, Wavesurfer (lib/wavesurfer.js), Message (src/message.js)
  */
 function AnnotationStages(wavesurfer, hiddenImage) {
     this.currentStage = 0;

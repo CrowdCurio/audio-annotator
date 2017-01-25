@@ -208,7 +208,9 @@ WaveSurfer.Label = {
             padding: '0px 5px',
             borderRadius: '2px',
             fontSize: '12px',
-            textTransform: 'uppercase'
+            textTransform: 'uppercase',
+            textOverflow: 'ellipsis',
+            overflow: 'hidden'
         });
 
         // Add play button inside the label

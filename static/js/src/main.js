@@ -125,10 +125,9 @@ Annotator.prototype = {
             // annotation task if the user is suppose to recieve feedback
             var proximityTags = my.currentTask.proximityTag;
             var annotationTags = my.currentTask.annotationTag;
-            var recordingIndex = my.currentTask.recordingIndex || 1;
-            var numRecordings = my.currentTask.numRecordings || 1;
             var tutorialVideoURL = my.currentTask.tutorialVideoURL;
             var alwaysShowTags = my.currentTask.alwaysShowTags;
+            var instructions = my.currentTask.instructions;
             my.stages.reset(
                 proximityTags,
                 annotationTags,
@@ -136,12 +135,34 @@ Annotator.prototype = {
                 alwaysShowTags
             );
 
-            // Update clip & time tracker of Header
-            $('#recording-index').html(recordingIndex);
-            $('#time-remaining').html((numRecordings - recordingIndex) * 1.5 + 5); // e.g. each clip should take 1.5 minutes, and all post-annotation tasks 5 mins.
-
             // set video url
             $('#tutorial-video').attr('src', tutorialVideoURL);
+
+            // add instructions
+            var instructionsContainer = $('#instructions-container');
+            if (typeof instructions !== "undefined"){
+                $('.modal-trigger').leanModal();
+                $('#instructions-modal').openModal();
+                instructions.forEach(function (instruction, index) {
+                    if (index==0) {
+                        // first instruction is the header
+                        var instr = $('<h4>', {
+                            html: instruction
+                        });
+                    } else {
+                        var instr = $('<h6>', {
+                            "class": "instruction",
+                            html: instruction
+                        });                    
+                    }
+                    instructionsContainer.append(instr);
+                });
+            }
+            else
+            {
+                $('#instructions-container').hide();
+                $('#trigger').hide();
+            }
 
             // Update the visualization type and the feedback type and load in the new audio clip
             my.wavesurfer.params.visualization = my.currentTask.visualization; // invisible, spectrogram, waveform

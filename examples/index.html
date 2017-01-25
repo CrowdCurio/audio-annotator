@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Urban Ears</title>
+    <title>Audio Annotator</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/css/materialize.min.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/urban-ears.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/audio-annotator.css">
 
     <script type="text/javascript" src="/static/js/lib/jquery-2.2.3.min.js"></script>
     <script type="text/javascript" src="/static/js/lib/materialize.min.js"></script>
@@ -31,28 +31,22 @@
         </div>
         <div class="col s6 ">
             <div class="right" style="padding-top: 10px;">
-                <a class="waves-effect waves-light modal-trigger right btn" id="trigger" href="#video-modal">Instructions</a>
+                <a class="waves-effect waves-light modal-trigger right btn" id="trigger" href="#instructions-modal">Instructions</a>
             </div>
         </div>
     </div>
     <!-- Modal Structure -->
-        <div id="video-modal" class="modal" style="max-height: 100% !important;">
-            <div class="modal-footer">
-                <a href="#!" class=" modal-action modal-close waves-effect waves-red btn-flat">Close</a>
-            </div>
-            <div class="modal-content">
-                <h4>Highlight & Label Each Sound</h4>
-                <h6 class="instruction"><span style="color: #00B1B9; font-size: 18px; font-weight: 600;">&#9312;</span> &nbsp; Familiarize yourself with the list of sound labels under the audio recording.</h6>
-                <h6 class="instruction"><span style="color: #00B1B9; font-size: 18px; font-weight: 600;">&#9313;</span> &nbsp; Click the play button and listen to the recording.</h6>
-                <h6 class="instruction"><span style="color: #00B1B9; font-size: 18px; font-weight: 600;">&#9314;</span> &nbsp; For each sound event that you hear click and drag on the visualization to create a new annotation.</h6>
-                <h6 class="instruction"><span style="color: #00B1B9; font-size: 18px; font-weight: 600;">&#9315;</span> &nbsp; When creating a new annotation be as precise as possible. </h6>
-                <h6 class="instruction"><span style="color: #00B1B9; font-size: 18px; font-weight: 600;">&#9316;</span> &nbsp; Select the appropriate label and indicate whether the sound is near or far.</h6>
-                <br>
-                <div class="videowrapper">
-                    <iframe id="tutorial-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
-                </div>
+    <div id="instructions-modal" class="modal" style="max-height: 100% !important;">
+        <div class="modal-footer">
+            <a href="#!" class=" modal-action modal-close waves-effect waves-red btn-flat">Close</a>
+        </div>
+        <div class="modal-content">
+            <div id="instructions-container"></div>
+            <div class="videowrapper">
+                <iframe id="tutorial-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
             </div>
         </div>
+    </div>
     <div class="annotation">
         <div class="labels"></div>
         <div class="audio_visual"></div>
@@ -65,11 +59,6 @@
     <script>
         var dataUrl = '/static/json/sample_data.json';
         var postUrl = '/<post_url>'; // This is where data posts to
-
-        $(document).ready(function(){
-            $('.modal-trigger').leanModal();
-            $('#video-modal').openModal();
-        });
     </script>
 </body>
 </html>
