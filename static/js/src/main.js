@@ -144,6 +144,7 @@ Annotator.prototype = {
 
             // add instructions
             var instructionsContainer = $('#instructions-container');
+            instructionsContainer.empty();
             if (typeof instructions !== "undefined"){
                 $('.modal-trigger').leanModal();
                 $('#instructions-modal').openModal();
