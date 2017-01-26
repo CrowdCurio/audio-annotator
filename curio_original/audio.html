@@ -13,10 +13,12 @@
     var total_num_tasks = {{ condition.configuration.task1.order|length }};
     var num_required_tasks;
     var experiment_id;
+    var experiment_name;
     var condition_id;
     var bonus_pay;
     {% if experiment.id %}
         bonus_pay = {{ condition.configuration.task1.bonus }};
+        experiment_name = '{{ experiment.name }}';
         experiment_id = {{ experiment.id }};
         condition_id = {{ condition.id }};
         num_required_tasks = {{ condition.configuration.task1.batch_size }};
