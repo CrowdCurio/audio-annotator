@@ -336,7 +336,17 @@ AnnotationStages.prototype = {
 
     // Switch the currently selected region
     swapRegion: function(newStage, region) {
-        this.deselectCurrentRegion();
+        if (this.currentRegion) {
+            this.currentRegion.update({drag: false, resize: false});
+            $(this.currentRegion.element).removeClass('current_region');
+            $(this.currentRegion.annotationLabel.element).removeClass('current_label');
+
+            // Remove the highlated label and disable.
+            $('.annotation_tag', this.dom).removeClass('selected');
+            $('.proximity_tag', this.dom).removeClass('selected');
+            $('.annotation_tag', this.dom).addClass('disabled');
+            $('.proximity_tag', this.dom).addClass('disabled');
+        }
 
         // If the user is switch to stage 3, enable drag and resize editing for the new current region. 
         // Also highlight the label and region border
@@ -352,9 +362,9 @@ AnnotationStages.prototype = {
         this.currentRegion = region;
     },
 
-    deselectCurrentRegion: function() {
+    clickDeselectCurrentRegion: function() {
         if (this.blockDeselect) {
-            // A region-update-end occurred, toggle blockDeselect
+            // A new region was created, block the subsequent click to not deselect
             this.blockDeselect = false;
         } else {
             if (this.currentRegion != null) {
@@ -485,6 +495,7 @@ AnnotationStages.prototype = {
     // select the new region and switch to stage 3 so the user can tag the region
     createRegionSwitchToStageThree: function(region) {
         if (region !== this.currentRegion) {
+            this.blockDeselect = true;
             this.trackEvent('offline-create', region.id, null, region.start, region.end);
             this.updateStage(3, region);
         }
@@ -515,8 +526,6 @@ AnnotationStages.prototype = {
             this.giveFeedback();
             this.trackEvent('region-moved-' + type, this.currentRegion.id, null, this.currentRegion.start, this.currentRegion.end);
         }
-
-        this.blockDeselect = true;
     },
 
     // Event handler: called when there is audio progress. Updates the online creation
