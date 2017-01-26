@@ -183,6 +183,7 @@ Annotator.prototype = {
 
             // add instructions
             var instructionsContainer = $('#instructions-container');
+            instructionsContainer.empty();
             if (typeof instructions !== "undefined") {
                 $('#instructions-modal').openModal();
                 instructions.forEach(function (instruction, index) {
