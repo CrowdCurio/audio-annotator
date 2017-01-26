@@ -450,6 +450,7 @@ WaveSurfer.Region = {
                         my.fireEvent('update-end', e);
                         my.wavesurfer.fireEvent('region-update-end', my, e, regionUpdateType);
                         moved = false;
+                        my.wavesurfer.fireEvent('click', e);
                     }
                 }
             };
