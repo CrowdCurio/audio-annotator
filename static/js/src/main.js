@@ -21,6 +21,8 @@ function Annotator() {
     this.currentTask;
     this.taskStartTime;
     this.hiddenImage;
+    // only automatically open instructions modal when first loaded
+    this.instructionsViewed = false;
     // Boolean, true if currently sending http post request 
     this.sendingResponse = false;
 
@@ -147,7 +149,6 @@ Annotator.prototype = {
             instructionsContainer.empty();
             if (typeof instructions !== "undefined"){
                 $('.modal-trigger').leanModal();
-                $('#instructions-modal').openModal();
                 instructions.forEach(function (instruction, index) {
                     if (index==0) {
                         // first instruction is the header
@@ -162,6 +163,10 @@ Annotator.prototype = {
                     }
                     instructionsContainer.append(instr);
                 });
+                if (!my.instructionsViewed) {
+                    $('#instructions-modal').openModal();
+                    my.instructionsViewed = true;
+                }
             }
             else
             {
