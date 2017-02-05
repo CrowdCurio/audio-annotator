@@ -1,11 +1,12 @@
 {
     "task": {
-        "feedback": "hiddenImage",
+        "feedback": "hiddenMap",
         "visualization": "spectrogram",
         "proximityTag": [],
         "annotationTag": ["bicycle bell", "church bell", "human voice", "mechanical squeak", "music", "screeching train wheels", "single footstep", "siren", "vehicle brakes", "vehicle engine", "vehicle honk"],
         "annotationSolutionsUrl": "/static/json/paris.json",
         "imgUrl": "/static/img/paris.jpg",
-        "url": "/static/wav/paris.wav"
+        "url": "/static/wav/paris.wav",
+        "alwaysShowTags": true
     }
 }

@@ -21,6 +21,7 @@ function Annotator() {
     this.currentTask;
     this.taskStartTime;
     this.hiddenImage;
+    this.hiddenMap;
     // only automatically open instructions modal when first loaded
     this.instructionsViewed = false;
     // Boolean, true if currently sending http post request 
@@ -58,6 +59,9 @@ function Annotator() {
     // (only for this.currentTask.feedback === 'hiddenImage')
     this.hiddenImage = new HiddenImg('.hidden_img', 100);
     this.hiddenImage.create();
+
+    // Create the map
+    this.hiddenMap = new HiddenMap('.hidden_map', 125, -33.8688, 151.2093);
 
     // Create the play button and time that appear below the wavesurfer
     this.playBar = new PlayBar(this.wavesurfer);
@@ -100,6 +104,9 @@ Annotator.prototype = {
             my.workflowBtns.update();
             if (my.currentTask.feedback === 'hiddenImage') {
                 my.hiddenImage.append(my.currentTask.imgUrl);
+            }
+            if (my.currentTask.feedback == 'hiddenMap') {
+                my.hiddenMap.create();
             }
         });
 
@@ -271,10 +278,10 @@ Annotator.prototype = {
 
 };
 
-function main() {
+//function main() {
     // Create all the components
     var annotator = new Annotator();
     // Load the first audio annotation task
     annotator.loadNextTask();
-}
-main();
+//}
+//main();
