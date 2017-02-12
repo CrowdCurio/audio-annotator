@@ -61,7 +61,7 @@ function Annotator() {
     this.hiddenImage.create();
 
     // Create the map
-    this.hiddenMap = new HiddenMap('.hidden_map', 125, -33.8688, 151.2093);
+    this.hiddenMap = new HiddenMap('.hidden_map', 256, 256, 48.8584, 2.2945);
 
     // Create the play button and time that appear below the wavesurfer
     this.playBar = new PlayBar(this.wavesurfer);
@@ -69,7 +69,7 @@ function Annotator() {
 
     // Create the annotation stages that appear below the wavesurfer. The stages contain tags 
     // the users use to label a region in the audio clip
-    this.stages = new AnnotationStages(this.wavesurfer, this.hiddenImage);
+    this.stages = new AnnotationStages(this.wavesurfer, this.hiddenImage, this.hiddenMap);
     this.stages.create();
 
     // Create Workflow btns (submit and exit)
