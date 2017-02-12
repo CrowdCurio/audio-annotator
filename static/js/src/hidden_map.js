@@ -16,8 +16,10 @@ function HiddenMap(container, height, width, latitude, longitude) {
     this.width = this.container.offsetWidth;
     this.latitude = latitude;
     this.longitude = longitude;
+    this.answer = null;
     this.zoomLevel = 0;
     this.maxZoom = 20;
+    this.prevF1Score = 0;
 }
 
 HiddenMap.prototype = {
@@ -28,6 +30,8 @@ HiddenMap.prototype = {
         this.container.style.height = this.height + 'px'
         this.container.style.width = this.width;
 
+        // Create google maps answer LatLng
+        this.answer = new google.maps.LatLng(this.latitude,this.longitude);
 
         // Disable user interaction with map.
         // Make the default starting location the prime
@@ -57,22 +61,26 @@ HiddenMap.prototype = {
     shiftCoordinates: function() {
         var xBoundary = Math.floor(this.width / 2);
         var yBoundary = Math.floor(this.height / 2);
-        var xShift = Math.floor(Math.random() * (xBoundary + 1)) - xBoundary/2;
-        var yShift = Math.floor(Math.random() * (yBoundary + 1)) - yBoundary/2;
+        var xShift = Math.floor(Math.random() * (xBoundary*2 + 1)) - xBoundary/2;
+        var yShift = Math.floor(Math.random() * (yBoundary*2 + 1)) - yBoundary/2;
         return [xShift,yShift]
     },
 
     navigateToSolution: function(f1Score) {
+        console.log(f1Score);
         var zoomToLevel = Math.floor(f1Score * this.maxZoom);
         var newCenter = null;
         var shifted = null;
         var xShift = 0;
         var yShift = 0;
+        if (this.prevF1Score == f1Score){
+            return;
+        }
         if (zoomToLevel < 1){
             zoomToLevel = 0;
             newCenter = new google.maps.LatLng(0,0);
         } else {
-            newCenter = new google.maps.LatLng(this.latitude,this.longitude);
+            newCenter = this.answer;
             shifted = this.shiftCoordinates();
             xShift = shifted[0];
             yShift = shifted[1];
@@ -81,8 +89,10 @@ HiddenMap.prototype = {
         this.map.setZoom(zoomToLevel);
         this.map.panTo(newCenter);
 
-        if (zoomToLevel >= 1){
+        if (zoomToLevel >= 1 && f1Score < 0.80){
             this.map.panBy(xShift,yShift)
         }
+
+        this.prevF1Score = f1Score;
     }
 };
