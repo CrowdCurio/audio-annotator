@@ -55,33 +55,34 @@ HiddenMap.prototype = {
     },
 
     shiftCoordinates: function() {
-        var latLng = new google.maps.LatLng(this.latitude,this.longitude);
-        var projection = this.map.getProjection();
-        var bounds = this.map.getBounds();
-        var topRight = projection.fromLatLngToPoint(bounds.getNorthEast());
-        var bottomLeft = projection.fromLatLngToPoint(bounds.getSouthWest());
-        var scale = Math.pow(2,this.map.getZoom());
-        var worldPoint = projection.fromLatLngToPoint(latLng);
-        var pixelX = Math.floor((worldPoint.x - bottomLeft.x) * scale)
-        var pixelY = Math.floor((worldPoint.y - topRight.y) * scale)
-        
+        var xBoundary = Math.floor(this.width / 2);
+        var yBoundary = Math.floor(this.height / 2);
+        var xShift = Math.floor(Math.random() * (xBoundary + 1)) - xBoundary/2;
+        var yShift = Math.floor(Math.random() * (yBoundary + 1)) - yBoundary/2;
+        return [xShift,yShift]
     },
 
     navigateToSolution: function(f1Score) {
         var zoomToLevel = Math.floor(f1Score * this.maxZoom);
-        var shiftedLat = 0;
-        var shiftedLng = 0;
+        var newCenter = null;
+        var shifted = null;
+        var xShift = 0;
+        var yShift = 0;
         if (zoomToLevel < 1){
             zoomToLevel = 0;
+            newCenter = new google.maps.LatLng(0,0);
+        } else {
+            newCenter = new google.maps.LatLng(this.latitude,this.longitude);
+            shifted = this.shiftCoordinates();
+            xShift = shifted[0];
+            yShift = shifted[1];
         }
-        else {
-            shiftedLat = this.latitude
-            shiftedLng = this.longitude
-        }
-        
-        var newLocation = new google.maps.LatLng(shiftedLat,shiftedLng)
 
         this.map.setZoom(zoomToLevel);
-        this.map.panTo(newLocation);
+        this.map.panTo(newCenter);
+
+        if (zoomToLevel >= 1){
+            this.map.panBy(xShift,yShift)
+        }
     }
 };
