@@ -61,8 +61,8 @@ HiddenMap.prototype = {
     shiftCoordinates: function() {
         var xBoundary = Math.floor(this.width / 2);
         var yBoundary = Math.floor(this.height / 2);
-        var xShift = Math.floor(Math.random() * (xBoundary*2 + 1)) - xBoundary/2;
-        var yShift = Math.floor(Math.random() * (yBoundary*2 + 1)) - yBoundary/2;
+        var xShift = Math.floor(Math.random() * (xBoundary*1.5 + 1)) - xBoundary/2;
+        var yShift = Math.floor(Math.random() * (yBoundary*1.5 + 1)) - yBoundary/2;
         return [xShift,yShift]
     },
 
@@ -89,7 +89,7 @@ HiddenMap.prototype = {
         this.map.setZoom(zoomToLevel);
         this.map.panTo(newCenter);
 
-        if (zoomToLevel >= 1 && f1Score < 0.80){
+        if (zoomToLevel > 3 && f1Score < 1){
             this.map.panBy(xShift,yShift)
         }
 
