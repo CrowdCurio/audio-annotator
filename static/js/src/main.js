@@ -21,7 +21,6 @@ function Annotator() {
     this.currentTask;
     this.taskStartTime;
     this.hiddenImage;
-    this.hiddenMap;
     // only automatically open instructions modal when first loaded
     this.instructionsViewed = false;
     // Boolean, true if currently sending http post request 
@@ -60,16 +59,13 @@ function Annotator() {
     this.hiddenImage = new HiddenImg('.hidden_img', 100);
     this.hiddenImage.create();
 
-    // Create the map
-    this.hiddenMap = new HiddenMap('.hidden_map', 256);
-
     // Create the play button and time that appear below the wavesurfer
     this.playBar = new PlayBar(this.wavesurfer);
     this.playBar.create();
 
     // Create the annotation stages that appear below the wavesurfer. The stages contain tags 
     // the users use to label a region in the audio clip
-    this.stages = new AnnotationStages(this.wavesurfer, this.hiddenImage, this.hiddenMap);
+    this.stages = new AnnotationStages(this.wavesurfer, this.hiddenImage);
     this.stages.create();
 
     // Create Workflow btns (submit and exit)
@@ -104,11 +100,6 @@ Annotator.prototype = {
             my.workflowBtns.update();
             if (my.currentTask.feedback === 'hiddenImage') {
                 my.hiddenImage.append(my.currentTask.imgUrl);
-            }
-            if (my.currentTask.feedback === 'hiddenMap') {
-                var mapSolution = my.currentTask.solutionCoordinates;
-                my.hiddenMap.addSolution(mapSolution['lat'],mapSolution['lng']);
-                my.hiddenMap.create();
             }
         });
 
