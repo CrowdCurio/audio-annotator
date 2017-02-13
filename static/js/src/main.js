@@ -280,10 +280,10 @@ Annotator.prototype = {
 
 };
 
-//function main() {
+function main() {
     // Create all the components
     var annotator = new Annotator();
     // Load the first audio annotation task
     annotator.loadNextTask();
-//}
-//main();
+}
+main();
