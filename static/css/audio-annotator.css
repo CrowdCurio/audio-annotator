@@ -4,14 +4,9 @@
 .submit_container,
 .annotation,
 .creation_stage_container,
-.hidden_img,
-.hidden_map {
+.hidden_img {
   width: 97%;
   margin: auto;
-}
-
-.hidden_map {
-  margin-top: 10px;
 }
 
 .btn {

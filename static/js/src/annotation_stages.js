@@ -241,7 +241,7 @@ StageThreeView.prototype = {
  * Dependencies:
  *   jQuey, audio-annotator.css, Wavesurfer (lib/wavesurfer.js), Message (src/message.js)
  */
-function AnnotationStages(wavesurfer, hiddenImage, hiddenMap) {
+function AnnotationStages(wavesurfer, hiddenImage) {
     this.currentStage = 0;
     this.currentRegion = null;
     this.usingProximity = false;
@@ -250,7 +250,6 @@ function AnnotationStages(wavesurfer, hiddenImage, hiddenMap) {
     this.stageThreeView = new StageThreeView();
     this.wavesurfer = wavesurfer;
     this.hiddenImage = hiddenImage;
-    this.hiddenMap = hiddenMap;
     this.deletedAnnotations = [];
     this.annotationSolutions = [];
     this.city = '';
@@ -637,9 +636,6 @@ AnnotationStages.prototype = {
                 this.hiddenImage.resetCover();
                 this.notify(newF1Score);
                 this.showImage(newF1Score);
-            } else if (this.wavesurfer.params.feedback === 'hiddenMap') {
-                this.notify(newF1Score);
-                this.showMap(newF1Score);
             }
             // For silent feedback just update the f1score
             // After we checked if the user has improved and recieved feedback, replace f1 score
@@ -742,11 +738,6 @@ AnnotationStages.prototype = {
     // Show a percentage of the hiddenImage
     showImage: function(f1Score) {
         this.hiddenImage.showRandomParts(f1Score);
-    },
-
-    // Zoom In / Out of the map based on the F1 score
-    showMap: function(f1Score) {
-        this.hiddenMap.navigateToSolution(f1Score);
     },
 
     // Return true if the user should have the city revealed to them
