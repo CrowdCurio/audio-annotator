@@ -105,7 +105,7 @@ Annotator.prototype = {
             if (my.currentTask.feedback === 'hiddenImage') {
                 my.hiddenImage.append(my.currentTask.imgUrl);
             }
-            if (my.currentTask.feedback == 'hiddenMap') {
+            if (my.currentTask.feedback === 'hiddenMap') {
                 var mapSolution = my.currentTask.solutionCoordinates;
                 my.hiddenMap.addSolution(mapSolution['lat'],mapSolution['lng']);
                 my.hiddenMap.create();

@@ -71,7 +71,6 @@ HiddenMap.prototype = {
     },
 
     navigateToSolution: function(f1Score) {
-        console.log(f1Score);
         var zoomToLevel = Math.floor(f1Score * this.maxZoom);
         var newCenter = null;
         var shifted = null;
