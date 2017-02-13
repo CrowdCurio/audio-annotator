@@ -8,14 +8,14 @@
  *   Google Maps API
  */
 
-function HiddenMap(container, height, width, latitude, longitude) {
+function HiddenMap(container, height) {
     this.container = document.querySelector(container);
     this.map = null;
     this.mapOptions = null;
     this.height = height;
     this.width = this.container.offsetWidth;
-    this.latitude = latitude;
-    this.longitude = longitude;
+    this.latitude = 0;
+    this.longitude = 0;
     this.answer = null;
     this.zoomLevel = 0;
     this.maxZoom = 20;
@@ -28,10 +28,6 @@ HiddenMap.prototype = {
     create: function() {
         
         this.container.style.height = this.height + 'px'
-        this.container.style.width = this.width;
-
-        // Create google maps answer LatLng
-        this.answer = new google.maps.LatLng(this.latitude,this.longitude);
 
         // Disable user interaction with map.
         // Make the default starting location the prime
@@ -56,6 +52,14 @@ HiddenMap.prototype = {
         }
         
         this.map = new google.maps.Map(this.container, this.mapOptions);
+    },
+
+    addSolution: function(latitude,longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+
+        // Create google maps answer LatLng
+        this.answer = new google.maps.LatLng(this.latitude,this.longitude);
     },
 
     shiftCoordinates: function() {

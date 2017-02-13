@@ -61,7 +61,7 @@ function Annotator() {
     this.hiddenImage.create();
 
     // Create the map
-    this.hiddenMap = new HiddenMap('.hidden_map', 256, 256, 48.8584, 2.2945);
+    this.hiddenMap = new HiddenMap('.hidden_map', 256);
 
     // Create the play button and time that appear below the wavesurfer
     this.playBar = new PlayBar(this.wavesurfer);
@@ -106,6 +106,8 @@ Annotator.prototype = {
                 my.hiddenImage.append(my.currentTask.imgUrl);
             }
             if (my.currentTask.feedback == 'hiddenMap') {
+                var mapSolution = my.currentTask.solutionCoordinates;
+                my.hiddenMap.addSolution(mapSolution['lat'],mapSolution['lng']);
                 my.hiddenMap.create();
             }
         });
