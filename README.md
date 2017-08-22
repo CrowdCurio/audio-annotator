@@ -6,7 +6,9 @@ Javascript web interface for annotating audio data.
 
 Developed by [StefanieMikloska](github.com/StefanieMikloska), [CrowdLab @ Univertsity of Waterloo](http://edithlaw.ca/people.html) and [MARL @ New York University](http://steinhardt.nyu.edu/marl/).
 
-When used in academic work please cite: TBD.
+When used in academic work please cite:
+
+> M. Cartwright, A. Seals, J. Salamon, A. Williams, S. Mikloska, D. MacConnell, E. Law, J. Bello, and O. Nov. "Seeing sound: Investigating the effects of visualizations and complexity on crowdsourced audio annotations." In *Proceedings of the ACM on Human-Computer Interaction*, 1(1), 2017.
 
 ### Description
 audio-annotator is a web interface that allows users to annotate audio recordings.
