@@ -6,16 +6,23 @@
  *   data, updates components. When the user submits their work this class gets the workers
  *   annotations and other data and submits to the backend
  * Dependencies:
- *   AnnotationStages (src/annotation_stages.js), PlayBar & WorkflowBtns (src/components.js), 
+ *   AnnotationStages (src/annotation_stages.js), PlayBar & WorkflowBtns (src/components.js),
  *   HiddenImg (src/hidden_image.js), colormap (colormap/colormap.min.js) , Wavesurfer (lib/wavesurfer.min.js)
  * Globals variable from other files:
  *   colormap.min.js:
  *       magma // color scheme array that maps 0 - 255 to rgb values
- *    
+ *
  */
+
+ // import streamSaver from 'streamsaver';
+ // const streamSaver = require('streamsaver');
+ const streamSaver = window.streamSaver;
+
 function Annotator() {
     this.wavesurfer;
     this.playBar;
+    this.files;
+    this.currentFilesIndex = 0;
     this.stages;
     this.workflowBtns;
     this.currentTask;
@@ -23,7 +30,7 @@ function Annotator() {
     this.hiddenImage;
     // only automatically open instructions modal when first loaded
     this.instructionsViewed = false;
-    // Boolean, true if currently sending http post request 
+    // Boolean, true if currently sending http post request
     this.sendingResponse = false;
 
     // Create color map for spectrogram
@@ -44,7 +51,9 @@ function Annotator() {
         // For the spectrogram the height is half the number of fftSamples
         fftSamples: height * 2,
         height: height,
-        colorMap: spectrogramColorMap
+        colorMap: spectrogramColorMap,
+        scrollParent: true,
+        fillparent: false
     });
 
     // Create labels (labels that appear above each region)
@@ -54,7 +63,7 @@ function Annotator() {
         container: '.labels'
     });
 
-    // Create hiddenImage, an image that is slowly revealed to a user as they annotate 
+    // Create hiddenImage, an image that is slowly revealed to a user as they annotate
     // (only for this.currentTask.feedback === 'hiddenImage')
     this.hiddenImage = new HiddenImg('.hidden_img', 100);
     this.hiddenImage.create();
@@ -63,7 +72,7 @@ function Annotator() {
     this.playBar = new PlayBar(this.wavesurfer);
     this.playBar.create();
 
-    // Create the annotation stages that appear below the wavesurfer. The stages contain tags 
+    // Create the annotation stages that appear below the wavesurfer. The stages contain tags
     // the users use to label a region in the audio clip
     this.stages = new AnnotationStages(this.wavesurfer, this.hiddenImage);
     this.stages.create();
@@ -85,15 +94,17 @@ Annotator.prototype = {
             my.wavesurfer.seekTo(progress);
         };
 
-        // Update vertical progress bar to the currentTime when the sound clip is 
+        // Update vertical progress bar to the currentTime when the sound clip is
         // finished or paused since it is only updated on audioprocess
         this.wavesurfer.on('pause', updateProgressBar);
-        this.wavesurfer.on('finish', updateProgressBar);    
+        this.wavesurfer.on('finish', updateProgressBar);
 
-        // When a new sound file is loaded into the wavesurfer update the  play bar, update the 
+        // When a new sound file is loaded into the wavesurfer update the  play bar, update the
         // annotation stages back to stage 1, update when the user started the task, update the workflow buttons.
         // Also if the user is suppose to get hidden image feedback, append that component to the page
         this.wavesurfer.on('ready', function () {
+            const loader = document.querySelector('.loader');
+            loader.style.display = "none";
             my.playBar.update();
             my.stages.updateStage(1);
             my.updateTaskTime();
@@ -131,9 +142,9 @@ Annotator.prototype = {
             // annotation task if the user is suppose to recieve feedback
             var proximityTags = my.currentTask.proximityTag;
             var annotationTags = my.currentTask.annotationTag;
-            var tutorialVideoURL = my.currentTask.tutorialVideoURL;
+            // var tutorialVideoURL = my.currentTask.tutorialVideoURL;
             var alwaysShowTags = my.currentTask.alwaysShowTags;
-            var instructions = my.currentTask.instructions;
+            // var instructions = my.currentTask.instructions;
             my.stages.reset(
                 proximityTags,
                 annotationTags,
@@ -142,41 +153,41 @@ Annotator.prototype = {
             );
 
             // set video url
-            $('#tutorial-video').attr('src', tutorialVideoURL);
+            // $('#tutorial-video').attr('src', tutorialVideoURL);
 
             // add instructions
-            var instructionsContainer = $('#instructions-container');
-            instructionsContainer.empty();
-            if (typeof instructions !== "undefined"){
-                $('.modal-trigger').leanModal();
-                instructions.forEach(function (instruction, index) {
-                    if (index==0) {
-                        // first instruction is the header
-                        var instr = $('<h4>', {
-                            html: instruction
-                        });
-                    } else {
-                        var instr = $('<h6>', {
-                            "class": "instruction",
-                            html: instruction
-                        });                    
-                    }
-                    instructionsContainer.append(instr);
-                });
-                if (!my.instructionsViewed) {
-                    $('#instructions-modal').openModal();
-                    my.instructionsViewed = true;
-                }
-            }
-            else
-            {
-                $('#instructions-container').hide();
-                $('#trigger').hide();
-            }
+            // var instructionsContainer = $('#instructions-container');
+            // instructionsContainer.empty();
+            // if (typeof instructions !== "undefined"){
+            //     // $('.modal-trigger').leanModal();
+            //     instructions.forEach(function (instruction, index) {
+            //         if (index==0) {
+            //             // first instruction is the header
+            //             var instr = $('<h4>', {
+            //                 html: instruction
+            //             });
+            //         } else {
+            //             var instr = $('<h6>', {
+            //                 "class": "instruction",
+            //                 html: instruction
+            //             });
+            //         }
+            //         instructionsContainer.append(instr);
+            //     });
+            //     if (!my.instructionsViewed) {
+            //         $('#instructions-modal').openModal();
+            //         my.instructionsViewed = true;
+            //     }
+            // }
+            // else
+            // {
+            //     $('#instructions-container').hide();
+            //     $('#trigger').hide();
+            // }
 
             // Update the visualization type and the feedback type and load in the new audio clip
             my.wavesurfer.params.visualization = my.currentTask.visualization; // invisible, spectrogram, waveform
-            my.wavesurfer.params.feedback = my.currentTask.feedback; // hiddenImage, silent, notify, none 
+            my.wavesurfer.params.feedback = my.currentTask.feedback; // hiddenImage, silent, notify, none
             my.wavesurfer.load(my.currentTask.url);
         };
 
@@ -198,22 +209,28 @@ Annotator.prototype = {
 
     // Update the interface with the next task's data
     loadNextTask: function() {
+        // const audioDirectory = '/static/wav/';
         var my = this;
-        $.getJSON(dataUrl)
-        .done(function(data) {
-            my.currentTask = data.task;
-            my.update();
-        });
+        console.log(my.currentFilesIndex);
+        console.log(my.files.length);
+        if (my.currentFilesIndex === my.files.length) {
+          alert("You have reviewed all loaded files. Please load some more !")
+        } else {
+          my.updateFileNumberDisplay();
+          const JSONFeed = fileToJSON(my.files[my.currentFilesIndex]);
+          my.currentTask = JSONFeed.task;
+          my.update();
+        }
     },
 
     // Collect data about users annotations and submit it to the backend
     submitAnnotations: function() {
         // Check if all the regions have been labeled before submitting
         if (this.stages.annotationDataValidationCheck()) {
-            if (this.sendingResponse) {
-                // If it is already sending a post with the data, do nothing
-                return;
-            }
+            // if (this.sendingResponse) {
+            //     // If it is already sending a post with the data, do nothing
+            //     return;
+            // }
             this.sendingResponse = true;
             // Get data about the annotations the user has created
             var content = {
@@ -230,51 +247,129 @@ Annotator.prototype = {
                 final_solution_shown: this.stages.aboveThreshold()
             };
 
-            if (this.stages.aboveThreshold()) {
-                // If the user is suppose to recieve feedback and got enough of the annotations correct
-                // display the city the clip was recorded for 2 seconds and then submit their work
-                var my = this;
-                this.stages.displaySolution();
-                setTimeout(function() {
-                    my.post(content);
-                }, 2000);
-            } else {
+            // if (this.stages.aboveThreshold()) {
+            //     // If the user is suppose to recieve feedback and got enough of the annotations correct
+            //     // display the city the clip was recorded for 2 seconds and then submit their work
+            //     var my = this;
+            //     this.stages.displaySolution();
+            //     setTimeout(function() {
+            //         my.post(content);
+            //     }, 2000);
+            // } else {
                 this.post(content);
-            }
+            // }
         }
+    },
+
+    fileToJSON(file) {
+      return {
+          "task": {
+              "feedback": "none",
+              "visualization": "spectrogram",
+              "proximityTag": [],
+              "annotationTag": ["bird"],
+              "url": `/static/${file.webkitRelativePath}`,
+              "tutorialVideoURL":"",
+              "alwaysShowTags": true
+          }
+      }
     },
 
     // Make POST request, passing back the content data. On success load in the next task
     post: function (content) {
+        console.log('yyy', content)
         var my = this;
-        $.ajax({
-            type: 'POST',
-            url: $.getJSON(postUrl),
-            contentType: 'application/json',
-            data: JSON.stringify(content)
-        })
-        .done(function(data) {
-            // If the last task had a hiddenImage component, remove it
-            if (my.currentTask.feedback === 'hiddenImage') {
-                my.hiddenImage.remove();
-            }
-            my.loadNextTask();
-        })
-        .fail(function() {
-            alert('Error: Unable to Submit Annotations');
-        })
-        .always(function() {
-            // No longer sending response
-            my.sendingResponse = false;
-        });
+        // const blob = new Blob([JSON.stringify(content.annotations)])
+        const regex = /(\/)(\w+)/g;
+        const filenameRegexed = my.files[my.currentFilesIndex].webkitRelativePath.match(regex);
+        const cleanedFilename = filenameRegexed[filenameRegexed.length - 1];
+        const filename = cleanedFilename.slice(1);
+        const fileStream = streamSaver.createWriteStream(`${filename}_labeled.json`)
+        // const fileStream = streamSaver.createWriteStream('annotation.json')
+
+        my.currentFilesIndex++
+        if (content.annotations.length > 0) {
+          new Response(JSON.stringify(content.annotations)).body
+            .pipeTo(fileStream)
+            .then(() => {
+              // If the last task had a hiddenImage component, remove it
+              if (my.currentTask.feedback === 'hiddenImage') {
+                  my.hiddenImage.remove();
+              }
+              my.loadNextTask();
+            }, () => {
+              alert('Error: Unable to Submit Annotations');
+            });
+        } else {
+          if (my.currentTask.feedback === 'hiddenImage') {
+              my.hiddenImage.remove();
+          }
+          my.loadNextTask();
+        }
+        // $.ajax({
+        //     type: 'POST',
+        //     url: $.getJSON(postUrl),
+        //     contentType: 'application/json',
+        //     data: JSON.stringify(content.annotations)
+        // })
+        // .done(function(data) {
+        //     // If the last task had a hiddenImage component, remove it
+        //     if (my.currentTask.feedback === 'hiddenImage') {
+        //         my.hiddenImage.remove();
+        //     }
+        //     my.loadNextTask();
+        // })
+        // .fail(function() {
+        //     alert('Error: Unable to Submit Annotations');
+        // })
+        // .always(function() {
+        //     // No longer sending response
+        //     my.sendingResponse = false;
+        // });
+    },
+
+    updateFileNumberDisplay() {
+      const indexElement = document.querySelector('.index');
+      const totalFilesElement = document.querySelector('.total-files');
+      indexElement.innerHTML = this.currentFilesIndex + 1;
+      totalFilesElement.innerHTML = this.files.length;
     }
 
 };
+
+function fileToJSON(file) {
+  return {
+      "task": {
+          "feedback": "none",
+          "visualization": "spectrogram",
+          "proximityTag": [],
+          "annotationTag": ["bird"],
+          "url": `/static/${file.webkitRelativePath}`,
+          "tutorialVideoURL":"",
+          "alwaysShowTags": true
+      }
+  }
+}
 
 function main() {
     // Create all the components
     var annotator = new Annotator();
     // Load the first audio annotation task
-    annotator.loadNextTask();
+    const fileNumberElement = document.querySelector('h5');
+    const fileInput = document.querySelector('input[type=file]');
+    fileInput.addEventListener('change', () => {
+      const loaderBis = document.querySelector('.loader');
+      loaderBis.style.display = "none";
+      const files = fileInput.files;
+      annotator.files = files;
+      // const indexElement = document.querySelector('.index');
+      // const totalFilesElement = document.querySelector('.total-files');
+      // indexElement.innerHTML = 0;
+      // totalFilesElement.innerHTML = files.length;
+      fileNumberElement.style.display = 'block';
+      annotator.updateFileNumberDisplay();
+      annotator.loadNextTask();
+    })
 }
+
 main();

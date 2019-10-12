@@ -6,7 +6,7 @@
  *   data, updates components. When the user submits their work this class gets the workers
  *   annotations and other data and submits to the backend
  * Dependencies:
- *   AnnotationStages (src/annotation_stages.js), PlayBar & WorkflowBtns (src/components.js), 
+ *   AnnotationStages (src/annotation_stages.js), PlayBar & WorkflowBtns (src/components.js),
  *   HiddenImg (src/hidden_image.js), colormap (colormap/colormap.min.js) , Wavesurfer (lib/wavesurfer.min.js)
  * Globals variable from other files:
  *   audio.html (task related):
@@ -141,6 +141,7 @@ Annotator.prototype = {
 
     // Event Handler, if the user clicks submit annotations call submitAnnotations
     addWorkflowBtnEvents: function() {
+        console.log('ttt')
         $(this.workflowBtns).on('submit-annotations', this.submitAnnotations.bind(this));
     },
 
@@ -284,6 +285,7 @@ Annotator.prototype = {
     // Collect data about users annotations and submit it to the backend
     submitAnnotations: function() {
         // Check if all the regions have been labeled before submitting
+        console.log('rrrr')
         if (this.stages.annotationDataValidationCheck()) {
             if (this.sendingResponse) {
                 // If it is already sending a post with the data, do nothing
@@ -304,6 +306,7 @@ Annotator.prototype = {
                 // Boolean, if at the end, the user was shown what city the clip was recorded in
                 final_solution_shown: this.stages.aboveThreshold()
             };
+            console.log('fdfdfd', content)
 
             if (this.stages.aboveThreshold()) {
                 // If the user is suppose to recieve feedback and got enough of the annotations correct

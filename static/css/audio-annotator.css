@@ -32,7 +32,7 @@
   top: 10px !important;
 }
 
-.annotation {   
+.annotation {
   margin: 0px auto;
   position: relative;
 }
@@ -55,7 +55,7 @@
 
 .creation_stage_container {
   text-align: center;
-  min-height: 303px;
+  /*min-height: 303px;*/
   position: relative;
 }
 
@@ -289,4 +289,19 @@ input.form-control.duration {
 .time {
   color: #999;
   font-style: italic;
+}
+
+.loader {
+  width: 100vw;
+  text-align: center;
+  display: none;
+}
+
+h3 {
+  font-size: 24px;
+  color: grey-darken-1;
+}
+
+h5 {
+  display: none;
 }

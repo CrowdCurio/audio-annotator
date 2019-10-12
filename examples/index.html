@@ -21,8 +21,12 @@
     <script type="text/javascript" src="/static/js/src/components.js"></script>
     <script type="text/javascript" src="/static/js/src/annotation_stages.js"></script>
     <script type="text/javascript" src="/static/js/src/main.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/web-streams-polyfill@2.0.2/dist/ponyfill.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/streamsaver@2.0.3/StreamSaver.min.js"></script>
 </head>
 <body>
+  <div class="container">
+
     <div class="row header">
         <div class="col s12">
             <div class="divider"></div>
@@ -36,7 +40,7 @@
         </div>
     </div>
     <!-- Modal Structure -->
-    <div id="instructions-modal" class="modal" style="max-height: 100% !important;">
+<!--     <div id="instructions-modal" class="modal" style="max-height: 100% !important;">
         <div class="modal-footer">
             <a href="#!" class=" modal-action modal-close waves-effect waves-red btn-flat">Close</a>
         </div>
@@ -46,8 +50,28 @@
                 <iframe id="tutorial-video" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
             </div>
         </div>
+    </div> -->
+
+   <h3>Select a directory :</h3>
+   <input type="file"
+          id="audio" webkitdirectory="true">
+    <div class="loader">
+      <h3>Loading audio...</h3>
+      <div class="preloader-wrapper big active">
+        <div class="spinner-layer spinner-blue-only">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div><div class="gap-patch">
+            <div class="circle"></div>
+          </div><div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+      </div>
+    </div>
     </div>
     <div class="annotation">
+        <h5>File <span class="index"></span> of <span class="total-files"></span></h5>
         <div class="labels"></div>
         <div class="audio_visual"></div>
         <div class="play_bar"></div>
@@ -55,9 +79,9 @@
         <div class="creation_stage_container"></div>
         <div class="submit_container"></div>
     </div>
+
     <script>
-        var dataUrl = '/static/json/sample_data.json';
-        var postUrl = '/<post_url>'; // This is where data posts to
+        var dataUrl = '/static/json/sample_citeu.json';
     </script>
 </body>
 </html>

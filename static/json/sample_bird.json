@@ -1,0 +1,16 @@
+{
+    "task": {
+        "feedback": "none",
+        "visualization": "spectrogram",
+        "proximityTag": [],
+        "annotationTag": ["bird"],
+        "url": "/static/wav/bird1.wav",
+        "tutorialVideoURL":"",
+        "alwaysShowTags": true,
+        "instructions": [
+            "Highlight &amp; Label Bird Songs",
+            "1. &nbsp; For each sound event that you hear click and drag on the visualization to create a new annotation.",
+            "2. &nbsp; When creating a new annotation be as precise as possible."
+        ]
+    }
+}
